@@ -5,4 +5,4 @@ pages_build_output_dir = "apps/web/dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "my-finance-db"
-database_id = "REPLACE_WITH_ACTUAL_DATABASE_ID"
+database_id = "ad34a080-5de6-4df9-82d9-c888c46fae40"
