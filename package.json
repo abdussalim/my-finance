@@ -1,0 +1,15 @@
+{
+  "name": "my-finance",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "deploy": "pnpm build && wrangler pages deploy apps/web/dist --project-name=my-finance"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

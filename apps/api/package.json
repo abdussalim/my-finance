@@ -1,0 +1,23 @@
+{
+  "name": "@my-finance/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev ../web/dist --d1=DB --compatibility-date=2024-12-01 --port=8788",
+    "build": "esbuild src/index.ts --bundle --minify --outfile=../web/dist/_worker.js --format=esm --target=es2022 --conditions=workerd --external:node:*",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@my-finance/shared": "workspace:*",
+    "hono": "^4.6.0",
+    "nanoid": "^5.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241205.0",
+    "@my-finance/web": "workspace:*",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^3.99.0"
+  }
+}
