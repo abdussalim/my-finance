@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev ../web/dist --d1=DB --compatibility-date=2024-12-01 --port=8788",
+    "dev": "wrangler pages dev apps/web/dist --cwd ../.. --port=8788",
     "build": "esbuild src/index.ts --bundle --minify --outfile=../web/dist/_worker.js --format=esm --target=es2022 --conditions=workerd --external:node:*",
     "lint": "tsc --noEmit"
   },

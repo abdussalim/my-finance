@@ -4,6 +4,7 @@ dist/
 .dev.vars
 .env
 .turbo/
+*.tsbuildinfo
 *.log
 .DS_Store
 Thumbs.db
