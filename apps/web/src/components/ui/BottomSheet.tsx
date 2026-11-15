@@ -5,10 +5,11 @@ export interface BottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
+  subtitle?: string;
   children: React.ReactNode;
 }
 
-export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetProps) {
+export function BottomSheet({ isOpen, onClose, title, subtitle, children }: BottomSheetProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -24,21 +25,32 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
+      {/* Dimmed backdrop with blur */}
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-lg bg-white rounded-t-[32px] p-6 shadow-2xl z-10 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom duration-300">
-        <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-5" />
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold tracking-tight text-[#1D1D1F]">{title}</h3>
+
+      {/* Sheet Content */}
+      <div className="relative w-full max-w-md bg-white rounded-t-[36px] px-6 pt-3 pb-[calc(env(safe-area-inset-bottom,16px)+16px)] shadow-[0_-12px_40px_rgba(0,0,0,0.12)] z-10 max-h-[92dvh] overflow-y-auto animate-in slide-in-from-bottom duration-250">
+        {/* Grabber handle */}
+        <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto my-2.5" />
+
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="text-xl font-bold tracking-tight text-slate-900">{title}</h3>
+            {subtitle ? <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p> : null}
+          </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center press-scale cursor-pointer"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Body */}
         <div>{children}</div>
       </div>
     </div>

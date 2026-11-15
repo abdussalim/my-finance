@@ -5,12 +5,32 @@ import { Button } from "../components/ui/Button";
 import { BottomSheet } from "../components/ui/BottomSheet";
 import { NumberPad } from "../components/ui/NumberPad";
 import { PinInput } from "../components/ui/PinInput";
+import { SegmentedControl } from "../components/ui/SegmentedControl";
 import { formatCurrency } from "../lib/format";
 import { useAuth } from "../hooks/useAuth";
 import { WalletWithBalance, Category } from "@my-finance/shared";
-import { Wallet, Tag, LogOut, Plus, Trash2, Info, KeyRound, X } from "lucide-react";
+import {
+  Wallet,
+  Tag,
+  LogOut,
+  Plus,
+  Trash2,
+  ShieldCheck,
+  KeyRound,
+  X,
+  Cpu,
+  Layers,
+} from "lucide-react";
 
-const WALLET_COLORS = ["#007AFF", "#34C759", "#FF9500", "#FF3B30", "#5856D6", "#1D1D1F"];
+const WALLET_COLORS = [
+  "#007AFF", // iOS Blue
+  "#10B981", // Emerald
+  "#F59E0B", // Amber
+  "#F43F5E", // Rose
+  "#6366F1", // Indigo
+  "#8B5CF6", // Purple
+  "#0F172A", // Slate Dark
+];
 
 export function Settings() {
   const { logout } = useAuth();
@@ -55,12 +75,12 @@ export function Settings() {
   }, []);
 
   const handleAddWallet = async () => {
-    if (!wName) return alert("Masukkan nama dompet");
+    if (!wName.trim()) return alert("Masukkan nama dompet");
     try {
       await apiFetch("/api/wallets", {
         method: "POST",
         body: JSON.stringify({
-          name: wName,
+          name: wName.trim(),
           type: wType,
           color: wColor,
           initial_balance: wBalance,
@@ -76,11 +96,11 @@ export function Settings() {
   };
 
   const handleAddCategory = async () => {
-    if (!cName) return alert("Masukkan nama kategori");
+    if (!cName.trim()) return alert("Masukkan nama kategori");
     try {
       await apiFetch("/api/categories", {
         method: "POST",
-        body: JSON.stringify({ name: cName, type: cType }),
+        body: JSON.stringify({ name: cName.trim(), type: cType }),
       });
       setIsCatOpen(false);
       setCName("");
@@ -91,7 +111,7 @@ export function Settings() {
   };
 
   const handleDeleteWallet = async (id: string) => {
-    if (!confirm("Hapus dompet ini?")) return;
+    if (!confirm("Hapus dompet ini? Riwayat transaksi lama mungkin terpengaruh.")) return;
     try {
       await apiFetch(`/api/wallets/${id}`, { method: "DELETE" });
       await loadData();
@@ -132,7 +152,7 @@ export function Settings() {
         setOldPin("");
         setNewPin("");
         setPinStep("old");
-        alert("PIN berhasil diubah!");
+        alert("Master PIN berhasil diperbarui!");
       } catch (err: any) {
         setPinError(err.message || "Gagal mengubah PIN");
         setOldPin("");
@@ -145,44 +165,63 @@ export function Settings() {
   };
 
   return (
-    <div className="space-y-6 pt-6">
-      <h1 className="text-2xl font-extrabold text-[#1D1D1F] tracking-tight">Setelan Aplikasi</h1>
+    <div className="space-y-6 pt-4">
+      {/* Top Header */}
+      <div>
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Preferensi & Konfigurasi
+        </span>
+        <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+          Setelan Aplikasi
+        </h1>
+      </div>
 
       {/* Section Wallets */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase">
-            <Wallet className="w-4 h-4" /> Dompet & Rekening
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <Wallet className="w-3.5 h-3.5" /> Dompet & Rekening ({wallets.length})
           </div>
-          <Button size="sm" variant="ghost" onClick={() => setIsWalletOpen(true)}>
-            <Plus className="w-4 h-4 mr-0.5" /> Tambah
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setIsWalletOpen(true)}
+            className="text-xs text-[#007AFF] font-bold"
+          >
+            <Plus className="w-3.5 h-3.5 mr-0.5" /> Tambah
           </Button>
         </div>
-        <Card className="p-2 divide-y divide-gray-100">
+
+        <Card className="p-2 divide-y divide-slate-100">
           {wallets.length === 0 ? (
-            <p className="p-4 text-xs text-gray-400 text-center">Belum ada dompet. Silakan tambah.</p>
+            <p className="p-5 text-xs text-slate-400 text-center">
+              Belum ada dompet. Tambahkan rekening atau dompet kas Anda.
+            </p>
           ) : (
             wallets.map((w) => (
               <div key={w.id} className="p-3 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className="w-3 h-3 rounded-full shrink-0"
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-bold shadow-sm"
                     style={{ backgroundColor: w.color || "#007AFF" }}
-                  />
+                  >
+                    <Wallet className="w-4 h-4" />
+                  </div>
                   <div>
-                    <p className="text-xs font-bold text-[#1D1D1F]">{w.name}</p>
-                    <p className="text-[10px] text-gray-400 capitalize">{w.type}</p>
+                    <p className="text-xs font-bold text-slate-900">{w.name}</p>
+                    <p className="text-[10px] text-slate-400 uppercase font-medium">{w.type}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-extrabold text-gray-700">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs font-bold text-slate-800 num-tabular">
                     {formatCurrency(w.current_balance)}
                   </span>
                   <button
                     onClick={() => handleDeleteWallet(w.id)}
-                    className="text-gray-300 hover:text-red-500 p-1 cursor-pointer"
+                    className="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg press-scale cursor-pointer"
+                    title="Hapus Dompet"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -192,32 +231,38 @@ export function Settings() {
       </div>
 
       {/* Section Categories */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase">
-            <Tag className="w-4 h-4" /> Kategori Transaksi
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <Tag className="w-3.5 h-3.5" /> Kategori Transaksi ({categories.length})
           </div>
-          <Button size="sm" variant="ghost" onClick={() => setIsCatOpen(true)}>
-            <Plus className="w-4 h-4 mr-0.5" /> Tambah
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setIsCatOpen(true)}
+            className="text-xs text-[#007AFF] font-bold"
+          >
+            <Plus className="w-3.5 h-3.5 mr-0.5" /> Tambah
           </Button>
         </div>
-        <Card className="p-3">
+
+        <Card className="p-3.5">
           <div className="flex flex-wrap gap-1.5">
             {categories.map((c) => (
               <span
                 key={c.id}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold pl-2.5 pr-1.5 py-1 bg-gray-100 rounded-lg text-gray-700"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold pl-2.5 pr-1.5 py-1.5 bg-slate-100/90 rounded-xl text-slate-700 border border-slate-200/50"
               >
                 <span
-                  className={`w-1.5 h-1.5 rounded-full ${
+                  className={`w-2 h-2 rounded-full ${
                     c.type === "income" ? "bg-emerald-500" : "bg-rose-500"
                   }`}
                 />
                 {c.name}
                 <button
                   onClick={() => handleDeleteCategory(c.id)}
-                  className="text-gray-400 hover:text-red-500 ml-0.5 cursor-pointer"
-                  title="Hapus kategori"
+                  className="text-slate-400 hover:text-rose-500 ml-0.5 p-0.5 rounded cursor-pointer"
+                  title="Hapus Kategori"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -227,89 +272,129 @@ export function Settings() {
         </Card>
       </div>
 
-      {/* Section Security */}
-      <div className="space-y-2">
-        <Button
-          variant="secondary"
-          size="lg"
-          onClick={() => {
-            setPinStep("old");
-            setOldPin("");
-            setNewPin("");
-            setPinError(null);
-            setIsPinOpen(true);
-          }}
-        >
-          <KeyRound className="w-4 h-4 mr-2" /> Ubah Master PIN
-        </Button>
+      {/* Section Security & Passcode */}
+      <div className="space-y-2.5">
+        <div className="px-1 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5" /> Keamanan Akun
+        </div>
+
+        <Card className="p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-bold text-slate-900">Master PIN 6-Digit</p>
+              <p className="text-[11px] text-slate-400">
+                Lindungi akses transaksi dan data finansial pribadi
+              </p>
+            </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setPinStep("old");
+                setOldPin("");
+                setNewPin("");
+                setPinError(null);
+                setIsPinOpen(true);
+              }}
+              className="text-xs font-bold"
+            >
+              <KeyRound className="w-3.5 h-3.5 mr-1 text-[#007AFF]" /> Ubah PIN
+            </Button>
+          </div>
+        </Card>
       </div>
 
-      {/* Section Info */}
-      <Card className="p-4 flex items-center gap-3 bg-blue-50/50 border-blue-100">
-        <Info className="w-5 h-5 text-[#007AFF]" />
-        <div className="text-xs text-gray-600">
-          <p className="font-bold text-[#1D1D1F]">My Finance PWA v1.0</p>
-          <p className="text-[11px] text-gray-400">Edge Workers + D1 • finance.abdussalim.my.id</p>
+      {/* Section Architecture & System Badge */}
+      <Card className="p-4 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 border-blue-100/80">
+        <div className="flex items-start gap-3">
+          <div className="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+            <Cpu className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-bold text-slate-900">My Finance PWA v1.0</p>
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-1.5 py-0.2 rounded-full">
+                &lt; 10ms CPU
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Cloudflare Pages + Edge Workers + D1 Database
+            </p>
+            <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
+              <Layers className="w-3 h-3" /> finance.abdussalim.my.id
+            </p>
+          </div>
         </div>
       </Card>
 
-      {/* Logout */}
-      <Button variant="danger" size="lg" onClick={logout}>
-        <LogOut className="w-4 h-4 mr-2" /> Kunci Aplikasi (Logout)
+      {/* Logout Button */}
+      <Button variant="danger" size="lg" onClick={logout} className="gap-2 shadow-sm">
+        <LogOut className="w-4 h-4" /> Kunci Aplikasi (Logout)
       </Button>
 
       {/* Add Wallet Modal */}
       <BottomSheet
         isOpen={isWalletOpen}
         onClose={() => setIsWalletOpen(false)}
-        title="Tambah Dompet"
+        title="Tambah Dompet Baru"
+        subtitle="Buat rekening bank, e-wallet, atau dompet tunai"
       >
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
-            <label className="text-[11px] font-bold text-gray-500 uppercase">Nama Dompet</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+              Nama Dompet
+            </label>
             <input
               type="text"
-              placeholder="Contoh: BCA, Tunai, GoPay"
-              className="w-full mt-1 p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+              placeholder="Contoh: BCA, Dompet Tunai, GoPay, Bibit"
+              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#007AFF]"
               value={wName}
               onChange={(e) => setWName(e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="text-[11px] font-bold text-gray-500 uppercase">Tipe</label>
-              <select
-                className="w-full mt-1 p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
-                value={wType}
-                onChange={(e) => setWType(e.target.value as any)}
-              >
-                <option value="bank">Bank</option>
-                <option value="cash">Tunai (Cash)</option>
-                <option value="ewallet">E-Wallet</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-[11px] font-bold text-gray-500 uppercase">Warna</label>
-              <div className="flex gap-1.5 mt-2">
-                {WALLET_COLORS.map((col) => (
-                  <button
-                    key={col}
-                    type="button"
-                    onClick={() => setWColor(col)}
-                    className={`w-6 h-6 rounded-full cursor-pointer transition-transform ${
-                      wColor === col ? "scale-115 ring-2 ring-offset-1 ring-gray-400" : ""
-                    }`}
-                    style={{ backgroundColor: col }}
-                  />
-                ))}
-              </div>
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+              Tipe Dompet
+            </label>
+            <SegmentedControl
+              options={[
+                { value: "bank", label: "Bank" },
+                { value: "cash", label: "Tunai" },
+                { value: "ewallet", label: "E-Wallet" },
+              ]}
+              value={wType}
+              onChange={(val) => setWType(val as any)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+              Warna Kartu
+            </label>
+            <div className="flex gap-2 py-1">
+              {WALLET_COLORS.map((col) => (
+                <button
+                  key={col}
+                  type="button"
+                  onClick={() => setWColor(col)}
+                  className={`w-7 h-7 rounded-full cursor-pointer transition-transform press-scale ${
+                    wColor === col ? "scale-110 ring-2 ring-offset-2 ring-slate-400 shadow-sm" : ""
+                  }`}
+                  style={{ backgroundColor: col }}
+                />
+              ))}
             </div>
           </div>
+
           <div>
-            <label className="text-[11px] font-bold text-gray-500 uppercase">Saldo Awal</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+              Saldo Awal
+            </label>
             <NumberPad value={wBalance} onChange={setWBalance} />
           </div>
-          <Button size="lg" onClick={handleAddWallet} className="mt-4">
+
+          <Button size="lg" onClick={handleAddWallet} className="mt-2">
             Simpan Dompet
           </Button>
         </div>
@@ -319,31 +404,38 @@ export function Settings() {
       <BottomSheet
         isOpen={isCatOpen}
         onClose={() => setIsCatOpen(false)}
-        title="Tambah Kategori"
+        title="Tambah Kategori Baru"
+        subtitle="Kelompokkan transaksi pemasukan dan pengeluaran"
       >
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
-            <label className="text-[11px] font-bold text-gray-500 uppercase">Nama Kategori</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+              Nama Kategori
+            </label>
             <input
               type="text"
-              placeholder="Contoh: Kopi, Laundry, Freelance"
-              className="w-full mt-1 p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+              placeholder="Contoh: Kopi & Cafe, Transportasi, Gaji Pokok"
+              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#007AFF]"
               value={cName}
               onChange={(e) => setCName(e.target.value)}
             />
           </div>
-          <div>
-            <label className="text-[11px] font-bold text-gray-500 uppercase">Tipe</label>
-            <select
-              className="w-full mt-1 p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+              Jenis Kategori
+            </label>
+            <SegmentedControl
+              options={[
+                { value: "expense", label: "Pengeluaran" },
+                { value: "income", label: "Pemasukan" },
+              ]}
               value={cType}
-              onChange={(e) => setCType(e.target.value as any)}
-            >
-              <option value="expense">Pengeluaran</option>
-              <option value="income">Pemasukan</option>
-            </select>
+              onChange={(val) => setCType(val as any)}
+            />
           </div>
-          <Button size="lg" onClick={handleAddCategory} className="mt-4">
+
+          <Button size="lg" onClick={handleAddCategory} className="mt-2">
             Simpan Kategori
           </Button>
         </div>
@@ -354,17 +446,21 @@ export function Settings() {
         isOpen={isPinOpen}
         onClose={() => setIsPinOpen(false)}
         title="Ubah Master PIN"
+        subtitle={
+          pinStep === "old"
+            ? "Masukkan 6-digit PIN lama Anda"
+            : "Masukkan 6-digit PIN baru yang ingin digunakan"
+        }
       >
-        <div className="text-center py-2">
-          <p className="text-sm font-semibold text-gray-700">
-            {pinStep === "old" ? "Masukkan PIN Lama (6 digit)" : "Masukkan PIN Baru (6 digit)"}
-          </p>
+        <div className="text-center py-4">
           <PinInput
             value={pinStep === "old" ? oldPin : newPin}
             onChange={pinStep === "old" ? handleOldPin : handleNewPin}
             disabled={pinLoading}
           />
-          {pinError ? <p className="text-xs text-red-500 font-semibold">{pinError}</p> : null}
+          {pinError ? (
+            <p className="text-xs text-rose-500 font-bold mt-2 animate-shake">{pinError}</p>
+          ) : null}
         </div>
       </BottomSheet>
     </div>

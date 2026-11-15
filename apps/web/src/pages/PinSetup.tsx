@@ -15,7 +15,7 @@ export function PinSetup() {
     setFirstPin(pin);
     setError(null);
     if (pin.length === 6) {
-      setTimeout(() => setStep("confirm"), 200);
+      setTimeout(() => setStep("confirm"), 180);
     }
   };
 
@@ -24,7 +24,7 @@ export function PinSetup() {
     setError(null);
     if (pin.length === 6) {
       if (pin !== firstPin) {
-        setError("PIN tidak cocok! Silakan coba lagi.");
+        setError("PIN tidak cocok! Silakan ulangi.");
         setConfirmPin("");
         return;
       }
@@ -41,27 +41,37 @@ export function PinSetup() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center">
-      <div className="w-16 h-16 bg-blue-50 text-[#007AFF] rounded-3xl flex items-center justify-center mb-6">
+    <div className="flex flex-col items-center justify-center min-h-dvh px-6 py-8 text-center max-w-sm mx-auto">
+      {/* Icon */}
+      <div className="w-16 h-16 glass-surface text-[#007AFF] rounded-3xl flex items-center justify-center mb-5 border border-white/80 shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
         <ShieldCheck className="w-8 h-8" />
       </div>
-      <h2 className="text-2xl font-bold tracking-tight text-[#1D1D1F]">
+
+      <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
         {step === "create" ? "Buat Master PIN" : "Konfirmasi PIN"}
-      </h2>
-      <p className="text-sm text-gray-500 mt-2 max-w-xs">
+      </h1>
+      <p className="text-xs font-medium text-slate-400 mt-1 mb-2 max-w-xs">
         {step === "create"
-          ? "Atur 6-digit PIN untuk mengamankan data keuangan pribadi Anda."
-          : "Masukkan kembali 6-digit PIN yang Anda buat tadi."}
+          ? "Atur 6-digit PIN untuk mengamankan seluruh transaksi dan catatan finansial Anda."
+          : "Masukkan kembali 6-digit PIN yang telah Anda buat."}
       </p>
 
       <PinInput
         value={step === "create" ? firstPin : confirmPin}
         onChange={step === "create" ? handleFirstPin : handleConfirmPin}
         disabled={loading}
+        showKeypad
       />
 
-      {error ? <p className="text-sm text-red-500 font-medium">{error}</p> : null}
-      {loading ? <p className="text-sm text-gray-400 mt-2">Menyimpan PIN...</p> : null}
+      {error ? (
+        <p className="text-xs text-rose-500 font-bold mt-2 animate-shake">{error}</p>
+      ) : null}
+      {loading ? (
+        <p className="text-xs text-slate-400 font-medium mt-3 flex items-center gap-1.5 justify-center">
+          <span className="w-3.5 h-3.5 border-2 border-[#007AFF] border-t-transparent rounded-full animate-spin" />
+          Menyimpan PIN...
+        </p>
+      ) : null}
     </div>
   );
 }

@@ -3,13 +3,25 @@ import { apiFetch } from "../lib/api-client";
 import { Card } from "../components/ui/Card";
 import { formatCurrency, relativeDate } from "../lib/format";
 import { DashboardSummary, WalletWithBalance } from "@my-finance/shared";
-import { Wallet, ArrowDownRight, ArrowUpRight, HandCoins, ArrowRight } from "lucide-react";
+import {
+  Wallet,
+  ArrowDownRight,
+  ArrowUpRight,
+  HandCoins,
+  ArrowRight,
+  Eye,
+  EyeOff,
+  TrendingUp,
+  CreditCard,
+  PlusCircle,
+} from "lucide-react";
 import { Link } from "react-router";
 
 export function Dashboard() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [wallets, setWallets] = useState<WalletWithBalance[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showBalance, setShowBalance] = useState(true);
 
   useEffect(() => {
     async function loadData() {
@@ -31,135 +43,260 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <div className="py-8 space-y-4 animate-pulse">
-        <div className="h-28 bg-white rounded-3xl" />
-        <div className="h-32 bg-white rounded-3xl" />
+      <div className="py-6 space-y-4 animate-pulse">
+        <div className="h-36 bg-slate-200/60 rounded-3xl" />
+        <div className="h-24 bg-slate-200/60 rounded-3xl" />
+        <div className="h-36 bg-slate-200/60 rounded-3xl" />
       </div>
     );
   }
 
+  const netSavings = (summary?.month_income || 0) - (summary?.month_expense || 0);
+  const incomeTotal = summary?.month_income || 0;
+  const expenseTotal = summary?.month_expense || 0;
+  const flowTotal = incomeTotal + expenseTotal;
+  const incomePercent = flowTotal > 0 ? Math.round((incomeTotal / flowTotal) * 100) : 50;
+
   return (
-    <div className="space-y-6 pt-6">
-      {/* Header */}
-      <div>
-        <p className="text-xs uppercase tracking-wider font-semibold text-gray-400">Ikhtisar Keuangan</p>
-        <h1 className="text-3xl font-extrabold text-[#1D1D1F] tracking-tight mt-0.5">
-          {formatCurrency(summary?.total_balance || 0)}
+    <div className="space-y-6 pt-4">
+      {/* Top Bar with Date & Eye Privacy Toggle */}
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            {new Date().toLocaleDateString("id-ID", {
+              weekday: "long",
+              day: "numeric",
+              month: "short",
+            })}
+          </span>
+          <h2 className="text-sm font-bold text-slate-800">Ringkasan Finansial</h2>
+        </div>
+        <button
+          onClick={() => setShowBalance(!showBalance)}
+          className="w-9 h-9 rounded-full glass-surface flex items-center justify-center text-slate-500 hover:text-slate-800 press-scale cursor-pointer"
+          title={showBalance ? "Sembunyikan Saldo" : "Tampilkan Saldo"}
+        >
+          {showBalance ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+        </button>
+      </div>
+
+      {/* Hero Net Worth Card */}
+      <div className="glass-hero rounded-3xl p-6 relative overflow-hidden border border-white/80">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Total Saldo Bersih
+          </p>
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+            <TrendingUp className="w-3 h-3" />
+            Aktif
+          </span>
+        </div>
+
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 num-tabular">
+          {showBalance ? formatCurrency(summary?.total_balance || 0) : "••••••••"}
         </h1>
+
+        <div className="mt-4 pt-3 border-t border-slate-100/80 flex items-center justify-between text-xs">
+          <span className="text-slate-400 font-medium">Arus Kas Bersih Bulan Ini</span>
+          <span
+            className={`font-bold num-tabular ${
+              netSavings >= 0 ? "text-emerald-600" : "text-rose-600"
+            }`}
+          >
+            {showBalance
+              ? `${netSavings >= 0 ? "+" : ""}${formatCurrency(netSavings)}`
+              : "••••••"}
+          </span>
+        </div>
       </div>
 
-      {/* Monthly Flow Cards */}
-      <div className="grid grid-cols-2 gap-3">
-        <Card className="p-4 bg-emerald-50/50 border-emerald-100">
-          <div className="flex items-center gap-1.5 text-emerald-600 mb-1">
-            <ArrowDownRight className="w-4 h-4" />
-            <span className="text-xs font-semibold">Pemasukan</span>
-          </div>
-          <p className="text-base font-bold text-emerald-700">
-            {formatCurrency(summary?.month_income || 0)}
-          </p>
-        </Card>
-
-        <Card className="p-4 bg-rose-50/50 border-rose-100">
-          <div className="flex items-center gap-1.5 text-rose-600 mb-1">
-            <ArrowUpRight className="w-4 h-4" />
-            <span className="text-xs font-semibold">Pengeluaran</span>
-          </div>
-          <p className="text-base font-bold text-rose-700">
-            {formatCurrency(summary?.month_expense || 0)}
-          </p>
-        </Card>
-      </div>
-
-      {/* Wallets Horizontal Scroll */}
-      <div>
+      {/* Monthly Cashflow Analytics Card */}
+      <Card className="p-5">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-gray-700">Dompet & Rekening</h2>
-          <Link to="/settings" className="text-xs text-[#007AFF] font-medium flex items-center">
-            Kelola <ArrowRight className="w-3 h-3 ml-0.5" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            Arus Kas Bulan Ini
+          </h3>
+          <span className="text-[11px] font-medium text-slate-400">
+            {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="p-3 bg-emerald-50/70 rounded-2xl border border-emerald-100/60">
+            <div className="flex items-center gap-1.5 text-emerald-600 mb-1">
+              <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
+                <ArrowDownRight className="w-3 h-3" />
+              </div>
+              <span className="text-xs font-semibold">Pemasukan</span>
+            </div>
+            <p className="text-base font-bold text-emerald-700 num-tabular">
+              {showBalance ? formatCurrency(incomeTotal) : "••••••"}
+            </p>
+          </div>
+
+          <div className="p-3 bg-rose-50/70 rounded-2xl border border-rose-100/60">
+            <div className="flex items-center gap-1.5 text-rose-600 mb-1">
+              <div className="w-5 h-5 rounded-full bg-rose-100 flex items-center justify-center">
+                <ArrowUpRight className="w-3 h-3" />
+              </div>
+              <span className="text-xs font-semibold">Pengeluaran</span>
+            </div>
+            <p className="text-base font-bold text-rose-700 num-tabular">
+              {showBalance ? formatCurrency(expenseTotal) : "••••••"}
+            </p>
+          </div>
+        </div>
+
+        {/* Visual Cashflow Ratio Bar */}
+        <div className="space-y-1.5">
+          <div className="flex justify-between text-[11px] text-slate-400 font-medium">
+            <span>Pemasukan ({incomePercent}%)</span>
+            <span>Pengeluaran ({100 - incomePercent}%)</span>
+          </div>
+          <div className="w-full h-2 rounded-full bg-rose-200 overflow-hidden flex">
+            <div
+              className="h-full bg-emerald-500 transition-all duration-500 rounded-l-full"
+              style={{ width: `${incomePercent}%` }}
+            />
+          </div>
+        </div>
+      </Card>
+
+      {/* Wallets Horizontal Carousel */}
+      <div>
+        <div className="flex items-center justify-between mb-3 px-1">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            Dompet & Rekening ({wallets.length})
+          </h3>
+          <Link
+            to="/settings"
+            className="text-xs font-semibold text-[#007AFF] flex items-center gap-0.5 hover:underline"
+          >
+            Kelola <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
+
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
           {wallets.length === 0 ? (
-            <div className="p-4 text-xs text-gray-400 bg-white rounded-2xl w-full text-center">
-              Belum ada dompet. Tambahkan di menu Setelan.
+            <div className="p-5 text-xs text-slate-400 glass-surface rounded-2xl w-full text-center">
+              Belum ada dompet. Tambahkan rekening atau dompet di menu Setelan.
             </div>
           ) : (
             wallets.map((w) => (
               <div
                 key={w.id}
-                className="min-w-[140px] bg-white rounded-2xl p-4 border border-black/[0.03] apple-card-shadow flex flex-col justify-between"
+                className="min-w-[155px] glass-surface rounded-2xl p-4 flex flex-col justify-between border border-slate-200/50 shadow-sm"
               >
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-3">
                   <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold"
+                    className="w-7 h-7 rounded-xl flex items-center justify-center text-white text-xs font-bold shadow-sm"
                     style={{ backgroundColor: w.color || "#007AFF" }}
                   >
-                    <Wallet className="w-4 h-4" />
+                    <Wallet className="w-3.5 h-3.5" />
                   </div>
-                  <span className="text-xs font-semibold text-gray-700 truncate">{w.name}</span>
+                  <span className="text-xs font-semibold text-slate-800 truncate">{w.name}</span>
                 </div>
-                <span className="text-sm font-extrabold text-[#1D1D1F]">
-                  {formatCurrency(w.current_balance)}
-                </span>
+                <div>
+                  <p className="text-[10px] text-slate-400 uppercase font-medium">{w.type}</p>
+                  <p className="text-sm font-extrabold text-slate-900 num-tabular">
+                    {showBalance ? formatCurrency(w.current_balance) : "••••••"}
+                  </p>
+                </div>
               </div>
             ))
           )}
+          <Link
+            to="/settings"
+            className="min-w-[120px] glass-surface rounded-2xl p-4 flex flex-col items-center justify-center text-center border border-dashed border-slate-300 text-slate-400 hover:text-[#007AFF] hover:border-[#007AFF] press-scale"
+          >
+            <PlusCircle className="w-6 h-6 mb-1 text-slate-400" />
+            <span className="text-xs font-semibold">Tambah</span>
+          </Link>
         </div>
       </div>
 
       {/* Debt & Receivable Quick Highlight */}
       <Link to="/debts">
-        <Card className="p-4 flex items-center justify-between bg-amber-50/50 border-amber-100">
+        <Card
+          interactive
+          className="p-4 flex items-center justify-between bg-gradient-to-r from-amber-50/70 to-orange-50/70 border-amber-200/60"
+        >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 text-white flex items-center justify-center shadow-sm">
               <HandCoins className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-amber-800">Status Hutang & Piutang</p>
-              <p className="text-xs text-amber-600 mt-0.5">
-                Hutang: <b>{formatCurrency(summary?.total_debt || 0)}</b> • Piutang:{" "}
-                <b>{formatCurrency(summary?.total_receivable || 0)}</b>
+              <p className="text-xs font-bold text-amber-900">Catatan Hutang & Piutang</p>
+              <p className="text-xs text-amber-700/90 mt-0.5 num-tabular">
+                Hutang: <b>{showBalance ? formatCurrency(summary?.total_debt || 0) : "••••"}</b> •
+                Piutang:{" "}
+                <b>{showBalance ? formatCurrency(summary?.total_receivable || 0) : "••••"}</b>
               </p>
             </div>
           </div>
-          <ArrowRight className="w-4 h-4 text-amber-600" />
+          <ArrowRight className="w-4 h-4 text-amber-700" />
         </Card>
       </Link>
 
       {/* Recent Transactions */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-gray-700">Transaksi Terakhir</h2>
-          <Link to="/transactions" className="text-xs text-[#007AFF] font-medium">
-            Semua
+        <div className="flex items-center justify-between mb-3 px-1">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            Transaksi Terakhir
+          </h3>
+          <Link
+            to="/transactions"
+            className="text-xs font-semibold text-[#007AFF] hover:underline"
+          >
+            Lihat Semua
           </Link>
         </div>
+
         <div className="space-y-2">
           {summary?.recent_transactions.length === 0 ? (
-            <p className="text-xs text-gray-400 text-center py-4 bg-white rounded-2xl">
-              Belum ada transaksi
+            <p className="text-xs text-slate-400 text-center py-6 glass-surface rounded-3xl">
+              Belum ada transaksi tercatat.
             </p>
           ) : (
             summary?.recent_transactions.map((tx) => (
-              <Card key={tx.id} className="p-3.5 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold text-[#1D1D1F]">
-                    {tx.category_name || (tx.type.includes("transfer") ? "Transfer Saldo" : "Umum")}
-                  </p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">
-                    {tx.wallet_name} • {relativeDate(tx.date)}
-                  </p>
+              <Card
+                key={tx.id}
+                className="p-3.5 flex items-center justify-between border-slate-200/40"
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-9 h-9 rounded-2xl flex items-center justify-center ${
+                      tx.type === "income" || tx.type === "transfer_in"
+                        ? "bg-emerald-50 text-emerald-600"
+                        : "bg-rose-50 text-rose-600"
+                    }`}
+                  >
+                    {tx.type === "income" || tx.type === "transfer_in" ? (
+                      <ArrowDownRight className="w-4 h-4" />
+                    ) : (
+                      <ArrowUpRight className="w-4 h-4" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">
+                      {tx.category_name ||
+                        (tx.type.includes("transfer") ? "Transfer Antar Dompet" : "Pengeluaran")}
+                    </p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      {tx.wallet_name} • {relativeDate(tx.date)}
+                    </p>
+                  </div>
                 </div>
+
                 <span
-                  className={`text-xs font-extrabold ${
+                  className={`text-xs font-extrabold num-tabular ${
                     tx.type === "income" || tx.type === "transfer_in"
                       ? "text-emerald-600"
                       : "text-rose-600"
                   }`}
                 >
                   {tx.type === "income" || tx.type === "transfer_in" ? "+" : "-"}
-                  {formatCurrency(tx.amount)}
+                  {showBalance ? formatCurrency(tx.amount) : "••••"}
                 </span>
               </Card>
             ))

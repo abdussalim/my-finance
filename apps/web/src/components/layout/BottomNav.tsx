@@ -10,8 +10,8 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/80 apple-blur border-t border-black/[0.04] pb-safe">
-      <div className="max-w-md mx-auto flex items-center justify-around h-16 px-2">
+    <nav className="fixed bottom-4 left-4 right-4 max-w-sm mx-auto z-40 pointer-events-auto">
+      <div className="glass-nav rounded-full p-1.5 flex items-center justify-between shadow-[0_12px_36px_-6px_rgba(15,23,42,0.14)]">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -19,15 +19,21 @@ export function BottomNav() {
               key={tab.to}
               to={tab.to}
               className={({ isActive }) =>
-                `flex flex-col items-center justify-center flex-1 py-1 transition-all duration-200 cursor-pointer ${
+                `flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-full transition-all duration-200 cursor-pointer press-scale select-none ${
                   isActive
-                    ? "text-[#007AFF] font-bold scale-105"
-                    : "text-gray-400 hover:text-gray-600 font-medium"
+                    ? "bg-[#007AFF] text-white shadow-[0_4px_12px_rgba(0,122,255,0.35)]"
+                    : "text-slate-400 hover:text-slate-600"
                 }`
               }
             >
-              <Icon className="w-5 h-5 mb-0.5" />
-              <span className="text-[10px] tracking-tight">{tab.label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon className={`w-4 h-4 mb-0.5 transition-transform ${isActive ? "scale-110" : ""}`} />
+                  <span className={`text-[10px] tracking-tight ${isActive ? "font-bold" : "font-medium"}`}>
+                    {tab.label}
+                  </span>
+                </>
+              )}
             </NavLink>
           );
         })}

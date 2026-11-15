@@ -3,6 +3,7 @@ import { cn } from "../../lib/cn";
 export interface SegmentedOption<T extends string> {
   value: T;
   label: string;
+  icon?: React.ReactNode;
 }
 
 export interface SegmentedControlProps<T extends string> {
@@ -10,6 +11,7 @@ export interface SegmentedControlProps<T extends string> {
   value: T;
   onChange: (val: T) => void;
   className?: string;
+  size?: "sm" | "md";
 }
 
 export function SegmentedControl<T extends string>({
@@ -17,11 +19,12 @@ export function SegmentedControl<T extends string>({
   value,
   onChange,
   className,
+  size = "md",
 }: SegmentedControlProps<T>) {
   return (
     <div
       className={cn(
-        "flex p-1 bg-gray-200/70 rounded-xl relative",
+        "flex p-1 bg-slate-200/60 rounded-2xl relative select-none",
         className
       )}
     >
@@ -33,13 +36,15 @@ export function SegmentedControl<T extends string>({
             type="button"
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer",
+              "flex-1 flex items-center justify-center gap-1.5 font-semibold rounded-xl transition-all duration-200 cursor-pointer press-scale",
+              size === "sm" ? "py-1.5 text-xs" : "py-2 text-xs",
               active
-                ? "bg-white text-[#1D1D1F] shadow-sm scale-[0.99]"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-white text-slate-900 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                : "text-slate-500 hover:text-slate-800"
             )}
           >
-            {opt.label}
+            {opt.icon}
+            <span>{opt.label}</span>
           </button>
         );
       })}
