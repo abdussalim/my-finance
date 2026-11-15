@@ -13,8 +13,15 @@ function AppRoutes() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F5F7]">
-        <div className="w-8 h-8 border-2 border-[#007AFF] border-t-transparent rounded-full animate-spin" />
+      <div
+        className="flex items-center justify-center min-h-dvh bg-[#F6F8FA]"
+        role="status"
+        aria-label="Memuat aplikasi…"
+      >
+        <div
+          className="w-8 h-8 border-2 border-[#007AFF] border-t-transparent rounded-full animate-spin"
+          aria-hidden="true"
+        />
       </div>
     );
   }

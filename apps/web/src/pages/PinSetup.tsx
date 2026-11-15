@@ -43,7 +43,10 @@ export function PinSetup() {
   return (
     <div className="flex flex-col items-center justify-center min-h-dvh px-6 py-8 text-center max-w-sm mx-auto">
       {/* Icon */}
-      <div className="w-16 h-16 glass-surface text-[#007AFF] rounded-3xl flex items-center justify-center mb-5 border border-white/80 shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
+      <div
+        className="w-16 h-16 glass-surface text-[#007AFF] rounded-3xl flex items-center justify-center mb-5 border border-white/80 shadow-[0_8px_24px_rgba(0,0,0,0.04)]"
+        aria-hidden="true"
+      >
         <ShieldCheck className="w-8 h-8" />
       </div>
 
@@ -64,12 +67,21 @@ export function PinSetup() {
       />
 
       {error ? (
-        <p className="text-xs text-rose-500 font-bold mt-2 animate-shake">{error}</p>
+        <p role="alert" aria-live="polite" className="text-xs text-rose-500 font-bold mt-2">
+          {error}
+        </p>
       ) : null}
       {loading ? (
-        <p className="text-xs text-slate-400 font-medium mt-3 flex items-center gap-1.5 justify-center">
-          <span className="w-3.5 h-3.5 border-2 border-[#007AFF] border-t-transparent rounded-full animate-spin" />
-          Menyimpan PIN...
+        <p
+          role="status"
+          aria-live="polite"
+          className="text-xs text-slate-400 font-medium mt-3 flex items-center gap-1.5 justify-center"
+        >
+          <span
+            className="w-3.5 h-3.5 border-2 border-[#007AFF] border-t-transparent rounded-full animate-spin"
+            aria-hidden="true"
+          />
+          Menyimpan PIN…
         </p>
       ) : null}
     </div>

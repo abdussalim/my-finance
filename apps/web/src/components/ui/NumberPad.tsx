@@ -35,11 +35,14 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
   return (
     <div className="flex flex-col items-center w-full">
       {/* Amount Display */}
-      <div className="w-full text-center py-5 my-2 glass-hero rounded-3xl border border-slate-200/60 shadow-sm">
+      <div className="w-full text-center py-5 my-2 glass-hero rounded-3xl border border-white/80 shadow-sm">
         <p className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase mb-1">
           Nominal Transaksi
         </p>
-        <div className="text-3xl font-extrabold tracking-tight text-slate-900 num-tabular">
+        <div
+          className="text-3xl font-extrabold tracking-tight text-slate-900 num-tabular"
+          aria-live="polite"
+        >
           {formatCurrency(value)}
         </div>
       </div>
@@ -55,8 +58,9 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
           <button
             key={item.label}
             type="button"
+            aria-label={`Tambah ${item.label}`}
             onClick={() => handleQuickAdd(item.val)}
-            className="py-1.5 px-1 bg-slate-100 hover:bg-slate-200/80 active:bg-slate-300 rounded-xl text-xs font-semibold text-slate-700 press-scale cursor-pointer"
+            className="py-1.5 px-1 bg-white/70 hover:bg-white active:bg-slate-100 rounded-xl text-xs font-semibold text-slate-700 press-scale cursor-pointer border border-slate-200/50 shadow-xs focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
           >
             {item.label}
           </button>
@@ -69,18 +73,20 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
           <button
             key={btn}
             type="button"
+            aria-label={`Digit ${btn}`}
             onClick={() => handleDigit(btn)}
-            className="h-13 bg-slate-100/90 active:bg-slate-200 rounded-2xl text-xl font-bold text-slate-800 press-scale flex items-center justify-center cursor-pointer select-none"
+            className="h-13 bg-white/75 hover:bg-white active:bg-slate-100 rounded-2xl text-xl font-bold text-slate-800 press-scale flex items-center justify-center cursor-pointer select-none border border-white/80 shadow-xs focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
           >
             {btn}
           </button>
         ))}
         <button
           type="button"
+          aria-label="Hapus digit terakhir"
           onClick={handleDelete}
-          className="h-13 bg-slate-100/90 active:bg-slate-200 rounded-2xl text-xl font-semibold text-slate-500 press-scale flex items-center justify-center cursor-pointer select-none"
+          className="h-13 bg-white/75 hover:bg-white active:bg-slate-100 rounded-2xl text-xl font-semibold text-slate-500 press-scale flex items-center justify-center cursor-pointer select-none border border-white/80 shadow-xs focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
         >
-          <Delete className="w-5 h-5 text-slate-600" />
+          <Delete className="w-5 h-5 text-slate-600" aria-hidden="true" />
         </button>
       </div>
     </div>

@@ -12,6 +12,7 @@ export interface SegmentedControlProps<T extends string> {
   onChange: (val: T) => void;
   className?: string;
   size?: "sm" | "md";
+  ariaLabel?: string;
 }
 
 export function SegmentedControl<T extends string>({
@@ -20,11 +21,14 @@ export function SegmentedControl<T extends string>({
   onChange,
   className,
   size = "md",
+  ariaLabel = "Opsi filter",
 }: SegmentedControlProps<T>) {
   return (
     <div
+      role="tablist"
+      aria-label={ariaLabel}
       className={cn(
-        "flex p-1 bg-slate-200/60 rounded-2xl relative select-none",
+        "flex p-1 bg-slate-200/50 backdrop-blur-md rounded-2xl relative select-none border border-white/60",
         className
       )}
     >
@@ -33,13 +37,15 @@ export function SegmentedControl<T extends string>({
         return (
           <button
             key={opt.value}
+            role="tab"
+            aria-selected={active}
             type="button"
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex-1 flex items-center justify-center gap-1.5 font-semibold rounded-xl transition-all duration-200 cursor-pointer press-scale",
+              "flex-1 flex items-center justify-center gap-1.5 font-semibold rounded-xl transition-colors duration-150 cursor-pointer press-scale focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none",
               size === "sm" ? "py-1.5 text-xs" : "py-2 text-xs",
               active
-                ? "bg-white text-slate-900 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                ? "bg-white/95 text-slate-900 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-white/80"
                 : "text-slate-500 hover:text-slate-800"
             )}
           >

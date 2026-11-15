@@ -100,7 +100,7 @@ export function Transactions() {
   }, [filteredTransactions]);
 
   const handleCreate = async () => {
-    if (amount <= 0) return alert("Masukkan nominal transaksi");
+    if (amount <= 0) return alert("Masukkan nominal transaksi yang valid");
     if (!walletId) return alert("Pilih dompet terlebih dahulu di menu Setelan");
 
     setLoading(true);
@@ -142,7 +142,7 @@ export function Transactions() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Hapus transaksi ini? Saldo dompet akan disesuaikan kembali.")) return;
+    if (!confirm("Hapus transaksi ini? Saldo dompet terkait akan disesuaikan kembali.")) return;
     try {
       await apiFetch(`/api/transactions/${id}`, { method: "DELETE" });
       await loadData();
@@ -165,14 +165,20 @@ export function Transactions() {
             Riwayat Transaksi
           </h1>
         </div>
-        <Button size="sm" onClick={() => setIsAddOpen(true)} className="gap-1 shadow-sm">
-          <Plus className="w-4 h-4" /> Catat
+        <Button
+          size="sm"
+          onClick={() => setIsAddOpen(true)}
+          className="gap-1 shadow-sm"
+          aria-label="Catat Transaksi Baru"
+        >
+          <Plus className="w-4 h-4" aria-hidden="true" /> Catat
         </Button>
       </div>
 
       {/* Filter Tabs */}
       <div className="space-y-2">
         <SegmentedControl
+          ariaLabel="Filter Jenis Transaksi"
           options={[
             { value: "all", label: "Semua" },
             { value: "expense", label: "Keluar" },
@@ -184,13 +190,18 @@ export function Transactions() {
         />
 
         {wallets.length > 1 ? (
-          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          <div
+            className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none"
+            role="group"
+            aria-label="Filter berdasarkan dompet"
+          >
             <button
               type="button"
               onClick={() => setFilterWallet("")}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all press-scale cursor-pointer ${
+              aria-pressed={filterWallet === ""}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
                 filterWallet === ""
-                  ? "bg-slate-900 text-white shadow-sm"
+                  ? "bg-slate-900 text-white shadow-xs"
                   : "glass-surface text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -201,7 +212,8 @@ export function Transactions() {
                 key={w.id}
                 type="button"
                 onClick={() => setFilterWallet(w.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all press-scale flex items-center gap-1.5 cursor-pointer ${
+                aria-pressed={filterWallet === w.id}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors duration-150 press-scale flex items-center gap-1.5 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
                   filterWallet === w.id
                     ? "bg-[#007AFF] text-white shadow-[0_2px_8px_rgba(0,122,255,0.3)]"
                     : "glass-surface text-slate-600 hover:text-slate-900"
@@ -210,6 +222,7 @@ export function Transactions() {
                 <span
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: w.color || "#007AFF" }}
+                  aria-hidden="true"
                 />
                 {w.name}
               </button>
@@ -227,7 +240,7 @@ export function Transactions() {
             description="Tidak ada riwayat transaksi pada filter ini. Mulai catat keuangan harian Anda."
             action={
               <Button size="sm" onClick={() => setIsAddOpen(true)}>
-                <Plus className="w-4 h-4 mr-1" /> Catat Sekarang
+                <Plus className="w-4 h-4 mr-1" aria-hidden="true" /> Catat Sekarang
               </Button>
             }
           />
@@ -263,11 +276,11 @@ export function Transactions() {
                       }`}
                     >
                       {tx.type === "income" || tx.type === "transfer_in" ? (
-                        <ArrowDownRight className="w-5 h-5" />
+                        <ArrowDownRight className="w-5 h-5" aria-hidden="true" />
                       ) : tx.type === "expense" ? (
-                        <ArrowUpRight className="w-5 h-5" />
+                        <ArrowUpRight className="w-5 h-5" aria-hidden="true" />
                       ) : (
-                        <ArrowRightLeft className="w-4 h-4" />
+                        <ArrowRightLeft className="w-4 h-4" aria-hidden="true" />
                       )}
                     </div>
                     <div>
@@ -295,11 +308,12 @@ export function Transactions() {
                       {formatCurrency(tx.amount)}
                     </span>
                     <button
+                      type="button"
                       onClick={() => handleDelete(tx.id)}
-                      className="text-slate-300 hover:text-rose-500 p-1 rounded-lg press-scale cursor-pointer"
-                      title="Hapus Transaksi"
+                      className="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                      aria-label={`Hapus transaksi ${tx.note || tx.category_name || "ini"}`}
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
                   </div>
                 </Card>
@@ -309,7 +323,7 @@ export function Transactions() {
         )}
       </div>
 
-      {/* Input Modal */}
+      {/* Input Bottom Sheet */}
       <BottomSheet
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
@@ -318,6 +332,7 @@ export function Transactions() {
       >
         <div className="space-y-4">
           <SegmentedControl
+            ariaLabel="Pilih Jenis Transaksi"
             options={[
               { value: "expense", label: "Pengeluaran" },
               { value: "income", label: "Pemasukan" },
@@ -335,24 +350,26 @@ export function Transactions() {
           <div className="space-y-3 pt-2">
             {/* Wallet Selection */}
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
-                <WalletIcon className="w-3.5 h-3.5" /> Sumber Dompet
-              </label>
-              <div className="grid grid-cols-2 gap-2">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                <WalletIcon className="w-3.5 h-3.5" aria-hidden="true" /> Sumber Dompet
+              </span>
+              <div className="grid grid-cols-2 gap-2" role="group" aria-label="Pilih dompet sumber">
                 {wallets.map((w) => (
                   <button
                     key={w.id}
                     type="button"
                     onClick={() => setWalletId(w.id)}
-                    className={`p-2.5 rounded-2xl border text-left flex items-center gap-2 transition-all press-scale cursor-pointer ${
+                    aria-pressed={walletId === w.id}
+                    className={`p-2.5 rounded-2xl border text-left flex items-center gap-2 transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
                       walletId === w.id
-                        ? "bg-blue-50/70 border-[#007AFF] text-slate-900 shadow-sm"
+                        ? "bg-blue-50/70 border-[#007AFF] text-slate-900 shadow-xs"
                         : "bg-slate-50 border-slate-200/80 text-slate-600"
                     }`}
                   >
                     <span
-                      className="w-3 h-3 rounded-full flex-shrink-0"
+                      className="w-3 h-3 rounded-full shrink-0"
                       style={{ backgroundColor: w.color || "#007AFF" }}
+                      aria-hidden="true"
                     />
                     <div className="truncate">
                       <p className="text-xs font-bold truncate">{w.name}</p>
@@ -368,10 +385,10 @@ export function Transactions() {
             {/* Target Wallet for Transfer */}
             {type === "transfer" ? (
               <div>
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
-                  <ArrowRightLeft className="w-3.5 h-3.5" /> Dompet Tujuan
-                </label>
-                <div className="grid grid-cols-2 gap-2">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                  <ArrowRightLeft className="w-3.5 h-3.5" aria-hidden="true" /> Dompet Tujuan
+                </span>
+                <div className="grid grid-cols-2 gap-2" role="group" aria-label="Pilih dompet tujuan">
                   {wallets
                     .filter((w) => w.id !== walletId)
                     .map((w) => (
@@ -379,15 +396,17 @@ export function Transactions() {
                         key={w.id}
                         type="button"
                         onClick={() => setTargetWalletId(w.id)}
-                        className={`p-2.5 rounded-2xl border text-left flex items-center gap-2 transition-all press-scale cursor-pointer ${
+                        aria-pressed={targetWalletId === w.id}
+                        className={`p-2.5 rounded-2xl border text-left flex items-center gap-2 transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
                           targetWalletId === w.id
-                            ? "bg-indigo-50/70 border-indigo-500 text-slate-900 shadow-sm"
+                            ? "bg-indigo-50/70 border-indigo-500 text-slate-900 shadow-xs"
                             : "bg-slate-50 border-slate-200/80 text-slate-600"
                         }`}
                       >
                         <span
-                          className="w-3 h-3 rounded-full flex-shrink-0"
+                          className="w-3 h-3 rounded-full shrink-0"
                           style={{ backgroundColor: w.color || "#6366F1" }}
+                          aria-hidden="true"
                         />
                         <div className="truncate">
                           <p className="text-xs font-bold truncate">{w.name}</p>
@@ -402,23 +421,28 @@ export function Transactions() {
             ) : (
               /* Categories Chips */
               <div>
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
                   Kategori
-                </label>
+                </span>
                 {currentAvailableCategories.length === 0 ? (
                   <p className="text-xs text-slate-400 py-1 italic">
                     Belum ada kategori untuk jenis ini.
                   </p>
                 ) : (
-                  <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
+                  <div
+                    className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1"
+                    role="group"
+                    aria-label="Pilih kategori"
+                  >
                     {currentAvailableCategories.map((c) => (
                       <button
                         key={c.id}
                         type="button"
                         onClick={() => setCategoryId(categoryId === c.id ? "" : c.id)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all press-scale cursor-pointer ${
+                        aria-pressed={categoryId === c.id}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
                           categoryId === c.id
-                            ? "bg-[#007AFF] text-white shadow-sm"
+                            ? "bg-[#007AFF] text-white shadow-xs"
                             : "bg-slate-100 hover:bg-slate-200/80 text-slate-700"
                         }`}
                       >
@@ -430,34 +454,49 @@ export function Transactions() {
               </div>
             )}
 
-            {/* Date & Note */}
+            {/* Date & Note Inputs */}
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <Calendar className="w-3 h-3" /> Tanggal
+                <label
+                  htmlFor="tx-date"
+                  className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+                >
+                  <Calendar className="w-3 h-3" aria-hidden="true" /> Tanggal
                 </label>
                 <input
+                  id="tx-date"
+                  name="transaction_date"
                   type="date"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#007AFF]"
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
               </div>
               <div>
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <FileText className="w-3 h-3" /> Catatan
+                <label
+                  htmlFor="tx-note"
+                  className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+                >
+                  <FileText className="w-3 h-3" aria-hidden="true" /> Catatan
                 </label>
                 <input
+                  id="tx-note"
+                  name="transaction_note"
                   type="text"
-                  placeholder="Opsional (misal: Makan siang)"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#007AFF]"
+                  placeholder="Misal: Makan siang…"
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                 />
               </div>
             </div>
 
-            <Button size="lg" onClick={handleCreate} loading={loading} className="mt-3">
+            <Button
+              size="lg"
+              onClick={handleCreate}
+              loading={loading}
+              className="mt-3"
+            >
               Simpan Transaksi
             </Button>
           </div>

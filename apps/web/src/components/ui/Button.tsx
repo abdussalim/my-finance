@@ -14,18 +14,19 @@ export function Button({
   className,
   children,
   disabled,
+  type = "button",
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-semibold rounded-2xl transition-all duration-150 press-scale disabled:opacity-40 disabled:pointer-events-none cursor-pointer select-none";
+    "inline-flex items-center justify-center font-semibold rounded-2xl transition-transform transition-colors duration-150 press-scale disabled:opacity-40 disabled:pointer-events-none cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:ring-offset-2 focus-visible:outline-none";
 
   const variants = {
     primary:
       "bg-gradient-to-b from-[#007AFF] to-[#0066E0] text-white shadow-[0_4px_16px_rgba(0,122,255,0.25)] hover:brightness-105 active:brightness-95",
     secondary:
-      "bg-white/90 text-slate-800 border border-slate-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-slate-50",
+      "bg-white/80 text-slate-800 border border-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:bg-white active:bg-slate-50",
     glass:
-      "glass-surface text-slate-800 border border-white/60 shadow-sm hover:bg-white/90",
+      "glass-surface text-slate-800 border border-white/80 shadow-sm hover:bg-white/90",
     danger:
       "bg-gradient-to-b from-rose-500 to-rose-600 text-white shadow-[0_4px_16px_rgba(244,63,94,0.25)] hover:brightness-105",
     ghost:
@@ -40,12 +41,17 @@ export function Button({
 
   return (
     <button
+      type={type}
       className={cn(base, variants[variant], sizes[size], className)}
       disabled={disabled || loading}
       {...props}
     >
       {loading ? (
-        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+        <span
+          className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"
+          role="status"
+          aria-label="Memuat…"
+        />
       ) : null}
       {children}
     </button>

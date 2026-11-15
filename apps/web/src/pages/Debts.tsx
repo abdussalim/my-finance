@@ -173,13 +173,19 @@ export function Debts() {
             Hutang & Piutang
           </h1>
         </div>
-        <Button size="sm" onClick={() => setIsAddOpen(true)} className="gap-1 shadow-sm">
-          <Plus className="w-4 h-4" /> Catat
+        <Button
+          size="sm"
+          onClick={() => setIsAddOpen(true)}
+          className="gap-1 shadow-sm"
+          aria-label="Catat Hutang atau Piutang Baru"
+        >
+          <Plus className="w-4 h-4" aria-hidden="true" /> Catat
         </Button>
       </div>
 
       {/* Segmented Switch */}
       <SegmentedControl
+        ariaLabel="Pilih jenis catatan hutang atau piutang"
         options={[
           { value: "debt", label: "Hutang Saya (Kewajiban)" },
           { value: "receivable", label: "Piutang (Hak Saya)" },
@@ -193,7 +199,7 @@ export function Debts() {
 
       {/* Active Tab Highlight Summary Card */}
       <div
-        className={`p-4 rounded-3xl border shadow-sm transition-colors ${
+        className={`p-4 rounded-3xl border shadow-sm transition-colors duration-150 ${
           activeTab === "debt"
             ? "bg-gradient-to-br from-amber-50/80 to-orange-50/60 border-amber-200/60"
             : "bg-gradient-to-br from-emerald-50/80 to-teal-50/60 border-emerald-200/60"
@@ -205,7 +211,7 @@ export function Debts() {
           </p>
           {totalOverdue > 0 ? (
             <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
-              <AlertCircle className="w-3 h-3" />
+              <AlertCircle className="w-3 h-3" aria-hidden="true" />
               {totalOverdue} Jatuh Tempo
             </span>
           ) : null}
@@ -231,7 +237,7 @@ export function Debts() {
             }
             action={
               <Button size="sm" onClick={() => setIsAddOpen(true)}>
-                <Plus className="w-4 h-4 mr-1" /> Buat Catatan Baru
+                <Plus className="w-4 h-4 mr-1" aria-hidden="true" /> Buat Catatan Baru
               </Button>
             }
           />
@@ -248,9 +254,12 @@ export function Debts() {
               <Card key={item.id} className="p-4 space-y-3.5 border-slate-200/50">
                 {/* Person Header */}
                 <div className="flex items-center justify-between">
-                  <div
-                    className="flex items-center gap-3 cursor-pointer flex-1"
+                  <button
+                    type="button"
+                    className="flex items-center gap-3 cursor-pointer flex-1 text-left focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none rounded-xl"
                     onClick={() => toggleHistory(item.id)}
+                    aria-expanded={isExpanded}
+                    aria-label={`Rincian cicilan untuk ${item.person_name}`}
                   >
                     <div
                       className={`w-9 h-9 rounded-2xl flex items-center justify-center font-bold text-xs ${
@@ -261,12 +270,13 @@ export function Debts() {
                           : "bg-blue-100 text-[#007AFF]"
                       }`}
                     >
-                      <User className="w-4 h-4" />
+                      <User className="w-4 h-4" aria-hidden="true" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-slate-900 flex items-center gap-1">
                         {item.person_name}
                         <ChevronDown
+                          aria-hidden="true"
                           className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
                             isExpanded ? "rotate-180" : ""
                           }`}
@@ -282,7 +292,7 @@ export function Debts() {
                         >
                           {isOverdue ? (
                             <>
-                              <AlertCircle className="w-3 h-3 text-rose-500" />
+                              <AlertCircle className="w-3 h-3 text-rose-500" aria-hidden="true" />
                               Terlambat: {formatDate(item.due_date)}
                             </>
                           ) : (
@@ -294,13 +304,13 @@ export function Debts() {
                         <p className="text-[11px] text-slate-400 italic mt-0.5">{item.note}</p>
                       ) : null}
                     </div>
-                  </div>
+                  </button>
 
                   {/* Actions */}
                   <div className="flex items-center gap-2">
                     {isSettled ? (
                       <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Lunas
+                        <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" /> Lunas
                       </span>
                     ) : (
                       <Button
@@ -314,15 +324,16 @@ export function Debts() {
                         className="text-xs py-1.5 px-3 min-h-[32px] gap-1"
                       >
                         {activeTab === "debt" ? "Bayar" : "Terima"}
-                        <ChevronRight className="w-3 h-3 text-slate-400" />
+                        <ChevronRight className="w-3 h-3 text-slate-400" aria-hidden="true" />
                       </Button>
                     )}
                     <button
+                      type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg press-scale cursor-pointer"
-                      title="Hapus"
+                      className="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                      aria-label={`Hapus catatan ${item.person_name}`}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -341,6 +352,7 @@ export function Debts() {
                     </span>
                   </div>
                   <ProgressBar
+                    ariaLabel={`Kemajuan pelunasan ${item.person_name}`}
                     progress={progress}
                     color={isSettled ? "#10B981" : activeTab === "debt" ? "#F59E0B" : "#007AFF"}
                   />
@@ -353,7 +365,7 @@ export function Debts() {
                 {isExpanded ? (
                   <div className="pt-3 border-t border-slate-100 space-y-2 animate-in fade-in duration-200">
                     <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                      <History className="w-3 h-3" /> Riwayat Cicilan ({history.length})
+                      <History className="w-3 h-3" aria-hidden="true" /> Riwayat Cicilan ({history.length})
                     </p>
                     {history.length === 0 ? (
                       <p className="text-xs text-slate-400 py-1 italic">
@@ -390,7 +402,7 @@ export function Debts() {
         )}
       </div>
 
-      {/* Add Debt Modal */}
+      {/* Add Debt Bottom Sheet */}
       <BottomSheet
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
@@ -399,14 +411,19 @@ export function Debts() {
       >
         <div className="space-y-4">
           <div>
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-              <User className="w-3.5 h-3.5" />
+            <label
+              htmlFor="debt-person-name"
+              className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+            >
+              <User className="w-3.5 h-3.5" aria-hidden="true" />
               {activeTab === "debt" ? "Berhutang Ke Siapa?" : "Siapa Yang Berhutang?"}
             </label>
             <input
+              id="debt-person-name"
+              name="person_name"
               type="text"
-              placeholder="Contoh: Budi, Bank Mandiri, Teman kantor"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#007AFF]"
+              placeholder="Contoh: Budi, Bank Mandiri…"
+              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
               value={personName}
               onChange={(e) => setPersonName(e.target.value)}
             />
@@ -416,24 +433,34 @@ export function Debts() {
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-                <Calendar className="w-3 h-3" /> Jatuh Tempo
+              <label
+                htmlFor="debt-due-date"
+                className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+              >
+                <Calendar className="w-3 h-3" aria-hidden="true" /> Jatuh Tempo
               </label>
               <input
+                id="debt-due-date"
+                name="due_date"
                 type="date"
-                className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#007AFF]"
+                className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
               />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-                <FileText className="w-3 h-3" /> Catatan
+              <label
+                htmlFor="debt-note"
+                className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+              >
+                <FileText className="w-3 h-3" aria-hidden="true" /> Catatan
               </label>
               <input
+                id="debt-note"
+                name="note"
                 type="text"
-                placeholder="Opsional (misal: Pinjam modal)"
-                className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#007AFF]"
+                placeholder="Misal: Modal usaha…"
+                className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
@@ -446,7 +473,7 @@ export function Debts() {
         </div>
       </BottomSheet>
 
-      {/* Payment Modal */}
+      {/* Payment Bottom Sheet */}
       <BottomSheet
         isOpen={isPayOpen}
         onClose={() => setIsPayOpen(false)}
@@ -461,25 +488,31 @@ export function Debts() {
           <div className="space-y-3">
             {/* Wallet Selector */}
             <div>
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
-                <WalletIcon className="w-3.5 h-3.5" />
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                <WalletIcon className="w-3.5 h-3.5" aria-hidden="true" />
                 {activeTab === "debt" ? "Bayar Pakai Dompet" : "Terima Ke Dompet"}
-              </label>
-              <div className="grid grid-cols-2 gap-2">
+              </span>
+              <div
+                className="grid grid-cols-2 gap-2"
+                role="group"
+                aria-label="Pilih dompet pembayaran"
+              >
                 {wallets.map((w) => (
                   <button
                     key={w.id}
                     type="button"
                     onClick={() => setPayWalletId(w.id)}
-                    className={`p-2.5 rounded-2xl border text-left flex items-center gap-2 transition-all press-scale cursor-pointer ${
+                    aria-pressed={payWalletId === w.id}
+                    className={`p-2.5 rounded-2xl border text-left flex items-center gap-2 transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
                       payWalletId === w.id
-                        ? "bg-blue-50/70 border-[#007AFF] text-slate-900 shadow-sm"
+                        ? "bg-blue-50/70 border-[#007AFF] text-slate-900 shadow-xs"
                         : "bg-slate-50 border-slate-200/80 text-slate-600"
                     }`}
                   >
                     <span
-                      className="w-3 h-3 rounded-full flex-shrink-0"
+                      className="w-3 h-3 rounded-full shrink-0"
                       style={{ backgroundColor: w.color || "#007AFF" }}
+                      aria-hidden="true"
                     />
                     <div className="truncate">
                       <p className="text-xs font-bold truncate">{w.name}</p>
@@ -494,24 +527,34 @@ export function Debts() {
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <Calendar className="w-3 h-3" /> Tanggal Bayar
+                <label
+                  htmlFor="pay-date"
+                  className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+                >
+                  <Calendar className="w-3 h-3" aria-hidden="true" /> Tanggal Bayar
                 </label>
                 <input
+                  id="pay-date"
+                  name="payment_date"
                   type="date"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#007AFF]"
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
                   value={payDate}
                   onChange={(e) => setPayDate(e.target.value)}
                 />
               </div>
               <div>
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <FileText className="w-3 h-3" /> Catatan
+                <label
+                  htmlFor="pay-note"
+                  className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+                >
+                  <FileText className="w-3 h-3" aria-hidden="true" /> Catatan
                 </label>
                 <input
+                  id="pay-note"
+                  name="payment_note"
                   type="text"
-                  placeholder="Cicilan ke-..."
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-[#007AFF]"
+                  placeholder="Cicilan ke-… (opsional)"
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
                   value={payNote}
                   onChange={(e) => setPayNote(e.target.value)}
                 />

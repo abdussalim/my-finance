@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { X } from "lucide-react";
 
 export interface BottomSheetProps {
@@ -10,43 +10,64 @@ export interface BottomSheetProps {
 }
 
 export function BottomSheet({ isOpen, onClose, title, subtitle, children }: BottomSheetProps) {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    },
+    [onClose]
+  );
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "auto";
     }
     return () => {
       document.body.style.overflow = "auto";
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, handleKeyDown]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
-      {/* Dimmed backdrop with blur */}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sheet-title"
+      className="fixed inset-0 z-50 flex items-end justify-center"
+    >
+      {/* Dimmed backdrop with soft blur */}
       <div
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200"
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity duration-200"
         onClick={onClose}
+        aria-hidden="true"
       />
 
-      {/* Sheet Content */}
-      <div className="relative w-full max-w-md bg-white rounded-t-[36px] px-6 pt-3 pb-[calc(env(safe-area-inset-bottom,16px)+16px)] shadow-[0_-12px_40px_rgba(0,0,0,0.12)] z-10 max-h-[92dvh] overflow-y-auto animate-in slide-in-from-bottom duration-250">
+      {/* Sheet Content with overscroll-contain */}
+      <div className="relative w-full max-w-md bg-white/95 backdrop-blur-2xl border-t border-white/80 rounded-t-[36px] px-6 pt-3 pb-[calc(env(safe-area-inset-bottom,16px)+16px)] shadow-[0_-16px_48px_rgba(15,23,42,0.14)] z-10 max-h-[92dvh] overflow-y-auto overscroll-contain animate-in slide-in-from-bottom duration-250">
         {/* Grabber handle */}
-        <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto my-2.5" />
+        <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2.5" aria-hidden="true" />
 
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h3 className="text-xl font-bold tracking-tight text-slate-900">{title}</h3>
+            <h3 id="sheet-title" className="text-xl font-bold tracking-tight text-slate-900">
+              {title}
+            </h3>
             {subtitle ? <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p> : null}
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center press-scale cursor-pointer"
+            aria-label="Tutup lembar"
+            className="w-8 h-8 rounded-full bg-slate-100/80 hover:bg-slate-200 text-slate-500 flex items-center justify-center press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
 

@@ -15,17 +15,18 @@ export function Card({
   ...props
 }: CardProps) {
   const variantStyles = {
-    glass: "glass-surface shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)]",
+    glass: "glass-surface",
     elevated: "glass-surface-elevated",
-    flat: "bg-slate-100/80 border border-slate-200/50",
+    flat: "bg-slate-100/70 border border-slate-200/50",
   };
 
   return (
     <div
       className={cn(
-        "rounded-3xl p-5 transition-all duration-200",
+        "rounded-3xl p-5 transition-transform transition-shadow duration-150",
         variantStyles[variant],
-        interactive && "press-scale cursor-pointer active:shadow-sm",
+        interactive &&
+          "press-scale cursor-pointer active:shadow-sm focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none",
         className
       )}
       {...props}

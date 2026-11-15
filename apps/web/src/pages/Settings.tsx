@@ -110,8 +110,8 @@ export function Settings() {
     }
   };
 
-  const handleDeleteWallet = async (id: string) => {
-    if (!confirm("Hapus dompet ini? Riwayat transaksi lama mungkin terpengaruh.")) return;
+  const handleDeleteWallet = async (id: string, name: string) => {
+    if (!confirm(`Hapus dompet ${name}? Riwayat transaksi lama mungkin terpengaruh.`)) return;
     try {
       await apiFetch(`/api/wallets/${id}`, { method: "DELETE" });
       await loadData();
@@ -120,8 +120,8 @@ export function Settings() {
     }
   };
 
-  const handleDeleteCategory = async (id: string) => {
-    if (!confirm("Hapus kategori ini?")) return;
+  const handleDeleteCategory = async (id: string, name: string) => {
+    if (!confirm(`Hapus kategori ${name}?`)) return;
     try {
       await apiFetch(`/api/categories/${id}`, { method: "DELETE" });
       await loadData();
@@ -179,16 +179,17 @@ export function Settings() {
       {/* Section Wallets */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
-            <Wallet className="w-3.5 h-3.5" /> Dompet & Rekening ({wallets.length})
-          </div>
+          <h2 className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <Wallet className="w-3.5 h-3.5" aria-hidden="true" /> Dompet & Rekening ({wallets.length})
+          </h2>
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setIsWalletOpen(true)}
             className="text-xs text-[#007AFF] font-bold"
+            aria-label="Tambah Dompet Baru"
           >
-            <Plus className="w-3.5 h-3.5 mr-0.5" /> Tambah
+            <Plus className="w-3.5 h-3.5 mr-0.5" aria-hidden="true" /> Tambah
           </Button>
         </div>
 
@@ -202,10 +203,10 @@ export function Settings() {
               <div key={w.id} className="p-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
-                    className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-bold shadow-sm"
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-bold shadow-xs"
                     style={{ backgroundColor: w.color || "#007AFF" }}
                   >
-                    <Wallet className="w-4 h-4" />
+                    <Wallet className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-slate-900">{w.name}</p>
@@ -217,11 +218,12 @@ export function Settings() {
                     {formatCurrency(w.current_balance)}
                   </span>
                   <button
-                    onClick={() => handleDeleteWallet(w.id)}
-                    className="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg press-scale cursor-pointer"
-                    title="Hapus Dompet"
+                    type="button"
+                    onClick={() => handleDeleteWallet(w.id, w.name)}
+                    className="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                    aria-label={`Hapus dompet ${w.name}`}
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -233,38 +235,42 @@ export function Settings() {
       {/* Section Categories */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
-            <Tag className="w-3.5 h-3.5" /> Kategori Transaksi ({categories.length})
-          </div>
+          <h2 className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <Tag className="w-3.5 h-3.5" aria-hidden="true" /> Kategori Transaksi ({categories.length})
+          </h2>
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setIsCatOpen(true)}
             className="text-xs text-[#007AFF] font-bold"
+            aria-label="Tambah Kategori Baru"
           >
-            <Plus className="w-3.5 h-3.5 mr-0.5" /> Tambah
+            <Plus className="w-3.5 h-3.5 mr-0.5" aria-hidden="true" /> Tambah
           </Button>
         </div>
 
         <Card className="p-3.5">
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5" role="list" aria-label="Daftar Kategori">
             {categories.map((c) => (
               <span
                 key={c.id}
+                role="listitem"
                 className="inline-flex items-center gap-1.5 text-xs font-semibold pl-2.5 pr-1.5 py-1.5 bg-slate-100/90 rounded-xl text-slate-700 border border-slate-200/50"
               >
                 <span
                   className={`w-2 h-2 rounded-full ${
                     c.type === "income" ? "bg-emerald-500" : "bg-rose-500"
                   }`}
+                  aria-hidden="true"
                 />
                 {c.name}
                 <button
-                  onClick={() => handleDeleteCategory(c.id)}
-                  className="text-slate-400 hover:text-rose-500 ml-0.5 p-0.5 rounded cursor-pointer"
-                  title="Hapus Kategori"
+                  type="button"
+                  onClick={() => handleDeleteCategory(c.id, c.name)}
+                  className="text-slate-400 hover:text-rose-500 ml-0.5 p-0.5 rounded cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                  aria-label={`Hapus kategori ${c.name}`}
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-3 h-3" aria-hidden="true" />
                 </button>
               </span>
             ))}
@@ -274,9 +280,9 @@ export function Settings() {
 
       {/* Section Security & Passcode */}
       <div className="space-y-2.5">
-        <div className="px-1 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5" /> Keamanan Akun
-        </div>
+        <h2 className="px-1 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" /> Keamanan Akun
+        </h2>
 
         <Card className="p-4 space-y-3">
           <div className="flex items-center justify-between">
@@ -298,7 +304,7 @@ export function Settings() {
               }}
               className="text-xs font-bold"
             >
-              <KeyRound className="w-3.5 h-3.5 mr-1 text-[#007AFF]" /> Ubah PIN
+              <KeyRound className="w-3.5 h-3.5 mr-1 text-[#007AFF]" aria-hidden="true" /> Ubah PIN
             </Button>
           </div>
         </Card>
@@ -307,32 +313,38 @@ export function Settings() {
       {/* Section Architecture & System Badge */}
       <Card className="p-4 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 border-blue-100/80">
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-            <Cpu className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+            <Cpu className="w-4 h-4" aria-hidden="true" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-bold text-slate-900">My Finance PWA v1.0</p>
-              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-1.5 py-0.2 rounded-full">
+              <p className="text-xs font-bold text-slate-900" translate="no">My Finance PWA v1.0</p>
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-1.5 py-0.5 rounded-full">
                 &lt; 10ms CPU
               </span>
             </div>
             <p className="text-[11px] text-slate-500 mt-0.5">
               Cloudflare Pages + Edge Workers + D1 Database
             </p>
-            <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
-              <Layers className="w-3 h-3" /> finance.abdussalim.my.id
+            <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1" translate="no">
+              <Layers className="w-3 h-3" aria-hidden="true" /> finance.abdussalim.my.id
             </p>
           </div>
         </div>
       </Card>
 
       {/* Logout Button */}
-      <Button variant="danger" size="lg" onClick={logout} className="gap-2 shadow-sm">
-        <LogOut className="w-4 h-4" /> Kunci Aplikasi (Logout)
+      <Button
+        variant="danger"
+        size="lg"
+        onClick={logout}
+        className="gap-2 shadow-sm"
+        aria-label="Kunci Aplikasi dan Keluar"
+      >
+        <LogOut className="w-4 h-4" aria-hidden="true" /> Kunci Aplikasi (Logout)
       </Button>
 
-      {/* Add Wallet Modal */}
+      {/* Add Wallet Bottom Sheet */}
       <BottomSheet
         isOpen={isWalletOpen}
         onClose={() => setIsWalletOpen(false)}
@@ -341,23 +353,26 @@ export function Settings() {
       >
         <div className="space-y-4">
           <div>
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+            <label htmlFor="wallet-name" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
               Nama Dompet
             </label>
             <input
+              id="wallet-name"
+              name="wallet_name"
               type="text"
-              placeholder="Contoh: BCA, Dompet Tunai, GoPay, Bibit"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#007AFF]"
+              placeholder="Contoh: BCA, Dompet Tunai, GoPay…"
+              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
               value={wName}
               onChange={(e) => setWName(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
               Tipe Dompet
-            </label>
+            </span>
             <SegmentedControl
+              ariaLabel="Pilih jenis dompet"
               options={[
                 { value: "bank", label: "Bank" },
                 { value: "cash", label: "Tunai" },
@@ -369,17 +384,18 @@ export function Settings() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
               Warna Kartu
-            </label>
-            <div className="flex gap-2 py-1">
+            </span>
+            <div className="flex gap-2 py-1" role="group" aria-label="Pilih warna dompet">
               {WALLET_COLORS.map((col) => (
                 <button
                   key={col}
                   type="button"
+                  aria-label={`Pilih warna ${col}`}
                   onClick={() => setWColor(col)}
-                  className={`w-7 h-7 rounded-full cursor-pointer transition-transform press-scale ${
-                    wColor === col ? "scale-110 ring-2 ring-offset-2 ring-slate-400 shadow-sm" : ""
+                  className={`w-7 h-7 rounded-full cursor-pointer transition-transform duration-150 press-scale focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
+                    wColor === col ? "scale-110 ring-2 ring-offset-2 ring-slate-400 shadow-xs" : ""
                   }`}
                   style={{ backgroundColor: col }}
                 />
@@ -388,9 +404,9 @@ export function Settings() {
           </div>
 
           <div>
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
               Saldo Awal
-            </label>
+            </span>
             <NumberPad value={wBalance} onChange={setWBalance} />
           </div>
 
@@ -400,7 +416,7 @@ export function Settings() {
         </div>
       </BottomSheet>
 
-      {/* Add Category Modal */}
+      {/* Add Category Bottom Sheet */}
       <BottomSheet
         isOpen={isCatOpen}
         onClose={() => setIsCatOpen(false)}
@@ -409,23 +425,26 @@ export function Settings() {
       >
         <div className="space-y-4">
           <div>
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+            <label htmlFor="category-name" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
               Nama Kategori
             </label>
             <input
+              id="category-name"
+              name="category_name"
               type="text"
-              placeholder="Contoh: Kopi & Cafe, Transportasi, Gaji Pokok"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#007AFF]"
+              placeholder="Contoh: Kopi & Cafe, Transportasi…"
+              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
               value={cName}
               onChange={(e) => setCName(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
               Jenis Kategori
-            </label>
+            </span>
             <SegmentedControl
+              ariaLabel="Pilih jenis kategori"
               options={[
                 { value: "expense", label: "Pengeluaran" },
                 { value: "income", label: "Pemasukan" },
@@ -441,7 +460,7 @@ export function Settings() {
         </div>
       </BottomSheet>
 
-      {/* Change PIN Modal */}
+      {/* Change PIN Bottom Sheet */}
       <BottomSheet
         isOpen={isPinOpen}
         onClose={() => setIsPinOpen(false)}
@@ -459,7 +478,7 @@ export function Settings() {
             disabled={pinLoading}
           />
           {pinError ? (
-            <p className="text-xs text-rose-500 font-bold mt-2 animate-shake">{pinError}</p>
+            <p className="text-xs text-rose-500 font-bold mt-2" role="alert">{pinError}</p>
           ) : null}
         </div>
       </BottomSheet>
