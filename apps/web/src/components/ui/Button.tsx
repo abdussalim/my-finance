@@ -18,17 +18,17 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-semibold rounded-xl transition-colors duration-120 press-scale disabled:opacity-40 disabled:pointer-events-none cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 focus-visible:outline-none";
+    "inline-flex items-center justify-center font-semibold rounded-xl transition-colors duration-120 press-scale disabled:opacity-40 disabled:pointer-events-none cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:ring-offset-2 focus-visible:outline-none";
 
   const variants = {
     primary:
-      "bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-xs border border-transparent",
+      "bg-[#4338CA] hover:bg-[#3730A3] active:bg-[#312E81] text-white shadow-[0_2px_8px_-1px_rgba(67,56,202,0.25)] border border-transparent",
     secondary:
-      "bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 shadow-xs",
+      "bg-indigo-50/70 hover:bg-indigo-100/80 text-[#312E81] border border-indigo-200/80 shadow-xs",
     outline:
       "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-xs",
     danger:
-      "bg-[#DC2626] hover:bg-[#B91C1C] text-white shadow-xs border border-transparent",
+      "bg-[#E11D48] hover:bg-[#BE123C] text-white shadow-[0_2px_8px_-1px_rgba(225,29,72,0.25)] border border-transparent",
     ghost:
       "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100",
   };

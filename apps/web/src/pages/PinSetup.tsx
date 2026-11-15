@@ -44,7 +44,7 @@ export function PinSetup() {
     <div className="flex flex-col items-center justify-center min-h-dvh px-5 py-6 text-center max-w-sm mx-auto">
       {/* Icon */}
       <div
-        className="w-14 h-14 bg-blue-50 text-[#2563EB] border border-blue-200 rounded-2xl flex items-center justify-center mb-4 shadow-2xs"
+        className="w-14 h-14 bg-indigo-50 text-[#4338CA] border border-indigo-200/90 rounded-2xl flex items-center justify-center mb-4 shadow-[0_2px_8px_rgba(67,56,202,0.12)]"
         aria-hidden="true"
       >
         <ShieldCheck className="w-7 h-7" />
@@ -67,7 +67,7 @@ export function PinSetup() {
       />
 
       {error ? (
-        <p role="alert" aria-live="polite" className="text-xs text-[#DC2626] font-bold mt-2">
+        <p role="alert" aria-live="polite" className="text-xs text-[#E11D48] font-bold mt-2">
           {error}
         </p>
       ) : null}
@@ -78,7 +78,7 @@ export function PinSetup() {
           className="text-xs text-slate-500 font-medium mt-2 flex items-center gap-1.5 justify-center"
         >
           <span
-            className="w-3.5 h-3.5 border-2 border-[#2563EB] border-t-transparent rounded-full animate-spin"
+            className="w-3.5 h-3.5 border-2 border-[#4338CA] border-t-transparent rounded-full animate-spin"
             aria-hidden="true"
           />
           Menyimpan PIN…

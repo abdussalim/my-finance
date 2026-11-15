@@ -202,7 +202,7 @@ export function Debts() {
         className={`p-3.5 rounded-xl border shadow-2xs transition-colors duration-120 ${
           activeTab === "debt"
             ? "bg-amber-50/80 border-amber-200"
-            : "bg-emerald-50/80 border-emerald-200"
+            : "bg-teal-50/80 border-teal-200"
         }`}
       >
         <div className="flex items-center justify-between mb-1">
@@ -210,7 +210,7 @@ export function Debts() {
             {activeTab === "debt" ? "Total Sisa Hutang" : "Total Sisa Piutang"}
           </span>
           {totalOverdue > 0 ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#DC2626] bg-red-100 border border-red-200 px-2 py-0.5 rounded-md">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#E11D48] bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md">
               <AlertCircle className="w-3 h-3" aria-hidden="true" />
               {totalOverdue} Jatuh Tempo
             </span>
@@ -251,12 +251,12 @@ export function Debts() {
             const history = paymentsByDebt[item.id] || [];
 
             return (
-              <Card key={item.id} className="p-3.5 space-y-3 border-slate-200">
+              <Card key={item.id} className="p-3.5 space-y-3 border-slate-200/90 shadow-2xs">
                 {/* Person Header */}
                 <div className="flex items-center justify-between">
                   <button
                     type="button"
-                    className="flex items-center gap-2.5 cursor-pointer flex-1 text-left focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none rounded-lg"
+                    className="flex items-center gap-2.5 cursor-pointer flex-1 text-left focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none rounded-lg"
                     onClick={() => toggleHistory(item.id)}
                     aria-expanded={isExpanded}
                     aria-label={`Rincian cicilan untuk ${item.person_name}`}
@@ -264,10 +264,10 @@ export function Debts() {
                     <div
                       className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
                         isSettled
-                          ? "bg-emerald-100 text-emerald-800"
+                          ? "bg-teal-50 text-[#0D9488] border border-teal-200/60"
                           : activeTab === "debt"
                           ? "bg-amber-100 text-amber-800"
-                          : "bg-blue-100 text-[#2563EB]"
+                          : "bg-indigo-50 text-[#4338CA] border border-indigo-200/60"
                       }`}
                     >
                       <User className="w-4 h-4" aria-hidden="true" />
@@ -286,13 +286,13 @@ export function Debts() {
                         <p
                           className={`text-[11px] ${
                             isOverdue
-                              ? "text-[#DC2626] font-bold flex items-center gap-1"
+                              ? "text-[#E11D48] font-bold flex items-center gap-1"
                               : "text-slate-500"
                           }`}
                         >
                           {isOverdue ? (
                             <>
-                              <AlertCircle className="w-3 h-3 text-[#DC2626]" aria-hidden="true" />
+                              <AlertCircle className="w-3 h-3 text-[#E11D48]" aria-hidden="true" />
                               Terlambat: {formatDate(item.due_date)}
                             </>
                           ) : (
@@ -309,7 +309,7 @@ export function Debts() {
                   {/* Actions */}
                   <div className="flex items-center gap-2">
                     {isSettled ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#16A34A] bg-[#DCFCE7] border border-emerald-200 px-2 py-0.5 rounded-md">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0D9488] bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md">
                         <CheckCircle2 className="w-3 h-3" aria-hidden="true" /> Lunas
                       </span>
                     ) : (
@@ -330,7 +330,7 @@ export function Debts() {
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="text-slate-400 hover:text-rose-600 p-1.5 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
+                      className="text-slate-400 hover:text-rose-600 p-1.5 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
                       aria-label={`Hapus catatan ${item.person_name}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
@@ -354,7 +354,7 @@ export function Debts() {
                   <ProgressBar
                     ariaLabel={`Kemajuan pelunasan ${item.person_name}`}
                     progress={progress}
-                    color={isSettled ? "#16A34A" : activeTab === "debt" ? "#D97706" : "#2563EB"}
+                    color={isSettled ? "#0D9488" : activeTab === "debt" ? "#D97706" : "#4338CA"}
                   />
                   <div className="flex justify-end text-[10px] text-slate-500 num-tabular font-medium">
                     {Math.round(progress)}% terbayar
@@ -423,7 +423,7 @@ export function Debts() {
               name="person_name"
               type="text"
               placeholder="Contoh: Budi, Bank Mandiri…"
-              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
               value={personName}
               onChange={(e) => setPersonName(e.target.value)}
             />
@@ -443,7 +443,7 @@ export function Debts() {
                 id="debt-due-date"
                 name="due_date"
                 type="date"
-                className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+                className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
               />
@@ -460,7 +460,7 @@ export function Debts() {
                 name="note"
                 type="text"
                 placeholder="Misal: Modal usaha…"
-                className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+                className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
@@ -503,15 +503,15 @@ export function Debts() {
                     type="button"
                     onClick={() => setPayWalletId(w.id)}
                     aria-pressed={payWalletId === w.id}
-                    className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
+                    className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none ${
                       payWalletId === w.id
-                        ? "bg-blue-50 border-[#2563EB] text-slate-900 shadow-2xs"
+                        ? "bg-indigo-50 border-[#4338CA] text-slate-900 shadow-2xs"
                         : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: w.color || "#2563EB" }}
+                      style={{ backgroundColor: w.color || "#4338CA" }}
                       aria-hidden="true"
                     />
                     <div className="truncate">
@@ -537,7 +537,7 @@ export function Debts() {
                   id="pay-date"
                   name="payment_date"
                   type="date"
-                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
                   value={payDate}
                   onChange={(e) => setPayDate(e.target.value)}
                 />
@@ -554,7 +554,7 @@ export function Debts() {
                   name="payment_note"
                   type="text"
                   placeholder="Cicilan ke-… (opsional)"
-                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
                   value={payNote}
                   onChange={(e) => setPayNote(e.target.value)}
                 />

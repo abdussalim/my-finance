@@ -14,12 +14,12 @@ function AppRoutes() {
   if (loading) {
     return (
       <div
-        className="flex items-center justify-center min-h-dvh bg-[#F8FAFC]"
+        className="flex items-center justify-center min-h-dvh bg-[#F4F6FB]"
         role="status"
         aria-label="Memuat aplikasi…"
       >
         <div
-          className="w-8 h-8 border-2 border-[#2563EB] border-t-transparent rounded-full animate-spin"
+          className="w-8 h-8 border-2 border-[#4338CA] border-t-transparent rounded-full animate-spin"
           aria-hidden="true"
         />
       </div>

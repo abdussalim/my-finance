@@ -198,7 +198,7 @@ export function Transactions() {
               type="button"
               onClick={() => setFilterWallet("")}
               aria-pressed={filterWallet === ""}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors duration-120 press-scale cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
+              className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors duration-120 press-scale cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none ${
                 filterWallet === ""
                   ? "bg-slate-900 border-slate-900 text-white shadow-2xs"
                   : "bg-white border-slate-200 text-slate-600 hover:text-slate-900"
@@ -212,15 +212,15 @@ export function Transactions() {
                 type="button"
                 onClick={() => setFilterWallet(w.id)}
                 aria-pressed={filterWallet === w.id}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors duration-120 press-scale flex items-center gap-1.5 cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
+                className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors duration-120 press-scale flex items-center gap-1.5 cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none ${
                   filterWallet === w.id
-                    ? "bg-[#2563EB] border-[#2563EB] text-white shadow-2xs"
+                    ? "bg-[#4338CA] border-[#4338CA] text-white shadow-2xs"
                     : "bg-white border-slate-200 text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <span
                   className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: w.color || "#2563EB" }}
+                  style={{ backgroundColor: w.color || "#4338CA" }}
                   aria-hidden="true"
                 />
                 {w.name}
@@ -251,7 +251,7 @@ export function Transactions() {
                 <span>{relativeDate(groupDate)}</span>
                 <span
                   className={`num-tabular font-bold ${
-                    dayNet >= 0 ? "text-[#16A34A]" : "text-[#DC2626]"
+                    dayNet >= 0 ? "text-[#0D9488]" : "text-[#E11D48]"
                   }`}
                 >
                   {dayNet >= 0 ? "+" : ""}
@@ -262,16 +262,16 @@ export function Transactions() {
               {items.map((tx) => (
                 <div
                   key={tx.id}
-                  className="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between shadow-2xs"
+                  className="p-3 bg-white rounded-xl border border-slate-200/90 flex items-center justify-between shadow-2xs"
                 >
                   <div className="flex items-center gap-2.5">
                     <div
                       className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                         tx.type === "income" || tx.type === "transfer_in"
-                          ? "bg-emerald-100 text-[#16A34A]"
+                          ? "bg-teal-50 text-[#0D9488] border border-teal-200/60"
                           : tx.type === "expense"
-                          ? "bg-rose-100 text-[#DC2626]"
-                          : "bg-indigo-100 text-[#4F46E5]"
+                          ? "bg-rose-50 text-[#E11D48] border border-rose-200/60"
+                          : "bg-indigo-50 text-[#4338CA] border border-indigo-200/60"
                       }`}
                     >
                       {tx.type === "income" || tx.type === "transfer_in" ? (
@@ -299,8 +299,8 @@ export function Transactions() {
                     <span
                       className={`text-xs font-extrabold num-tabular ${
                         tx.type === "income" || tx.type === "transfer_in"
-                          ? "text-[#16A34A]"
-                          : "text-[#DC2626]"
+                          ? "text-[#0D9488]"
+                          : "text-[#E11D48]"
                       }`}
                     >
                       {tx.type === "income" || tx.type === "transfer_in" ? "+" : "-"}
@@ -309,7 +309,7 @@ export function Transactions() {
                     <button
                       type="button"
                       onClick={() => handleDelete(tx.id)}
-                      className="text-slate-400 hover:text-rose-600 p-1 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
+                      className="text-slate-400 hover:text-rose-600 p-1 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
                       aria-label={`Hapus transaksi ${tx.note || tx.category_name || "ini"}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
@@ -359,15 +359,15 @@ export function Transactions() {
                     type="button"
                     onClick={() => setWalletId(w.id)}
                     aria-pressed={walletId === w.id}
-                    className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
+                    className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none ${
                       walletId === w.id
-                        ? "bg-blue-50 border-[#2563EB] text-slate-900 shadow-2xs"
+                        ? "bg-indigo-50 border-[#4338CA] text-slate-900 shadow-2xs"
                         : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: w.color || "#2563EB" }}
+                      style={{ backgroundColor: w.color || "#4338CA" }}
                       aria-hidden="true"
                     />
                     <div className="truncate">
@@ -396,15 +396,15 @@ export function Transactions() {
                         type="button"
                         onClick={() => setTargetWalletId(w.id)}
                         aria-pressed={targetWalletId === w.id}
-                        className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
+                        className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none ${
                           targetWalletId === w.id
-                            ? "bg-indigo-50 border-[#4F46E5] text-slate-900 shadow-2xs"
+                            ? "bg-indigo-50 border-[#4338CA] text-slate-900 shadow-2xs"
                             : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
                         }`}
                       >
                         <span
                           className="w-2.5 h-2.5 rounded-full shrink-0"
-                          style={{ backgroundColor: w.color || "#4F46E5" }}
+                          style={{ backgroundColor: w.color || "#4338CA" }}
                           aria-hidden="true"
                         />
                         <div className="truncate">
@@ -439,9 +439,9 @@ export function Transactions() {
                         type="button"
                         onClick={() => setCategoryId(categoryId === c.id ? "" : c.id)}
                         aria-pressed={categoryId === c.id}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors duration-120 press-scale cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors duration-120 press-scale cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none ${
                           categoryId === c.id
-                            ? "bg-[#2563EB] border-[#2563EB] text-white shadow-2xs"
+                            ? "bg-[#4338CA] border-[#4338CA] text-white shadow-2xs"
                             : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
                         }`}
                       >
@@ -466,7 +466,7 @@ export function Transactions() {
                   id="tx-date"
                   name="transaction_date"
                   type="date"
-                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
@@ -483,7 +483,7 @@ export function Transactions() {
                   name="transaction_note"
                   type="text"
                   placeholder="Misal: Makan siang…"
-                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                 />

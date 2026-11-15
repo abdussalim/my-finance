@@ -1,36 +1,47 @@
 # MyFinance Mobile DESIGN.md
-*Based on awesome-mobile-design-md (data-dashboard)*
+*Theme: Electric Indigo & Cool Chalk (Silicon Valley / Stripe / Linear Aesthetic)*
 
 ## 1. Design Principles
 
-* **Data-First**: UI strictly serves information. Balances, cashflows, and debt progress take center stage with zero decorative clutter.
-* **High Information Density with Clarity**: Clean tabular presentation, compact spacing, and strong visual hierarchy allowing instant scanning and comparison.
-* **Precision Over Decoration**: Eliminates heavy blurs and abstract shapes in favor of crisp 1px borders (`#E2E8F0`), high-contrast numbers, and functional semantic indicators.
-* **Functional Color System**: Colors exist exclusively to indicate financial states (positive `#16A34A`, negative `#DC2626`, warning `#D97706`).
-* **Safe-Area Native & Mobile Optimized**: Clean docked navigation, dynamic viewport units (`100dvh`), `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)` compliance.
+* **Sharp, Modern & Tech-Forward**: Inspired by the precision and confidence of modern Silicon Valley tools (Stripe, Linear, Wise). High typographic clarity, deliberate hierarchy, and zero generic template artifacts.
+* **Distinctive Color Identity**: Replaces generic corporate blues with Deep Ultramarine (`#4338CA`), Cool Chalk canvas (`#F4F6FB`), Crisp Teal for cash inflow (`#0D9488`), and Vivid Crimson/Coral for cash outflow (`#E11D48`).
+* **High Information Density**: Dense, analytical data dashboard layout. Numbers, cashflows, and debt progress take center stage with tabular numeric alignment (`font-variant-numeric: tabular-nums`).
+* **Tactile Micro-Interactions**: Active press feedback (`active:scale-[0.98]`), instant keyboard response, and smooth sheet transitions.
+* **Safe-Area Native & Mobile Optimized**: Clean docked bottom bar, dynamic viewport units (`100dvh`), `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)` compliance.
 
 ---
 
-## 2. Color System
+## 2. Color System: Electric Indigo & Cool Chalk
 
-### 2.1 Light Mode Palette
+### 2.1 Base Palette
 
-* **Primary**: `#2563EB` (Dashboard Blue)
-* **Background**: `#F8FAFC` (Slate 50 - clean analytical canvas)
+* **Primary / Brand**: `#4338CA` (Deep Ultramarine / Indigo 700)
+  * Hover / Focus: `#3730A3` (Indigo 800)
+  * Active: `#312E81` (Indigo 900)
+  * Light Container / Accent: `#EEF2FF` (Indigo 50)
+  * Border Accent: `#C7D2FE` (Indigo 200)
+* **Electric Accent**: `#6366F1` (Electric Indigo) & `#06B6D4` (Cyber Cyan)
+* **Background / Canvas**: `#F4F6FB` (Cool Chalk / Ice Slate — clean, modern, crisp contrast)
 * **Surface**: `#FFFFFF` (Pure white metric cards & panels)
-* **Surface Alt**: `#F1F5F9` (Slate 100 - secondary containers & chip backgrounds)
-* **Text Primary**: `#0F172A` (Slate 900 - maximum contrast for figures)
-* **Text Secondary**: `#475569` (Slate 600 - labels & secondary descriptions)
-* **Text Muted / Caption**: `#64748B` (Slate 500 - timestamps & helper hints)
-* **Border**: `#E2E8F0` (Slate 200 - crisp structural boundaries)
-* **Divider**: `#E5E7EB` (Slate 200)
+* **Surface Alt**: `#F8FAFC` / `#EEF2FF` (Secondary containers & chip backgrounds)
+* **Border Hairline**: `#E2E8F0` / `#E0E7FF` (Crisp 1px cool border)
+* **Text Primary**: `#0F172A` (Midnight Slate 900 — maximum contrast for figures)
+* **Text Secondary**: `#475569` (Slate 600 — labels & secondary descriptions)
+* **Text Muted / Caption**: `#64748B` (Slate 500 — timestamps & helper hints)
 
 ### 2.2 Semantic Financial Roles
 
-* **Positive (Pemasukan / Piutang)**: `#16A34A` (Green 600) | Background `#DCFCE7` (Green 100)
-* **Negative (Pengeluaran / Utang)**: `#DC2626` (Red 600) | Background `#FEE2E2` (Red 100)
-* **Warning (Jatuh Tempo)**: `#D97706` (Amber 600) | Background `#FEF3C7` (Amber 100)
-* **Neutral / Transfer**: `#4F46E5` (Indigo 600) | Background `#EEF2FF` (Indigo 50)
+* **Inflow / Pemasukan / Piutang**: `#0D9488` (Teal 600) & `#059669` (Emerald 600)
+  * Container / Badge: `#F0FDF4` / `#CCFBF1` (Teal/Emerald 50)
+  * Text Badge: `#0F766E` (Teal 700)
+* **Outflow / Pengeluaran / Utang**: `#E11D48` (Vivid Crimson / Rose 600)
+  * Container / Badge: `#FFF1F2` (Rose 50)
+  * Text Badge: `#BE123C` (Rose 700)
+* **Warning / Jatuh Tempo**: `#D97706` (Amber 600)
+  * Container / Badge: `#FFFBEB` (Amber 50)
+  * Text Badge: `#B45309` (Amber 700)
+* **Transfer / Netral**: `#4338CA` (Indigo 700)
+  * Container / Badge: `#EEF2FF` (Indigo 50)
 
 ---
 
@@ -42,7 +53,7 @@
 
 ### Type Scale
 
-* **Large Metric**: `28–32px` / Bold (`font-extrabold tracking-tight`)
+* **Large Metric**: `28–32px` / Bold (`font-extrabold tracking-tight text-slate-900`)
 * **Card Metric**: `18–22px` / Bold
 * **Title**: `16–18px` / SemiBold
 * **Body / Row Item**: `14–15px` / Medium
@@ -56,30 +67,25 @@
 * **Base Grid**: 4px base (`xs: 4px`, `sm: 8px`, `md: 12px`, `lg: 16px`, `xl: 20px`, `xxl: 24px`).
 * **Page Padding**: 16px horizontal screen margin (`px-4 sm:px-5`).
 * **Bottom Scroll Clearance**: `pb-24` ensuring docked bottom bar never covers content.
-* **Component Radius**: 12–16px (`rounded-xl` to `rounded-2xl`) for cards; 8–10px (`rounded-lg` / `rounded-xl`) for buttons.
+* **Component Radius**: 14–16px (`rounded-xl` to `rounded-2xl`) for cards; 10–12px for buttons.
 
 ---
 
 ## 5. Components Anatomy
 
 ### 5.1 Docked Bottom Navigation Bar
-* Docked at screen bottom: `fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 bg-white border-t border-slate-200 pb-safe`.
+* Docked at screen bottom: `fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 bg-white border-t border-slate-200/80 pb-safe shadow-[0_-2px_12px_rgba(15,23,42,0.03)]`.
 * Height: 58px.
-* Active item: `#2563EB` icon & bold label with subtle top border indicator or solid highlight.
+* Active item: `#4338CA` (Indigo 700) text & icon with electric top accent indicator.
 * Inactive item: `#64748B`.
 
-### 5.2 Metric Card (Core Component)
-* Pure white surface with crisp 1px border: `bg-white border border-slate-200 rounded-2xl p-4 shadow-xs`.
-* Top row: Label (uppercase 11px slate-500) + status pill.
-* Middle: Large bold value (`text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums`).
-* Bottom row: Subtext or trend indicator.
+### 5.2 Metric & Summary Cards
+* Card base: Pure white background `#FFFFFF`, 1px border `#E2E8F0`, subtle shadow `0 1px 3px rgba(15, 23, 42, 0.04)`.
+* Hero card accent: Electric indigo micro-badge or top accent.
+* Cashflow split: Teal `#0D9488` for Pemasukan, Crimson `#E11D48` for Pengeluaran.
+* Ratio Bar: Visual bar showing ratio of income vs expense in real-time.
 
-### 5.3 Bottom Sheets & Filters
-* Backdrop: `bg-slate-900/40 backdrop-blur-xs`.
-* Container: `bg-white border-t border-slate-200 rounded-t-2xl p-5 shadow-xl max-h-[90dvh] overflow-y-auto overscroll-contain`.
-* Grabber handle: `w-9 h-1 rounded-full bg-slate-200 mx-auto mb-3`.
-
-### 5.4 Functional Number Pad
-* Large display card with crisp borders.
-* Presets: `+50rb`, `+100rb`, `+500rb`, `+1jt` with high contrast borders.
-* Keys: 50–54px height, `rounded-xl bg-slate-50 border border-slate-200 text-xl font-bold text-slate-800`.
+### 5.3 NumberPad & Form Inputs
+* Keypad buttons: Clean crisp border `#E2E8F0` on white, active state `#EEF2FF`.
+* Preset amount chips: `#EEF2FF` background with `#4338CA` text.
+* Action buttons: Primary `#4338CA` with subtle glow shadow `0 2px 8px -1px rgba(67, 56, 202, 0.25)`.

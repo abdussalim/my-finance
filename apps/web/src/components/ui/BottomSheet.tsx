@@ -65,7 +65,7 @@ export function BottomSheet({ isOpen, onClose, title, subtitle, children }: Bott
             type="button"
             onClick={onClose}
             aria-label="Tutup lembar"
-            className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
+            className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
           >
             <X className="w-4 h-4" aria-hidden="true" />
           </button>

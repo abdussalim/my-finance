@@ -42,10 +42,10 @@ export function SegmentedControl<T extends string>({
             type="button"
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex-1 flex items-center justify-center gap-1.5 rounded-lg transition-colors duration-120 cursor-pointer press-scale focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none",
+              "flex-1 flex items-center justify-center gap-1.5 rounded-lg transition-colors duration-120 cursor-pointer press-scale focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none",
               size === "sm" ? "py-1.5 text-xs font-semibold" : "py-2 text-xs font-semibold",
               active
-                ? "bg-white text-slate-900 font-bold shadow-2xs border border-slate-200/80"
+                ? "bg-white text-[#1E1B4B] font-bold shadow-2xs border border-slate-200/90"
                 : "text-slate-600 hover:text-slate-900"
             )}
           >

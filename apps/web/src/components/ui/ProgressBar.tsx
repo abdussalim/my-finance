@@ -10,7 +10,7 @@ export interface ProgressBarProps {
 
 export function ProgressBar({
   progress,
-  color = "#2563EB",
+  color = "#4338CA",
   className,
   height = "md",
   ariaLabel = "Kemajuan",

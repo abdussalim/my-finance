@@ -23,13 +23,13 @@ import {
 } from "lucide-react";
 
 const WALLET_COLORS = [
-  "#2563EB", // Primary Blue
-  "#16A34A", // Positive Green
+  "#4338CA", // Deep Ultramarine
+  "#0D9488", // Teal
+  "#6366F1", // Electric Indigo
+  "#06B6D4", // Cyan
   "#D97706", // Amber
-  "#DC2626", // Red
-  "#4F46E5", // Indigo
-  "#7C3AED", // Violet
-  "#0F172A", // Slate Dark
+  "#E11D48", // Vivid Crimson
+  "#1E1B4B", // Midnight Navy
 ];
 
 export function Settings() {
@@ -186,14 +186,14 @@ export function Settings() {
             size="sm"
             variant="ghost"
             onClick={() => setIsWalletOpen(true)}
-            className="text-xs text-[#2563EB] font-bold"
+            className="text-xs text-[#4338CA] font-bold"
             aria-label="Tambah Dompet Baru"
           >
             <Plus className="w-3.5 h-3.5 mr-0.5" aria-hidden="true" /> Tambah
           </Button>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 divide-y divide-slate-100 shadow-2xs">
+        <div className="bg-white rounded-xl border border-slate-200/90 divide-y divide-slate-100 shadow-2xs">
           {wallets.length === 0 ? (
             <p className="p-4 text-xs text-slate-500 text-center">
               Belum ada dompet. Tambahkan rekening atau dompet kas Anda.
@@ -204,7 +204,7 @@ export function Settings() {
                 <div className="flex items-center gap-2.5">
                   <div
                     className="w-7 h-7 rounded-md flex items-center justify-center text-white text-xs font-bold shadow-2xs"
-                    style={{ backgroundColor: w.color || "#2563EB" }}
+                    style={{ backgroundColor: w.color || "#4338CA" }}
                   >
                     <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
                   </div>
@@ -220,7 +220,7 @@ export function Settings() {
                   <button
                     type="button"
                     onClick={() => handleDeleteWallet(w.id, w.name)}
-                    className="text-slate-400 hover:text-rose-600 p-1 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
+                    className="text-slate-400 hover:text-rose-600 p-1 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
                     aria-label={`Hapus dompet ${w.name}`}
                   >
                     <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
@@ -242,14 +242,14 @@ export function Settings() {
             size="sm"
             variant="ghost"
             onClick={() => setIsCatOpen(true)}
-            className="text-xs text-[#2563EB] font-bold"
+            className="text-xs text-[#4338CA] font-bold"
             aria-label="Tambah Kategori Baru"
           >
             <Plus className="w-3.5 h-3.5 mr-0.5" aria-hidden="true" /> Tambah
           </Button>
         </div>
 
-        <Card className="p-3">
+        <Card className="p-3 border-slate-200/90 shadow-2xs">
           <div className="flex flex-wrap gap-1.5" role="list" aria-label="Daftar Kategori">
             {categories.map((c) => (
               <span
@@ -259,7 +259,7 @@ export function Settings() {
               >
                 <span
                   className={`w-2 h-2 rounded-full ${
-                    c.type === "income" ? "bg-[#16A34A]" : "bg-[#DC2626]"
+                    c.type === "income" ? "bg-[#0D9488]" : "bg-[#E11D48]"
                   }`}
                   aria-hidden="true"
                 />
@@ -267,7 +267,7 @@ export function Settings() {
                 <button
                   type="button"
                   onClick={() => handleDeleteCategory(c.id, c.name)}
-                  className="text-slate-400 hover:text-rose-600 ml-0.5 p-0.5 rounded-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
+                  className="text-slate-400 hover:text-rose-600 ml-0.5 p-0.5 rounded-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
                   aria-label={`Hapus kategori ${c.name}`}
                 >
                   <X className="w-3 h-3" aria-hidden="true" />
@@ -284,7 +284,7 @@ export function Settings() {
           <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" /> Keamanan Akun
         </h2>
 
-        <Card className="p-3.5">
+        <Card className="p-3.5 border-slate-200/90 shadow-2xs">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-bold text-slate-900">Master PIN 6-Digit</p>
@@ -304,22 +304,22 @@ export function Settings() {
               }}
               className="text-xs font-bold"
             >
-              <KeyRound className="w-3.5 h-3.5 mr-1 text-[#2563EB]" aria-hidden="true" /> Ubah PIN
+              <KeyRound className="w-3.5 h-3.5 mr-1 text-[#4338CA]" aria-hidden="true" /> Ubah PIN
             </Button>
           </div>
         </Card>
       </div>
 
       {/* Section Architecture & System Badge */}
-      <Card className="p-3.5 bg-blue-50/70 border-blue-200">
+      <Card className="p-3.5 bg-indigo-50/70 border-indigo-200 shadow-2xs">
         <div className="flex items-start gap-2.5">
-          <div className="w-7 h-7 rounded-md bg-[#2563EB] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+          <div className="w-7 h-7 rounded-md bg-[#4338CA] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
             <Cpu className="w-3.5 h-3.5" aria-hidden="true" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <p className="text-xs font-bold text-slate-900" translate="no">My Finance v1.0</p>
-              <span className="text-[10px] font-bold text-[#16A34A] bg-[#DCFCE7] border border-emerald-200 px-1.5 py-0.2 rounded-md">
+              <span className="text-[10px] font-bold text-[#0D9488] bg-teal-50 border border-teal-200 px-1.5 py-0.2 rounded-md">
                 &lt; 10ms CPU
               </span>
             </div>
@@ -361,7 +361,7 @@ export function Settings() {
               name="wallet_name"
               type="text"
               placeholder="Contoh: BCA, Kas Tunai, GoPay…"
-              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
               value={wName}
               onChange={(e) => setWName(e.target.value)}
             />
@@ -394,8 +394,8 @@ export function Settings() {
                   type="button"
                   aria-label={`Pilih warna ${col}`}
                   onClick={() => setWColor(col)}
-                  className={`w-6 h-6 rounded-md cursor-pointer transition-transform duration-120 press-scale focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
-                    wColor === col ? "scale-110 ring-2 ring-offset-2 ring-slate-400 shadow-2xs" : ""
+                  className={`w-6 h-6 rounded-md cursor-pointer transition-transform duration-120 press-scale focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none ${
+                    wColor === col ? "scale-110 ring-2 ring-offset-2 ring-indigo-400 shadow-2xs" : ""
                   }`}
                   style={{ backgroundColor: col }}
                 />
@@ -433,7 +433,7 @@ export function Settings() {
               name="category_name"
               type="text"
               placeholder="Contoh: Kopi, Makanan, Gaji…"
-              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
+              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
               value={cName}
               onChange={(e) => setCName(e.target.value)}
             />
@@ -478,7 +478,7 @@ export function Settings() {
             disabled={pinLoading}
           />
           {pinError ? (
-            <p className="text-xs text-[#DC2626] font-bold mt-2" role="alert">{pinError}</p>
+            <p className="text-xs text-[#E11D48] font-bold mt-2" role="alert">{pinError}</p>
           ) : null}
         </div>
       </BottomSheet>

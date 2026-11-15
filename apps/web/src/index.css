@@ -2,17 +2,19 @@
 
 @layer base {
   :root {
-    --bg-canvas: #F8FAFC;
+    --bg-canvas: #F4F6FB;
     --surface: #FFFFFF;
-    --surface-alt: #F1F5F9;
-    --border: #E2E8F0;
-    --divider: #E5E7EB;
+    --surface-alt: #EEF2FF;
+    --border: #E0E7FF;
+    --divider: #E2E8F0;
     --text-primary: #0F172A;
     --text-secondary: #475569;
     --text-muted: #64748B;
-    --primary: #2563EB;
-    --positive: #16A34A;
-    --negative: #DC2626;
+    --primary: #4338CA;
+    --primary-hover: #3730A3;
+    --primary-light: #EEF2FF;
+    --positive: #0D9488;
+    --negative: #E11D48;
     --warning: #D97706;
   }
 
@@ -36,7 +38,7 @@
 
 /* Accessible visible focus states */
 :focus-visible {
-  outline: 2px solid #2563EB;
+  outline: 2px solid #4338CA;
   outline-offset: 2px;
 }
 

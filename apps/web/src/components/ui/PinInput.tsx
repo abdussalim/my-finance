@@ -67,9 +67,9 @@ export function PinInput({
             <div
               key={i}
               className={cn(
-                "w-3.5 h-3.5 rounded-full border-2 transition-colors duration-120",
+                "w-3.5 h-3.5 rounded-full border-2 transition-all duration-120",
                 filled
-                  ? "bg-[#2563EB] border-[#2563EB]"
+                  ? "bg-[#4338CA] border-[#4338CA] shadow-[0_0_8px_rgba(67,56,202,0.4)]"
                   : "bg-slate-100 border-slate-300"
               )}
             />
@@ -97,7 +97,7 @@ export function PinInput({
               aria-label={`Digit ${item.num} ${item.sub}`}
               disabled={disabled}
               onClick={() => handleDigit(item.num)}
-              className="h-14 rounded-xl bg-white hover:bg-slate-50 active:bg-slate-100 flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
+              className="h-14 rounded-xl bg-white hover:bg-slate-50 active:bg-indigo-50/60 flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
             >
               <span className="text-xl font-bold text-slate-900 leading-none">{item.num}</span>
               {item.sub ? (
@@ -117,7 +117,7 @@ export function PinInput({
             aria-label="Digit 0"
             disabled={disabled}
             onClick={() => handleDigit("0")}
-            className="h-14 rounded-xl bg-white hover:bg-slate-50 active:bg-slate-100 flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
+            className="h-14 rounded-xl bg-white hover:bg-slate-50 active:bg-indigo-50/60 flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
           >
             <span className="text-xl font-bold text-slate-900 leading-none">0</span>
           </button>
@@ -128,7 +128,7 @@ export function PinInput({
             aria-label="Hapus digit PIN"
             disabled={disabled}
             onClick={handleDelete}
-            className="h-14 rounded-xl bg-slate-50 hover:bg-slate-100 active:bg-slate-200 flex items-center justify-center text-slate-600 press-scale cursor-pointer border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
+            className="h-14 rounded-xl bg-slate-50 hover:bg-slate-100 active:bg-slate-200 flex items-center justify-center text-slate-600 press-scale cursor-pointer border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
           >
             <Delete className="w-5 h-5" aria-hidden="true" />
           </button>
