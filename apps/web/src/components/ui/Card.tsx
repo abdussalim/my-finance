@@ -3,30 +3,30 @@ import { cn } from "../../lib/cn";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  variant?: "glass" | "elevated" | "flat";
+  variant?: "surface" | "alt" | "outline";
   interactive?: boolean;
 }
 
 export function Card({
   className,
   children,
-  variant = "glass",
+  variant = "surface",
   interactive = false,
   ...props
 }: CardProps) {
   const variantStyles = {
-    glass: "glass-surface",
-    elevated: "glass-surface-elevated",
-    flat: "bg-slate-100/70 border border-slate-200/50",
+    surface: "bg-white border border-slate-200 shadow-xs",
+    alt: "bg-slate-50 border border-slate-200/80 shadow-xs",
+    outline: "bg-transparent border border-slate-200",
   };
 
   return (
     <div
       className={cn(
-        "rounded-3xl p-5 transition-transform transition-shadow duration-150",
+        "rounded-2xl p-4 transition-colors duration-120",
         variantStyles[variant],
         interactive &&
-          "press-scale cursor-pointer active:shadow-sm focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none",
+          "press-scale cursor-pointer hover:border-slate-300 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none",
         className
       )}
       {...props}

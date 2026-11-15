@@ -23,12 +23,12 @@ import {
 } from "lucide-react";
 
 const WALLET_COLORS = [
-  "#007AFF", // iOS Blue
-  "#10B981", // Emerald
-  "#F59E0B", // Amber
-  "#F43F5E", // Rose
-  "#6366F1", // Indigo
-  "#8B5CF6", // Purple
+  "#2563EB", // Primary Blue
+  "#16A34A", // Positive Green
+  "#D97706", // Amber
+  "#DC2626", // Red
+  "#4F46E5", // Indigo
+  "#7C3AED", // Violet
   "#0F172A", // Slate Dark
 ];
 
@@ -165,62 +165,62 @@ export function Settings() {
   };
 
   return (
-    <div className="space-y-6 pt-4">
+    <div className="space-y-4 pt-3">
       {/* Top Header */}
-      <div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <div className="pb-1">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
           Preferensi & Konfigurasi
         </span>
-        <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-base font-bold text-slate-900">
           Setelan Aplikasi
         </h1>
       </div>
 
       {/* Section Wallets */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between px-0.5">
+          <h2 className="flex items-center gap-1.5 text-xs font-bold text-slate-600 uppercase tracking-wider">
             <Wallet className="w-3.5 h-3.5" aria-hidden="true" /> Dompet & Rekening ({wallets.length})
           </h2>
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setIsWalletOpen(true)}
-            className="text-xs text-[#007AFF] font-bold"
+            className="text-xs text-[#2563EB] font-bold"
             aria-label="Tambah Dompet Baru"
           >
             <Plus className="w-3.5 h-3.5 mr-0.5" aria-hidden="true" /> Tambah
           </Button>
         </div>
 
-        <Card className="p-2 divide-y divide-slate-100">
+        <div className="bg-white rounded-xl border border-slate-200 divide-y divide-slate-100 shadow-2xs">
           {wallets.length === 0 ? (
-            <p className="p-5 text-xs text-slate-400 text-center">
+            <p className="p-4 text-xs text-slate-500 text-center">
               Belum ada dompet. Tambahkan rekening atau dompet kas Anda.
             </p>
           ) : (
             wallets.map((w) => (
               <div key={w.id} className="p-3 flex items-center justify-between">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <div
-                    className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-bold shadow-xs"
-                    style={{ backgroundColor: w.color || "#007AFF" }}
+                    className="w-7 h-7 rounded-md flex items-center justify-center text-white text-xs font-bold shadow-2xs"
+                    style={{ backgroundColor: w.color || "#2563EB" }}
                   >
-                    <Wallet className="w-4 h-4" aria-hidden="true" />
+                    <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-slate-900">{w.name}</p>
-                    <p className="text-[10px] text-slate-400 uppercase font-medium">{w.type}</p>
+                    <p className="text-[10px] text-slate-500 uppercase font-medium">{w.type}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-slate-800 num-tabular">
                     {formatCurrency(w.current_balance)}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleDeleteWallet(w.id, w.name)}
-                    className="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                    className="text-slate-400 hover:text-rose-600 p-1 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
                     aria-label={`Hapus dompet ${w.name}`}
                   >
                     <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
@@ -229,37 +229,37 @@ export function Settings() {
               </div>
             ))
           )}
-        </Card>
+        </div>
       </div>
 
       {/* Section Categories */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between px-0.5">
+          <h2 className="flex items-center gap-1.5 text-xs font-bold text-slate-600 uppercase tracking-wider">
             <Tag className="w-3.5 h-3.5" aria-hidden="true" /> Kategori Transaksi ({categories.length})
           </h2>
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setIsCatOpen(true)}
-            className="text-xs text-[#007AFF] font-bold"
+            className="text-xs text-[#2563EB] font-bold"
             aria-label="Tambah Kategori Baru"
           >
             <Plus className="w-3.5 h-3.5 mr-0.5" aria-hidden="true" /> Tambah
           </Button>
         </div>
 
-        <Card className="p-3.5">
+        <Card className="p-3">
           <div className="flex flex-wrap gap-1.5" role="list" aria-label="Daftar Kategori">
             {categories.map((c) => (
               <span
                 key={c.id}
                 role="listitem"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold pl-2.5 pr-1.5 py-1.5 bg-slate-100/90 rounded-xl text-slate-700 border border-slate-200/50"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold pl-2 pr-1 py-1 bg-slate-50 rounded-lg text-slate-700 border border-slate-200"
               >
                 <span
                   className={`w-2 h-2 rounded-full ${
-                    c.type === "income" ? "bg-emerald-500" : "bg-rose-500"
+                    c.type === "income" ? "bg-[#16A34A]" : "bg-[#DC2626]"
                   }`}
                   aria-hidden="true"
                 />
@@ -267,7 +267,7 @@ export function Settings() {
                 <button
                   type="button"
                   onClick={() => handleDeleteCategory(c.id, c.name)}
-                  className="text-slate-400 hover:text-rose-500 ml-0.5 p-0.5 rounded cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                  className="text-slate-400 hover:text-rose-600 ml-0.5 p-0.5 rounded-sm cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
                   aria-label={`Hapus kategori ${c.name}`}
                 >
                   <X className="w-3 h-3" aria-hidden="true" />
@@ -279,21 +279,21 @@ export function Settings() {
       </div>
 
       {/* Section Security & Passcode */}
-      <div className="space-y-2.5">
-        <h2 className="px-1 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+      <div className="space-y-2">
+        <h2 className="px-0.5 text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
           <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" /> Keamanan Akun
         </h2>
 
-        <Card className="p-4 space-y-3">
+        <Card className="p-3.5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-bold text-slate-900">Master PIN 6-Digit</p>
-              <p className="text-[11px] text-slate-400">
-                Lindungi akses transaksi dan data finansial pribadi
+              <p className="text-[11px] text-slate-500">
+                Akses transaksi dan data finansial pribadi
               </p>
             </div>
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => {
                 setPinStep("old");
@@ -304,29 +304,29 @@ export function Settings() {
               }}
               className="text-xs font-bold"
             >
-              <KeyRound className="w-3.5 h-3.5 mr-1 text-[#007AFF]" aria-hidden="true" /> Ubah PIN
+              <KeyRound className="w-3.5 h-3.5 mr-1 text-[#2563EB]" aria-hidden="true" /> Ubah PIN
             </Button>
           </div>
         </Card>
       </div>
 
       {/* Section Architecture & System Badge */}
-      <Card className="p-4 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 border-blue-100/80">
-        <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
-            <Cpu className="w-4 h-4" aria-hidden="true" />
+      <Card className="p-3.5 bg-blue-50/70 border-blue-200">
+        <div className="flex items-start gap-2.5">
+          <div className="w-7 h-7 rounded-md bg-[#2563EB] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+            <Cpu className="w-3.5 h-3.5" aria-hidden="true" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-bold text-slate-900" translate="no">My Finance PWA v1.0</p>
-              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-1.5 py-0.5 rounded-full">
+              <p className="text-xs font-bold text-slate-900" translate="no">My Finance v1.0</p>
+              <span className="text-[10px] font-bold text-[#16A34A] bg-[#DCFCE7] border border-emerald-200 px-1.5 py-0.2 rounded-md">
                 &lt; 10ms CPU
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <p className="text-[11px] text-slate-600 mt-0.5">
               Cloudflare Pages + Edge Workers + D1 Database
             </p>
-            <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1" translate="no">
+            <p className="text-[10px] text-slate-500 mt-1 flex items-center gap-1" translate="no">
               <Layers className="w-3 h-3" aria-hidden="true" /> finance.abdussalim.my.id
             </p>
           </div>
@@ -338,7 +338,7 @@ export function Settings() {
         variant="danger"
         size="lg"
         onClick={logout}
-        className="gap-2 shadow-sm"
+        className="gap-2 shadow-2xs"
         aria-label="Kunci Aplikasi dan Keluar"
       >
         <LogOut className="w-4 h-4" aria-hidden="true" /> Kunci Aplikasi (Logout)
@@ -349,26 +349,26 @@ export function Settings() {
         isOpen={isWalletOpen}
         onClose={() => setIsWalletOpen(false)}
         title="Tambah Dompet Baru"
-        subtitle="Buat rekening bank, e-wallet, atau dompet tunai"
+        subtitle="Buat rekening bank, e-wallet, atau kas"
       >
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           <div>
-            <label htmlFor="wallet-name" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+            <label htmlFor="wallet-name" className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1 block">
               Nama Dompet
             </label>
             <input
               id="wallet-name"
               name="wallet_name"
               type="text"
-              placeholder="Contoh: BCA, Dompet Tunai, GoPay…"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+              placeholder="Contoh: BCA, Kas Tunai, GoPay…"
+              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
               value={wName}
               onChange={(e) => setWName(e.target.value)}
             />
           </div>
 
-          <div className="space-y-2">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+          <div className="space-y-1.5">
+            <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block">
               Tipe Dompet
             </span>
             <SegmentedControl
@@ -383,8 +383,8 @@ export function Settings() {
             />
           </div>
 
-          <div className="space-y-2">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+          <div className="space-y-1.5">
+            <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block">
               Warna Kartu
             </span>
             <div className="flex gap-2 py-1" role="group" aria-label="Pilih warna dompet">
@@ -394,8 +394,8 @@ export function Settings() {
                   type="button"
                   aria-label={`Pilih warna ${col}`}
                   onClick={() => setWColor(col)}
-                  className={`w-7 h-7 rounded-full cursor-pointer transition-transform duration-150 press-scale focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
-                    wColor === col ? "scale-110 ring-2 ring-offset-2 ring-slate-400 shadow-xs" : ""
+                  className={`w-6 h-6 rounded-md cursor-pointer transition-transform duration-120 press-scale focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
+                    wColor === col ? "scale-110 ring-2 ring-offset-2 ring-slate-400 shadow-2xs" : ""
                   }`}
                   style={{ backgroundColor: col }}
                 />
@@ -404,7 +404,7 @@ export function Settings() {
           </div>
 
           <div>
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+            <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1 block">
               Saldo Awal
             </span>
             <NumberPad value={wBalance} onChange={setWBalance} />
@@ -423,24 +423,24 @@ export function Settings() {
         title="Tambah Kategori Baru"
         subtitle="Kelompokkan transaksi pemasukan dan pengeluaran"
       >
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           <div>
-            <label htmlFor="category-name" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+            <label htmlFor="category-name" className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1 block">
               Nama Kategori
             </label>
             <input
               id="category-name"
               name="category_name"
               type="text"
-              placeholder="Contoh: Kopi & Cafe, Transportasi…"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+              placeholder="Contoh: Kopi, Makanan, Gaji…"
+              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
               value={cName}
               onChange={(e) => setCName(e.target.value)}
             />
           </div>
 
-          <div className="space-y-2">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+          <div className="space-y-1.5">
+            <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block">
               Jenis Kategori
             </span>
             <SegmentedControl
@@ -471,14 +471,14 @@ export function Settings() {
             : "Masukkan 6-digit PIN baru yang ingin digunakan"
         }
       >
-        <div className="text-center py-4">
+        <div className="text-center py-3">
           <PinInput
             value={pinStep === "old" ? oldPin : newPin}
             onChange={pinStep === "old" ? handleOldPin : handleNewPin}
             disabled={pinLoading}
           />
           {pinError ? (
-            <p className="text-xs text-rose-500 font-bold mt-2" role="alert">{pinError}</p>
+            <p className="text-xs text-[#DC2626] font-bold mt-2" role="alert">{pinError}</p>
           ) : null}
         </div>
       </BottomSheet>

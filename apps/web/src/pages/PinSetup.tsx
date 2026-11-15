@@ -15,7 +15,7 @@ export function PinSetup() {
     setFirstPin(pin);
     setError(null);
     if (pin.length === 6) {
-      setTimeout(() => setStep("confirm"), 180);
+      setTimeout(() => setStep("confirm"), 150);
     }
   };
 
@@ -41,21 +41,21 @@ export function PinSetup() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-dvh px-6 py-8 text-center max-w-sm mx-auto">
+    <div className="flex flex-col items-center justify-center min-h-dvh px-5 py-6 text-center max-w-sm mx-auto">
       {/* Icon */}
       <div
-        className="w-16 h-16 glass-surface text-[#007AFF] rounded-3xl flex items-center justify-center mb-5 border border-white/80 shadow-[0_8px_24px_rgba(0,0,0,0.04)]"
+        className="w-14 h-14 bg-blue-50 text-[#2563EB] border border-blue-200 rounded-2xl flex items-center justify-center mb-4 shadow-2xs"
         aria-hidden="true"
       >
-        <ShieldCheck className="w-8 h-8" />
+        <ShieldCheck className="w-7 h-7" />
       </div>
 
-      <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
+      <h1 className="text-xl font-extrabold tracking-tight text-slate-900">
         {step === "create" ? "Buat Master PIN" : "Konfirmasi PIN"}
       </h1>
-      <p className="text-xs font-medium text-slate-400 mt-1 mb-2 max-w-xs">
+      <p className="text-xs font-medium text-slate-500 mt-1 mb-2 max-w-xs">
         {step === "create"
-          ? "Atur 6-digit PIN untuk mengamankan seluruh transaksi dan catatan finansial Anda."
+          ? "Atur 6-digit PIN untuk mengamankan data finansial pribadi Anda."
           : "Masukkan kembali 6-digit PIN yang telah Anda buat."}
       </p>
 
@@ -67,7 +67,7 @@ export function PinSetup() {
       />
 
       {error ? (
-        <p role="alert" aria-live="polite" className="text-xs text-rose-500 font-bold mt-2">
+        <p role="alert" aria-live="polite" className="text-xs text-[#DC2626] font-bold mt-2">
           {error}
         </p>
       ) : null}
@@ -75,10 +75,10 @@ export function PinSetup() {
         <p
           role="status"
           aria-live="polite"
-          className="text-xs text-slate-400 font-medium mt-3 flex items-center gap-1.5 justify-center"
+          className="text-xs text-slate-500 font-medium mt-2 flex items-center gap-1.5 justify-center"
         >
           <span
-            className="w-3.5 h-3.5 border-2 border-[#007AFF] border-t-transparent rounded-full animate-spin"
+            className="w-3.5 h-3.5 border-2 border-[#2563EB] border-t-transparent rounded-full animate-spin"
             aria-hidden="true"
           />
           Menyimpan PIN…

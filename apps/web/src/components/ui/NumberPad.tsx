@@ -34,13 +34,13 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
 
   return (
     <div className="flex flex-col items-center w-full">
-      {/* Amount Display */}
-      <div className="w-full text-center py-5 my-2 glass-hero rounded-3xl border border-white/80 shadow-sm">
-        <p className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase mb-1">
+      {/* High-Contrast Amount Display */}
+      <div className="w-full text-center py-4 my-2 bg-slate-50 rounded-xl border border-slate-200">
+        <p className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase mb-1">
           Nominal Transaksi
         </p>
         <div
-          className="text-3xl font-extrabold tracking-tight text-slate-900 num-tabular"
+          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 num-tabular"
           aria-live="polite"
         >
           {formatCurrency(value)}
@@ -48,7 +48,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
       </div>
 
       {/* Quick Add Presets */}
-      <div className="grid grid-cols-4 gap-2 w-full mt-2 mb-3">
+      <div className="grid grid-cols-4 gap-2 w-full mt-1 mb-2.5">
         {[
           { label: "+50rb", val: 50000 },
           { label: "+100rb", val: 100000 },
@@ -60,7 +60,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
             type="button"
             aria-label={`Tambah ${item.label}`}
             onClick={() => handleQuickAdd(item.val)}
-            className="py-1.5 px-1 bg-white/70 hover:bg-white active:bg-slate-100 rounded-xl text-xs font-semibold text-slate-700 press-scale cursor-pointer border border-slate-200/50 shadow-xs focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+            className="py-1.5 px-1 bg-white hover:bg-slate-100 active:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700 press-scale cursor-pointer border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
           >
             {item.label}
           </button>
@@ -68,14 +68,14 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
       </div>
 
       {/* Grid Keypad */}
-      <div className="grid grid-cols-3 gap-2 w-full">
+      <div className="grid grid-cols-3 gap-1.5 w-full">
         {["1", "2", "3", "4", "5", "6", "7", "8", "9", "000", "0"].map((btn) => (
           <button
             key={btn}
             type="button"
             aria-label={`Digit ${btn}`}
             onClick={() => handleDigit(btn)}
-            className="h-13 bg-white/75 hover:bg-white active:bg-slate-100 rounded-2xl text-xl font-bold text-slate-800 press-scale flex items-center justify-center cursor-pointer select-none border border-white/80 shadow-xs focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+            className="h-12 bg-white hover:bg-slate-50 active:bg-slate-100 rounded-xl text-lg font-bold text-slate-800 press-scale flex items-center justify-center cursor-pointer select-none border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
           >
             {btn}
           </button>
@@ -84,7 +84,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
           type="button"
           aria-label="Hapus digit terakhir"
           onClick={handleDelete}
-          className="h-13 bg-white/75 hover:bg-white active:bg-slate-100 rounded-2xl text-xl font-semibold text-slate-500 press-scale flex items-center justify-center cursor-pointer select-none border border-white/80 shadow-xs focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+          className="h-12 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 rounded-xl text-lg font-semibold text-slate-600 press-scale flex items-center justify-center cursor-pointer select-none border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
         >
           <Delete className="w-5 h-5 text-slate-600" aria-hidden="true" />
         </button>

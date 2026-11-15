@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { apiFetch } from "../lib/api-client";
-import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { BottomSheet } from "../components/ui/BottomSheet";
 import { NumberPad } from "../components/ui/NumberPad";
@@ -154,21 +153,21 @@ export function Transactions() {
   const currentAvailableCategories = categories.filter((c) => c.type === type);
 
   return (
-    <div className="space-y-4 pt-4">
+    <div className="space-y-4 pt-3">
       {/* Top Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pb-1">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             Aktivitas Keuangan
           </span>
-          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-base font-bold text-slate-900">
             Riwayat Transaksi
           </h1>
         </div>
         <Button
           size="sm"
           onClick={() => setIsAddOpen(true)}
-          className="gap-1 shadow-sm"
+          className="gap-1 shadow-2xs"
           aria-label="Catat Transaksi Baru"
         >
           <Plus className="w-4 h-4" aria-hidden="true" /> Catat
@@ -199,10 +198,10 @@ export function Transactions() {
               type="button"
               onClick={() => setFilterWallet("")}
               aria-pressed={filterWallet === ""}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
+              className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors duration-120 press-scale cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
                 filterWallet === ""
-                  ? "bg-slate-900 text-white shadow-xs"
-                  : "glass-surface text-slate-600 hover:text-slate-900"
+                  ? "bg-slate-900 border-slate-900 text-white shadow-2xs"
+                  : "bg-white border-slate-200 text-slate-600 hover:text-slate-900"
               }`}
             >
               Semua Dompet
@@ -213,15 +212,15 @@ export function Transactions() {
                 type="button"
                 onClick={() => setFilterWallet(w.id)}
                 aria-pressed={filterWallet === w.id}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors duration-150 press-scale flex items-center gap-1.5 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
+                className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors duration-120 press-scale flex items-center gap-1.5 cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
                   filterWallet === w.id
-                    ? "bg-[#007AFF] text-white shadow-[0_2px_8px_rgba(0,122,255,0.3)]"
-                    : "glass-surface text-slate-600 hover:text-slate-900"
+                    ? "bg-[#2563EB] border-[#2563EB] text-white shadow-2xs"
+                    : "bg-white border-slate-200 text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <span
                   className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: w.color || "#007AFF" }}
+                  style={{ backgroundColor: w.color || "#2563EB" }}
                   aria-hidden="true"
                 />
                 {w.name}
@@ -232,10 +231,10 @@ export function Transactions() {
       </div>
 
       {/* Grouped Transaction List */}
-      <div className="space-y-5">
+      <div className="space-y-4">
         {groupedByDate.length === 0 ? (
           <EmptyState
-            icon={<Receipt className="w-7 h-7" />}
+            icon={<Receipt className="w-6 h-6" />}
             title="Belum ada transaksi"
             description="Tidak ada riwayat transaksi pada filter ini. Mulai catat keuangan harian Anda."
             action={
@@ -246,13 +245,13 @@ export function Transactions() {
           />
         ) : (
           groupedByDate.map(([groupDate, { items, dayNet }]) => (
-            <div key={groupDate} className="space-y-2">
+            <div key={groupDate} className="space-y-1.5">
               {/* Date Header with Daily Net Summary */}
-              <div className="flex items-center justify-between px-1 text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <div className="flex items-center justify-between px-1 text-xs font-bold text-slate-500 uppercase tracking-wider">
                 <span>{relativeDate(groupDate)}</span>
                 <span
-                  className={`num-tabular font-semibold lowercase ${
-                    dayNet >= 0 ? "text-emerald-600" : "text-rose-500"
+                  className={`num-tabular font-bold ${
+                    dayNet >= 0 ? "text-[#16A34A]" : "text-[#DC2626]"
                   }`}
                 >
                   {dayNet >= 0 ? "+" : ""}
@@ -261,24 +260,24 @@ export function Transactions() {
               </div>
 
               {items.map((tx) => (
-                <Card
+                <div
                   key={tx.id}
-                  className="p-3.5 flex items-center justify-between border-slate-200/40"
+                  className="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between shadow-2xs"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
                     <div
-                      className={`w-10 h-10 rounded-2xl flex items-center justify-center ${
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                         tx.type === "income" || tx.type === "transfer_in"
-                          ? "bg-emerald-50 text-emerald-600"
+                          ? "bg-emerald-100 text-[#16A34A]"
                           : tx.type === "expense"
-                          ? "bg-rose-50 text-rose-600"
-                          : "bg-indigo-50 text-indigo-600"
+                          ? "bg-rose-100 text-[#DC2626]"
+                          : "bg-indigo-100 text-[#4F46E5]"
                       }`}
                     >
                       {tx.type === "income" || tx.type === "transfer_in" ? (
-                        <ArrowDownRight className="w-5 h-5" aria-hidden="true" />
+                        <ArrowDownRight className="w-4 h-4" aria-hidden="true" />
                       ) : tx.type === "expense" ? (
-                        <ArrowUpRight className="w-5 h-5" aria-hidden="true" />
+                        <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
                       ) : (
                         <ArrowRightLeft className="w-4 h-4" aria-hidden="true" />
                       )}
@@ -289,8 +288,8 @@ export function Transactions() {
                           tx.category_name ||
                           (tx.type.includes("transfer") ? "Transfer Saldo" : "Lainnya")}
                       </p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        <span className="font-semibold text-slate-600">{tx.wallet_name}</span>
+                      <p className="text-[11px] text-slate-500 mt-0.5">
+                        <span className="font-semibold text-slate-700">{tx.wallet_name}</span>
                         {tx.category_name && tx.note ? ` • ${tx.category_name}` : ""}
                       </p>
                     </div>
@@ -300,8 +299,8 @@ export function Transactions() {
                     <span
                       className={`text-xs font-extrabold num-tabular ${
                         tx.type === "income" || tx.type === "transfer_in"
-                          ? "text-emerald-600"
-                          : "text-rose-600"
+                          ? "text-[#16A34A]"
+                          : "text-[#DC2626]"
                       }`}
                     >
                       {tx.type === "income" || tx.type === "transfer_in" ? "+" : "-"}
@@ -310,13 +309,13 @@ export function Transactions() {
                     <button
                       type="button"
                       onClick={() => handleDelete(tx.id)}
-                      className="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                      className="text-slate-400 hover:text-rose-600 p-1 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none"
                       aria-label={`Hapus transaksi ${tx.note || tx.category_name || "ini"}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
                   </div>
-                </Card>
+                </div>
               ))}
             </div>
           ))
@@ -328,9 +327,9 @@ export function Transactions() {
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         title="Catat Transaksi Baru"
-        subtitle="Pilih jenis dan masukkan nominal transaksi Anda"
+        subtitle="Pilih jenis dan masukkan nominal transaksi"
       >
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           <SegmentedControl
             ariaLabel="Pilih Jenis Transaksi"
             options={[
@@ -347,10 +346,10 @@ export function Transactions() {
 
           <NumberPad value={amount} onChange={setAmount} />
 
-          <div className="space-y-3 pt-2">
+          <div className="space-y-3 pt-1">
             {/* Wallet Selection */}
             <div>
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1.5">
                 <WalletIcon className="w-3.5 h-3.5" aria-hidden="true" /> Sumber Dompet
               </span>
               <div className="grid grid-cols-2 gap-2" role="group" aria-label="Pilih dompet sumber">
@@ -360,20 +359,20 @@ export function Transactions() {
                     type="button"
                     onClick={() => setWalletId(w.id)}
                     aria-pressed={walletId === w.id}
-                    className={`p-2.5 rounded-2xl border text-left flex items-center gap-2 transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
+                    className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
                       walletId === w.id
-                        ? "bg-blue-50/70 border-[#007AFF] text-slate-900 shadow-xs"
-                        : "bg-slate-50 border-slate-200/80 text-slate-600"
+                        ? "bg-blue-50 border-[#2563EB] text-slate-900 shadow-2xs"
+                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     <span
-                      className="w-3 h-3 rounded-full shrink-0"
-                      style={{ backgroundColor: w.color || "#007AFF" }}
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={{ backgroundColor: w.color || "#2563EB" }}
                       aria-hidden="true"
                     />
                     <div className="truncate">
                       <p className="text-xs font-bold truncate">{w.name}</p>
-                      <p className="text-[10px] text-slate-400 num-tabular truncate">
+                      <p className="text-[10px] text-slate-500 num-tabular truncate">
                         {formatCurrency(w.current_balance)}
                       </p>
                     </div>
@@ -385,7 +384,7 @@ export function Transactions() {
             {/* Target Wallet for Transfer */}
             {type === "transfer" ? (
               <div>
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1.5">
                   <ArrowRightLeft className="w-3.5 h-3.5" aria-hidden="true" /> Dompet Tujuan
                 </span>
                 <div className="grid grid-cols-2 gap-2" role="group" aria-label="Pilih dompet tujuan">
@@ -397,20 +396,20 @@ export function Transactions() {
                         type="button"
                         onClick={() => setTargetWalletId(w.id)}
                         aria-pressed={targetWalletId === w.id}
-                        className={`p-2.5 rounded-2xl border text-left flex items-center gap-2 transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
+                        className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
                           targetWalletId === w.id
-                            ? "bg-indigo-50/70 border-indigo-500 text-slate-900 shadow-xs"
-                            : "bg-slate-50 border-slate-200/80 text-slate-600"
+                            ? "bg-indigo-50 border-[#4F46E5] text-slate-900 shadow-2xs"
+                            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
                         }`}
                       >
                         <span
-                          className="w-3 h-3 rounded-full shrink-0"
-                          style={{ backgroundColor: w.color || "#6366F1" }}
+                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                          style={{ backgroundColor: w.color || "#4F46E5" }}
                           aria-hidden="true"
                         />
                         <div className="truncate">
                           <p className="text-xs font-bold truncate">{w.name}</p>
-                          <p className="text-[10px] text-slate-400 num-tabular truncate">
+                          <p className="text-[10px] text-slate-500 num-tabular truncate">
                             {formatCurrency(w.current_balance)}
                           </p>
                         </div>
@@ -421,16 +420,16 @@ export function Transactions() {
             ) : (
               /* Categories Chips */
               <div>
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1.5">
                   Kategori
                 </span>
                 {currentAvailableCategories.length === 0 ? (
-                  <p className="text-xs text-slate-400 py-1 italic">
+                  <p className="text-xs text-slate-500 py-1 italic">
                     Belum ada kategori untuk jenis ini.
                   </p>
                 ) : (
                   <div
-                    className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1"
+                    className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1"
                     role="group"
                     aria-label="Pilih kategori"
                   >
@@ -440,10 +439,10 @@ export function Transactions() {
                         type="button"
                         onClick={() => setCategoryId(categoryId === c.id ? "" : c.id)}
                         aria-pressed={categoryId === c.id}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors duration-150 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none ${
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors duration-120 press-scale cursor-pointer border focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none ${
                           categoryId === c.id
-                            ? "bg-[#007AFF] text-white shadow-xs"
-                            : "bg-slate-100 hover:bg-slate-200/80 text-slate-700"
+                            ? "bg-[#2563EB] border-[#2563EB] text-white shadow-2xs"
+                            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
                         }`}
                       >
                         {c.name}
@@ -459,7 +458,7 @@ export function Transactions() {
               <div>
                 <label
                   htmlFor="tx-date"
-                  className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+                  className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1"
                 >
                   <Calendar className="w-3 h-3" aria-hidden="true" /> Tanggal
                 </label>
@@ -467,7 +466,7 @@ export function Transactions() {
                   id="tx-date"
                   name="transaction_date"
                   type="date"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
@@ -475,7 +474,7 @@ export function Transactions() {
               <div>
                 <label
                   htmlFor="tx-note"
-                  className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1"
+                  className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1"
                 >
                   <FileText className="w-3 h-3" aria-hidden="true" /> Catatan
                 </label>
@@ -484,7 +483,7 @@ export function Transactions() {
                   name="transaction_note"
                   type="text"
                   placeholder="Misal: Makan siang…"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#007AFF] focus-visible:outline-none"
+                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:outline-none shadow-2xs"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                 />
@@ -495,7 +494,7 @@ export function Transactions() {
               size="lg"
               onClick={handleCreate}
               loading={loading}
-              className="mt-3"
+              className="mt-2"
             >
               Simpan Transaksi
             </Button>

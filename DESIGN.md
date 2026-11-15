@@ -1,90 +1,85 @@
 # MyFinance Mobile DESIGN.md
-*Based on awesome-mobile-design-md (soft-glass & data-dashboard)*
+*Based on awesome-mobile-design-md (data-dashboard)*
 
 ## 1. Design Principles
 
-* **Clarity First**: Numbers are the hero. Balances, cashflow, and debt progress must be instantly readable at a glance.
-* **Apple Minimalist Organic**: Soft frosted glass (`backdrop-blur-xl`), layered translucency, subtle borders (`rgba(15, 23, 42, 0.06)`), and generous rounded radii (`rounded-2xl` to `rounded-3xl`).
-* **Calm & Confident**: No loud visual clutter or unnecessary decorative elements. Every color indicates financial meaning (positive, negative, alert, or neutral).
-* **Frictionless Mobile-First**: 48dp+ thumb targets, floating navigation pill, ergonomic bottom sheets, and rapid numeric inputs with quick shortcuts.
-* **Safe-Area Native**: Dynamic viewport units (`100dvh`), `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)` compliance on all iOS and Android devices.
+* **Data-First**: UI strictly serves information. Balances, cashflows, and debt progress take center stage with zero decorative clutter.
+* **High Information Density with Clarity**: Clean tabular presentation, compact spacing, and strong visual hierarchy allowing instant scanning and comparison.
+* **Precision Over Decoration**: Eliminates heavy blurs and abstract shapes in favor of crisp 1px borders (`#E2E8F0`), high-contrast numbers, and functional semantic indicators.
+* **Functional Color System**: Colors exist exclusively to indicate financial states (positive `#16A34A`, negative `#DC2626`, warning `#D97706`).
+* **Safe-Area Native & Mobile Optimized**: Clean docked navigation, dynamic viewport units (`100dvh`), `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)` compliance.
 
 ---
 
 ## 2. Color System
 
-### 2.1 Palette Tokens
+### 2.1 Light Mode Palette
 
-* **Primary**: `#007AFF` (iOS System Blue) / `#2563EB` (Electric Blue)
-* **Background**: `#F6F8FA` (Soft cool porcelain canvas)
-* **Surface (Glass)**: `rgba(255, 255, 255, 0.82)` with `backdrop-filter: blur(20px)`
-* **Surface Elevated**: `rgba(255, 255, 255, 0.95)` with soft shadow
-* **Surface Subtle**: `rgba(241, 245, 249, 0.7)` (Slate 100 tint)
-* **Text Primary**: `#0F172A` (Slate 900, high contrast for numbers)
-* **Text Secondary**: `#64748B` (Slate 500, metadata & labels)
-* **Text Muted**: `#94A3B8` (Slate 400, timestamps & hints)
-* **Border Glass**: `rgba(15, 23, 42, 0.06)` (Subtle perimeter)
-* **Border Focused**: `rgba(0, 122, 255, 0.4)` (Active focus ring)
+* **Primary**: `#2563EB` (Dashboard Blue)
+* **Background**: `#F8FAFC` (Slate 50 - clean analytical canvas)
+* **Surface**: `#FFFFFF` (Pure white metric cards & panels)
+* **Surface Alt**: `#F1F5F9` (Slate 100 - secondary containers & chip backgrounds)
+* **Text Primary**: `#0F172A` (Slate 900 - maximum contrast for figures)
+* **Text Secondary**: `#475569` (Slate 600 - labels & secondary descriptions)
+* **Text Muted / Caption**: `#64748B` (Slate 500 - timestamps & helper hints)
+* **Border**: `#E2E8F0` (Slate 200 - crisp structural boundaries)
+* **Divider**: `#E5E7EB` (Slate 200)
 
-### 2.2 Semantic Financial Colors
+### 2.2 Semantic Financial Roles
 
-* **Positive (Pemasukan / Piutang)**: `#10B981` (Emerald 500) / Background `#ECFDF5`
-* **Negative (Pengeluaran / Utang)**: `#F43F5E` (Rose 500) / Background `#FFF1F2`
-* **Warning (Jatuh Tempo)**: `#F59E0B` (Amber 500) / Background `#FEF3C7`
-* **Transfer (Pindah Saldo)**: `#6366F1` (Indigo 500) / Background `#EEF2FF`
+* **Positive (Pemasukan / Piutang)**: `#16A34A` (Green 600) | Background `#DCFCE7` (Green 100)
+* **Negative (Pengeluaran / Utang)**: `#DC2626` (Red 600) | Background `#FEE2E2` (Red 100)
+* **Warning (Jatuh Tempo)**: `#D97706` (Amber 600) | Background `#FEF3C7` (Amber 100)
+* **Neutral / Transfer**: `#4F46E5` (Indigo 600) | Background `#EEF2FF` (Indigo 50)
 
 ---
 
 ## 3. Typography & Numbers
 
-* **Font Stack**: `-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif`
-* **Numerical Formatting**: Always tabular (`font-variant-numeric: tabular-nums`, `tabular-nums`) to prevent horizontal jitter when values update.
+* **Font Family**: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif`
+* **Numbers**: Tabular figures throughout (`font-variant-numeric: tabular-nums`, `tabular-nums`) to ensure numbers never jitter during updates.
 * **Currency Standard**: Indonesian Rupiah format without decimals (`Rp 1.500.000`).
 
 ### Type Scale
 
-* **Hero Metric**: `32px` / Bold (`tracking-tight font-extrabold`)
-* **Card Value**: `20–22px` / Bold (`font-bold`)
-* **Section Title**: `15–16px` / SemiBold (`text-slate-800 font-semibold`)
-* **Caption / Label**: `11–12px` / Medium (`text-slate-400 uppercase tracking-wider font-semibold`)
-* **Body / Row Item**: `14–15px` / Medium (`text-slate-700`)
-* **Footnote**: `11–12px` / Regular (`text-slate-400`)
+* **Large Metric**: `28–32px` / Bold (`font-extrabold tracking-tight`)
+* **Card Metric**: `18–22px` / Bold
+* **Title**: `16–18px` / SemiBold
+* **Body / Row Item**: `14–15px` / Medium
+* **Caption / Label**: `11–12px` / SemiBold uppercase tracking-wider
+* **Small**: `10–11px` / Medium
 
 ---
 
 ## 4. Spacing & Layout Rhythm
 
-* **Base Grid**: 4px base (`xs: 4px`, `sm: 8px`, `md: 12px`, `lg: 16px`, `xl: 24px`, `xxl: 32px`).
-* **Page Margin**: `16px` to `20px` horizontal screen padding (`px-4 sm:px-5`).
-* **Bottom Scroll Clearance**: `pb-28` to ensure the floating navigation bar never covers content.
-* **Safe Areas**: `pt-[calc(env(safe-area-inset-top)+12px)]` and `pb-[calc(env(safe-area-inset-bottom)+12px)]`.
+* **Base Grid**: 4px base (`xs: 4px`, `sm: 8px`, `md: 12px`, `lg: 16px`, `xl: 20px`, `xxl: 24px`).
+* **Page Padding**: 16px horizontal screen margin (`px-4 sm:px-5`).
+* **Bottom Scroll Clearance**: `pb-24` ensuring docked bottom bar never covers content.
+* **Component Radius**: 12–16px (`rounded-xl` to `rounded-2xl`) for cards; 8–10px (`rounded-lg` / `rounded-xl`) for buttons.
 
 ---
 
 ## 5. Components Anatomy
 
-### 5.1 Floating Navigation Bar (Soft Glass Pill)
-* Centered floating pill detached from screen edges: `fixed bottom-4 left-4 right-4 max-w-sm mx-auto z-40`.
-* Translucent glass: `bg-white/80 backdrop-blur-xl border border-black/[0.06] shadow-xl rounded-full px-2 py-1.5`.
-* Active item: Soft pill highlight (`bg-blue-50 text-[#007AFF] font-semibold`), icon scale `scale-105`.
-* Inactive item: `text-slate-400 hover:text-slate-600`.
+### 5.1 Docked Bottom Navigation Bar
+* Docked at screen bottom: `fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 bg-white border-t border-slate-200 pb-safe`.
+* Height: 58px.
+* Active item: `#2563EB` icon & bold label with subtle top border indicator or solid highlight.
+* Inactive item: `#64748B`.
 
-### 5.2 Glass Metric Cards
-* `bg-white/85 backdrop-blur-md rounded-3xl p-5 border border-black/[0.05] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]`.
-* Interactive press state: `active:scale-[0.98] transition-all duration-150`.
+### 5.2 Metric Card (Core Component)
+* Pure white surface with crisp 1px border: `bg-white border border-slate-200 rounded-2xl p-4 shadow-xs`.
+* Top row: Label (uppercase 11px slate-500) + status pill.
+* Middle: Large bold value (`text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums`).
+* Bottom row: Subtext or trend indicator.
 
-### 5.3 Bottom Sheets (Modal Flows)
-* Backdrop: `bg-black/35 backdrop-blur-sm animate-fade-in`.
-* Container: `bg-white rounded-t-[32px] p-6 shadow-2xl max-h-[92dvh] overflow-y-auto`.
-* Handle grabber: `w-10 h-1 rounded-full bg-slate-300 mx-auto mb-4`.
-* Close button: Circular soft button `p-2 rounded-full bg-slate-100 hover:bg-slate-200`.
+### 5.3 Bottom Sheets & Filters
+* Backdrop: `bg-slate-900/40 backdrop-blur-xs`.
+* Container: `bg-white border-t border-slate-200 rounded-t-2xl p-5 shadow-xl max-h-[90dvh] overflow-y-auto overscroll-contain`.
+* Grabber handle: `w-9 h-1 rounded-full bg-slate-200 mx-auto mb-3`.
 
-### 5.4 Number Pad & Quick Amounts
-* Display: Big bold metric card with clear zero state.
-* Quick preset pills: `+50rb`, `+100rb`, `+500rb`, `+1jt` for rapid logging.
-* Keys: 56px height, `rounded-2xl bg-slate-100/80 active:bg-slate-200 text-xl font-semibold`.
-
-### 5.5 Debt & Receivable Progress
-* Visual progress bar indicating percentage paid (`h-2 rounded-full bg-slate-100 overflow-hidden`).
-* Overdue indicator tag with icon (`bg-rose-50 text-rose-600 border border-rose-200`).
-* Expandable payment history with seamless accordion drawer.
+### 5.4 Functional Number Pad
+* Large display card with crisp borders.
+* Presets: `+50rb`, `+100rb`, `+500rb`, `+1jt` with high contrast borders.
+* Keys: 50–54px height, `rounded-xl bg-slate-50 border border-slate-200 text-xl font-bold text-slate-800`.
