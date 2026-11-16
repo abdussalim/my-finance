@@ -2,20 +2,24 @@
 
 @layer base {
   :root {
-    --bg-canvas: #F4F6FB;
-    --surface: #FFFFFF;
-    --surface-alt: #EEF2FF;
-    --border: #E0E7FF;
-    --divider: #E2E8F0;
-    --text-primary: #0F172A;
-    --text-secondary: #475569;
+    --bg-canvas: #08090E;
+    --surface: #11141E;
+    --surface-glass: rgba(17, 20, 30, 0.85);
+    --surface-alt: #181D2B;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-highlight: rgba(99, 102, 241, 0.3);
+    --divider: rgba(255, 255, 255, 0.06);
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
     --text-muted: #64748B;
-    --primary: #4338CA;
-    --primary-hover: #3730A3;
-    --primary-light: #EEF2FF;
-    --positive: #0D9488;
-    --negative: #E11D48;
-    --warning: #D97706;
+    --primary: #6366F1;
+    --primary-hover: #4F46E5;
+    --primary-light: rgba(99, 102, 241, 0.15);
+    --positive: #10B981;
+    --negative: #F43F5E;
+    --warning: #F59E0B;
+    --cyan: #06B6D4;
+    --violet: #8B5CF6;
   }
 
   body {
@@ -38,36 +42,52 @@
 
 /* Accessible visible focus states */
 :focus-visible {
-  outline: 2px solid #4338CA;
+  outline: 2px solid #6366F1;
   outline-offset: 2px;
 }
 
-/* Data Dashboard Component Surfaces */
-.dashboard-card {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 14px;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+/* Glassmorphic Cyber Surfaces */
+.glass-panel {
+  background-color: rgba(17, 20, 30, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
 }
 
-.dashboard-card-alt {
-  background-color: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
+.glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(17, 20, 30, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
 }
 
-.dashboard-nav {
-  background-color: #FFFFFF;
-  border-top: 1px solid #E2E8F0;
-  box-shadow: 0 -2px 10px rgba(15, 23, 42, 0.03);
+.glass-card-interactive {
+  transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms ease, box-shadow 150ms ease;
+}
+.glass-card-interactive:active {
+  transform: scale(0.98);
+}
+.glass-card-interactive:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.15);
 }
 
-/* Touch & Interaction (Explicit transitions, no transition: all) */
+.glass-nav {
+  background-color: rgba(10, 12, 18, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* Touch & Interaction */
 .press-scale {
   transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1), opacity 120ms ease;
 }
 .press-scale:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 /* Tabular figures for non-jitter numbers */
@@ -91,6 +111,17 @@
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Glow Utilities */
+.neon-glow-indigo {
+  box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.4);
+}
+.neon-glow-emerald {
+  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.4);
+}
+.neon-glow-rose {
+  box-shadow: 0 0 20px -3px rgba(244, 63, 94, 0.4);
 }
 
 /* Accessibility: Honor prefers-reduced-motion */

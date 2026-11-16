@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { apiFetch } from "../lib/api-client";
 import { Card } from "../components/ui/Card";
 import { formatCurrency, relativeDate } from "../lib/format";
-import { DashboardSummary, WalletWithBalance } from "@my-finance/shared";
+import { DashboardSummary, WalletWithBalance, ProjectWithStats } from "@my-finance/shared";
 import {
   Wallet,
   ArrowDownRight,
@@ -13,24 +13,29 @@ import {
   EyeOff,
   TrendingUp,
   Plus,
+  Briefcase,
+  Layers,
 } from "lucide-react";
 import { Link } from "react-router";
 
 export function Dashboard() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [wallets, setWallets] = useState<WalletWithBalance[]>([]);
+  const [projects, setProjects] = useState<ProjectWithStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [showBalance, setShowBalance] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [sum, wlt] = await Promise.all([
+        const [sum, wlt, prjs] = await Promise.all([
           apiFetch<DashboardSummary>("/api/dashboard/summary"),
           apiFetch<WalletWithBalance[]>("/api/wallets"),
+          apiFetch<ProjectWithStats[]>("/api/projects"),
         ]);
         setSummary(sum);
         setWallets(wlt);
+        setProjects(prjs);
       } catch (err) {
         console.error(err);
       } finally {
@@ -43,9 +48,9 @@ export function Dashboard() {
   if (loading) {
     return (
       <div className="py-5 space-y-3 animate-pulse" role="status" aria-label="Memuat data ikhtisar…">
-        <div className="h-32 bg-white rounded-2xl border border-slate-200" />
-        <div className="h-24 bg-white rounded-2xl border border-slate-200" />
-        <div className="h-36 bg-white rounded-2xl border border-slate-200" />
+        <div className="h-36 bg-white/[0.04] rounded-2xl border border-white/[0.08]" />
+        <div className="h-28 bg-white/[0.04] rounded-2xl border border-white/[0.08]" />
+        <div className="h-36 bg-white/[0.04] rounded-2xl border border-white/[0.08]" />
       </div>
     );
   }
@@ -61,7 +66,8 @@ export function Dashboard() {
       {/* Top Header Bar */}
       <div className="flex items-center justify-between pb-1">
         <div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-indigo-400/90 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             {new Date().toLocaleDateString("id-ID", {
               weekday: "long",
               day: "numeric",
@@ -69,13 +75,15 @@ export function Dashboard() {
               year: "numeric",
             })}
           </span>
-          <h1 className="text-base font-bold text-slate-900">Dashboard Keuangan</h1>
+          <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
+            Dashboard Keuangan
+          </h1>
         </div>
         <button
           type="button"
           onClick={() => setShowBalance(!showBalance)}
           aria-label={showBalance ? "Sembunyikan Saldo" : "Tampilkan Saldo"}
-          className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-900 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
+          className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-slate-300 hover:text-white press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none shadow-xs transition-colors"
         >
           {showBalance ? (
             <Eye className="w-4 h-4" aria-hidden="true" />
@@ -85,28 +93,28 @@ export function Dashboard() {
         </button>
       </div>
 
-      {/* Core Metric Card */}
-      <Card className="p-4 border-slate-200/90 relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#4338CA] to-[#6366F1]" aria-hidden="true" />
+      {/* Core Net Worth Hero Card */}
+      <Card className="p-4 relative overflow-hidden border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 via-[#11141E]/90 to-[#121622] shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-cyan-400 to-purple-500" aria-hidden="true" />
         <div className="flex items-center justify-between mb-1.5 pt-0.5">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             Total Kekayaan Bersih
           </span>
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#4338CA] bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200/70">
-            <TrendingUp className="w-3 h-3 text-[#4338CA]" aria-hidden="true" />
-            Aktif
+          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.25)]">
+            <TrendingUp className="w-3 h-3 text-emerald-400" aria-hidden="true" />
+            Live
           </span>
         </div>
 
-        <div className="text-3xl font-extrabold text-[#0F172A] num-tabular tracking-tight my-1">
+        <div className="text-3xl font-extrabold text-white num-tabular tracking-tight my-1 drop-shadow-[0_0_12px_rgba(255,255,255,0.15)]">
           {showBalance ? formatCurrency(summary?.total_balance || 0) : "••••••••"}
         </div>
 
-        <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
-          <span className="text-slate-500 font-medium">Net Arus Kas Bulan Ini</span>
+        <div className="mt-3 pt-2.5 border-t border-white/[0.08] flex items-center justify-between text-xs">
+          <span className="text-slate-400 font-medium">Net Arus Kas Bulan Ini</span>
           <span
             className={`font-bold num-tabular ${
-              netSavings >= 0 ? "text-[#0D9488]" : "text-[#E11D48]"
+              netSavings >= 0 ? "text-emerald-400" : "text-rose-400"
             }`}
           >
             {showBalance
@@ -117,9 +125,9 @@ export function Dashboard() {
       </Card>
 
       {/* Monthly Cashflow Analytics Grid */}
-      <Card className="p-4 border-slate-200/90">
+      <Card className="p-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-600">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
             Arus Kas Bulan Ini
           </h2>
           <span className="text-[11px] font-medium text-slate-500">
@@ -128,22 +136,22 @@ export function Dashboard() {
         </div>
 
         <div className="grid grid-cols-2 gap-2.5 mb-3">
-          <div className="p-3 bg-teal-50/80 rounded-xl border border-teal-200/80">
-            <div className="flex items-center gap-1.5 text-[#0D9488] mb-1">
+          <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 shadow-xs">
+            <div className="flex items-center gap-1.5 text-emerald-400 mb-1">
               <ArrowDownRight className="w-4 h-4" aria-hidden="true" />
               <span className="text-xs font-bold">Pemasukan</span>
             </div>
-            <p className="text-base font-extrabold text-teal-900 num-tabular">
+            <p className="text-base font-extrabold text-emerald-300 num-tabular">
               {showBalance ? formatCurrency(incomeTotal) : "••••••"}
             </p>
           </div>
 
-          <div className="p-3 bg-rose-50/80 rounded-xl border border-rose-200/80">
-            <div className="flex items-center gap-1.5 text-[#E11D48] mb-1">
+          <div className="p-3 bg-rose-500/10 rounded-xl border border-rose-500/20 shadow-xs">
+            <div className="flex items-center gap-1.5 text-rose-400 mb-1">
               <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
               <span className="text-xs font-bold">Pengeluaran</span>
             </div>
-            <p className="text-base font-extrabold text-rose-900 num-tabular">
+            <p className="text-base font-extrabold text-rose-300 num-tabular">
               {showBalance ? formatCurrency(expenseTotal) : "••••••"}
             </p>
           </div>
@@ -151,12 +159,12 @@ export function Dashboard() {
 
         {/* Visual Cashflow Ratio Bar */}
         <div className="space-y-1">
-          <div className="flex justify-between text-[11px] text-slate-500 font-medium num-tabular">
+          <div className="flex justify-between text-[11px] text-slate-400 font-medium num-tabular">
             <span>Pemasukan ({incomePercent}%)</span>
             <span>Pengeluaran ({100 - incomePercent}%)</span>
           </div>
           <div
-            className="w-full h-2 rounded-full bg-rose-200/90 overflow-hidden flex border border-slate-200/60"
+            className="w-full h-2 rounded-full bg-rose-500/20 overflow-hidden flex border border-white/[0.06]"
             role="progressbar"
             aria-label="Rasio arus kas masuk versus keluar"
             aria-valuenow={incomePercent}
@@ -164,22 +172,97 @@ export function Dashboard() {
             aria-valuemax={100}
           >
             <div
-              className="h-full bg-[#0D9488] transition-[width] duration-300 ease-out"
+              className="h-full bg-emerald-500 transition-[width] duration-300 ease-out shadow-[0_0_8px_rgba(16,185,129,0.8)]"
               style={{ width: `${incomePercent}%` }}
             />
           </div>
         </div>
       </Card>
 
+      {/* Projects Teaser & Telemetry Section */}
+      <div>
+        <div className="flex items-center justify-between mb-2 px-0.5">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <Briefcase className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" /> Proyek Bisnis ({projects.length})
+          </h2>
+          <Link
+            to="/projects"
+            className="text-xs font-semibold text-indigo-400 flex items-center gap-0.5 hover:text-indigo-300 focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none rounded-sm transition-colors"
+          >
+            Kelola Proyek <ArrowRight className="w-3 h-3" aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none">
+          {projects.length === 0 ? (
+            <div className="p-4 text-xs text-slate-400 bg-white/[0.03] rounded-xl border border-white/[0.08] w-full text-center">
+              Belum ada proyek bisnis. Tambahkan proyek di menu Proyek.
+            </div>
+          ) : (
+            projects.map((p) => (
+              <Link
+                key={p.id}
+                to="/projects"
+                className="min-w-[170px] bg-white/[0.04] hover:bg-white/[0.07] rounded-2xl p-3.5 flex flex-col justify-between border border-white/[0.08] hover:border-indigo-500/40 transition-all press-scale shadow-sm relative overflow-hidden group"
+              >
+                <div
+                  className="absolute top-0 left-0 right-0 h-0.5"
+                  style={{ backgroundColor: p.color || "#6366F1", boxShadow: `0 0 8px ${p.color || "#6366F1"}` }}
+                  aria-hidden="true"
+                />
+                <div className="flex items-center justify-between mb-2">
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold border border-white/20 shadow-xs"
+                    style={{ backgroundColor: p.color || "#6366F1" }}
+                  >
+                    {p.code || p.name.slice(0, 3)}
+                  </div>
+                  <span
+                    className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full ${
+                      p.net_profit >= 0
+                        ? "text-emerald-400 bg-emerald-500/15"
+                        : "text-rose-400 bg-rose-500/15"
+                    }`}
+                  >
+                    {p.margin_percentage}%
+                  </span>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-white group-hover:text-indigo-300 truncate transition-colors">
+                    {p.name}
+                  </p>
+                  <p className="text-[10px] text-slate-400 uppercase mt-0.5">Laba Bersih</p>
+                  <p
+                    className={`text-sm font-extrabold num-tabular ${
+                      p.net_profit >= 0 ? "text-emerald-400" : "text-rose-400"
+                    }`}
+                  >
+                    {showBalance ? formatCurrency(p.net_profit) : "••••••"}
+                  </p>
+                </div>
+              </Link>
+            ))
+          )}
+          <Link
+            to="/projects"
+            aria-label="Tambah Proyek Baru"
+            className="min-w-[100px] bg-white/[0.02] hover:bg-white/[0.05] rounded-2xl p-3 flex flex-col items-center justify-center text-center border border-dashed border-white/20 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/50 press-scale focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-all"
+          >
+            <Plus className="w-5 h-5 mb-0.5 text-slate-400" aria-hidden="true" />
+            <span className="text-xs font-semibold">Proyek</span>
+          </Link>
+        </div>
+      </div>
+
       {/* Wallets & Accounts Section */}
       <div>
         <div className="flex items-center justify-between mb-2 px-0.5">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-600">
-            Dompet & Rekening ({wallets.length})
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <Wallet className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" /> Dompet & Rekening ({wallets.length})
           </h2>
           <Link
             to="/settings"
-            className="text-xs font-semibold text-[#4338CA] flex items-center gap-0.5 hover:underline focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none rounded-sm"
+            className="text-xs font-semibold text-indigo-400 flex items-center gap-0.5 hover:text-indigo-300 focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none rounded-sm transition-colors"
           >
             Kelola <ArrowRight className="w-3 h-3" aria-hidden="true" />
           </Link>
@@ -187,27 +270,27 @@ export function Dashboard() {
 
         <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none">
           {wallets.length === 0 ? (
-            <div className="p-4 text-xs text-slate-500 bg-white rounded-xl border border-slate-200 w-full text-center">
+            <div className="p-4 text-xs text-slate-400 bg-white/[0.03] rounded-xl border border-white/[0.08] w-full text-center">
               Belum ada dompet. Tambahkan rekening atau dompet di menu Setelan.
             </div>
           ) : (
             wallets.map((w) => (
               <div
                 key={w.id}
-                className="min-w-[145px] bg-white rounded-xl p-3.5 flex flex-col justify-between border border-slate-200/90 shadow-2xs hover:border-indigo-200 transition-colors"
+                className="min-w-[145px] bg-white/[0.04] rounded-2xl p-3.5 flex flex-col justify-between border border-white/[0.08] hover:border-indigo-500/40 transition-colors shadow-sm"
               >
                 <div className="flex items-center gap-2 mb-2.5">
                   <div
-                    className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold shadow-2xs"
-                    style={{ backgroundColor: w.color || "#4338CA" }}
+                    className="w-6 h-6 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-xs border border-white/20"
+                    style={{ backgroundColor: w.color || "#6366F1" }}
                   >
                     <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800 truncate">{w.name}</span>
+                  <span className="text-xs font-bold text-white truncate">{w.name}</span>
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-500 uppercase font-medium">{w.type}</p>
-                  <p className="text-sm font-extrabold text-slate-900 num-tabular">
+                  <p className="text-[10px] text-slate-400 uppercase font-medium">{w.type}</p>
+                  <p className="text-sm font-extrabold text-white num-tabular">
                     {showBalance ? formatCurrency(w.current_balance) : "••••••"}
                   </p>
                 </div>
@@ -217,9 +300,9 @@ export function Dashboard() {
           <Link
             to="/settings"
             aria-label="Tambah Dompet Baru"
-            className="min-w-[100px] bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center border border-dashed border-slate-300 text-slate-500 hover:text-[#4338CA] hover:border-[#4338CA] press-scale focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
+            className="min-w-[100px] bg-white/[0.02] hover:bg-white/[0.05] rounded-2xl p-3 flex flex-col items-center justify-center text-center border border-dashed border-white/20 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/50 press-scale focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-all"
           >
-            <Plus className="w-5 h-5 mb-0.5 text-slate-500" aria-hidden="true" />
+            <Plus className="w-5 h-5 mb-0.5 text-slate-400" aria-hidden="true" />
             <span className="text-xs font-semibold">Tambah</span>
           </Link>
         </div>
@@ -228,38 +311,38 @@ export function Dashboard() {
       {/* Debt & Receivable Status Highlight */}
       <Link
         to="/debts"
-        className="block rounded-xl focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
+        className="block rounded-2xl focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
       >
         <Card
           interactive
-          className="p-3.5 flex items-center justify-between bg-amber-50/70 border-amber-200"
+          className="p-3.5 flex items-center justify-between bg-amber-500/10 border-amber-500/25"
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-2xs">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center shadow-xs">
               <HandCoins className="w-4 h-4" aria-hidden="true" />
             </div>
             <div>
-              <p className="text-xs font-bold text-amber-900">Status Hutang & Piutang</p>
-              <p className="text-xs text-amber-800 mt-0.5 num-tabular">
+              <p className="text-xs font-bold text-amber-300">Status Hutang & Piutang</p>
+              <p className="text-xs text-amber-400/90 mt-0.5 num-tabular">
                 Hutang: <b>{showBalance ? formatCurrency(summary?.total_debt || 0) : "••••"}</b> •
                 Piutang:{" "}
                 <b>{showBalance ? formatCurrency(summary?.total_receivable || 0) : "••••"}</b>
               </p>
             </div>
           </div>
-          <ArrowRight className="w-4 h-4 text-amber-700" aria-hidden="true" />
+          <ArrowRight className="w-4 h-4 text-amber-400" aria-hidden="true" />
         </Card>
       </Link>
 
-      {/* Recent Transactions List (8.3 Table / List from data-dashboard.md) */}
+      {/* Recent Transactions List */}
       <div>
         <div className="flex items-center justify-between mb-2 px-0.5">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-600">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
             Transaksi Terakhir
           </h2>
           <Link
             to="/transactions"
-            className="text-xs font-semibold text-[#4338CA] hover:underline focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none rounded-sm"
+            className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none rounded-sm transition-colors"
           >
             Lihat Semua
           </Link>
@@ -267,21 +350,21 @@ export function Dashboard() {
 
         <div className="space-y-1.5">
           {summary?.recent_transactions.length === 0 ? (
-            <p className="text-xs text-slate-500 text-center py-6 bg-white rounded-xl border border-slate-200">
+            <p className="text-xs text-slate-400 text-center py-6 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
               Belum ada transaksi tercatat.
             </p>
           ) : (
             summary?.recent_transactions.map((tx) => (
               <div
                 key={tx.id}
-                className="p-3 bg-white rounded-xl border border-slate-200/90 flex items-center justify-between shadow-2xs"
+                className="p-3 bg-white/[0.04] rounded-2xl border border-white/[0.08] flex items-center justify-between shadow-xs hover:border-white/15 transition-colors"
               >
                 <div className="flex items-center gap-2.5">
                   <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                    className={`w-8 h-8 rounded-xl flex items-center justify-center ${
                       tx.type === "income" || tx.type === "transfer_in"
-                        ? "bg-teal-50 text-[#0D9488] border border-teal-200/60"
-                        : "bg-rose-50 text-[#E11D48] border border-rose-200/60"
+                        ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25"
+                        : "bg-rose-500/15 text-rose-400 border border-rose-500/25"
                     }`}
                   >
                     {tx.type === "income" || tx.type === "transfer_in" ? (
@@ -291,12 +374,26 @@ export function Dashboard() {
                     )}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">
-                      {tx.note ||
-                        tx.category_name ||
-                        (tx.type.includes("transfer") ? "Transfer Antar Dompet" : "Pengeluaran")}
-                    </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-xs font-bold text-white">
+                        {tx.note ||
+                          tx.category_name ||
+                          (tx.type.includes("transfer") ? "Transfer Antar Dompet" : "Pengeluaran")}
+                      </p>
+                      {tx.project_name ? (
+                        <span
+                          className="text-[9px] font-extrabold px-1.5 py-0.2 rounded-md uppercase border"
+                          style={{
+                            color: tx.project_color || "#6366F1",
+                            borderColor: `${tx.project_color || "#6366F1"}40`,
+                            backgroundColor: `${tx.project_color || "#6366F1"}15`,
+                          }}
+                        >
+                          {tx.project_code || tx.project_name.slice(0, 3)}
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
                       {tx.wallet_name} • {relativeDate(tx.date)}
                     </p>
                   </div>
@@ -305,8 +402,8 @@ export function Dashboard() {
                 <span
                   className={`text-xs font-extrabold num-tabular ${
                     tx.type === "income" || tx.type === "transfer_in"
-                      ? "text-[#0D9488]"
-                      : "text-[#E11D48]"
+                      ? "text-emerald-400"
+                      : "text-rose-400"
                   }`}
                 >
                   {tx.type === "income" || tx.type === "transfer_in" ? "+" : "-"}

@@ -21,6 +21,7 @@ import {
   Calendar,
   FileText,
   Wallet as WalletIcon,
+  HandCoins,
 } from "lucide-react";
 
 interface PaymentWithWallet extends DebtPayment {
@@ -166,17 +167,17 @@ export function Debts() {
       {/* Top Header */}
       <div className="flex items-center justify-between pb-1">
         <div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-indigo-400">
             Kewajiban & Hak
           </span>
-          <h1 className="text-base font-bold text-slate-900">
+          <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
             Hutang & Piutang
           </h1>
         </div>
         <Button
           size="sm"
           onClick={() => setIsAddOpen(true)}
-          className="gap-1 shadow-2xs"
+          className="gap-1 shadow-[0_0_15px_rgba(99,102,241,0.4)]"
           aria-label="Catat Hutang atau Piutang Baru"
         >
           <Plus className="w-4 h-4" aria-hidden="true" /> Catat
@@ -197,29 +198,29 @@ export function Debts() {
         }}
       />
 
-      {/* Active Tab Highlight Summary Card (data-dashboard.md) */}
+      {/* Active Tab Highlight Summary Card */}
       <div
-        className={`p-3.5 rounded-xl border shadow-2xs transition-colors duration-120 ${
+        className={`p-4 rounded-2xl border shadow-lg transition-all duration-150 ${
           activeTab === "debt"
-            ? "bg-amber-50/80 border-amber-200"
-            : "bg-teal-50/80 border-teal-200"
+            ? "bg-amber-500/10 border-amber-500/30"
+            : "bg-emerald-500/10 border-emerald-500/30"
         }`}
       >
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300">
             {activeTab === "debt" ? "Total Sisa Hutang" : "Total Sisa Piutang"}
           </span>
           {totalOverdue > 0 ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#E11D48] bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-400 bg-rose-500/20 border border-rose-500/30 px-2 py-0.5 rounded-full shadow-[0_0_10px_rgba(244,63,94,0.3)]">
               <AlertCircle className="w-3 h-3" aria-hidden="true" />
               {totalOverdue} Jatuh Tempo
             </span>
           ) : null}
         </div>
-        <div className="text-2xl font-extrabold text-slate-900 num-tabular tracking-tight">
+        <div className="text-3xl font-extrabold text-white num-tabular tracking-tight my-1">
           {formatCurrency(totalRemaining)}
         </div>
-        <p className="text-xs text-slate-600 mt-1">
+        <p className="text-xs text-slate-400 mt-1">
           {filteredDebts.length} catatan ({filteredDebts.filter((d) => d.remaining_amount <= 0).length} lunas)
         </p>
       </div>
@@ -251,29 +252,29 @@ export function Debts() {
             const history = paymentsByDebt[item.id] || [];
 
             return (
-              <Card key={item.id} className="p-3.5 space-y-3 border-slate-200/90 shadow-2xs">
+              <Card key={item.id} className="p-3.5 space-y-3 border-white/[0.08] shadow-sm">
                 {/* Person Header */}
                 <div className="flex items-center justify-between">
                   <button
                     type="button"
-                    className="flex items-center gap-2.5 cursor-pointer flex-1 text-left focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none rounded-lg"
+                    className="flex items-center gap-2.5 cursor-pointer flex-1 text-left focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none rounded-xl"
                     onClick={() => toggleHistory(item.id)}
                     aria-expanded={isExpanded}
                     aria-label={`Rincian cicilan untuk ${item.person_name}`}
                   >
                     <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs border ${
                         isSettled
-                          ? "bg-teal-50 text-[#0D9488] border border-teal-200/60"
+                          ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
                           : activeTab === "debt"
-                          ? "bg-amber-100 text-amber-800"
-                          : "bg-indigo-50 text-[#4338CA] border border-indigo-200/60"
+                          ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                          : "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
                       }`}
                     >
                       <User className="w-4 h-4" aria-hidden="true" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-900 flex items-center gap-1">
+                      <p className="text-xs font-bold text-white flex items-center gap-1">
                         {item.person_name}
                         <ChevronDown
                           aria-hidden="true"
@@ -286,13 +287,13 @@ export function Debts() {
                         <p
                           className={`text-[11px] ${
                             isOverdue
-                              ? "text-[#E11D48] font-bold flex items-center gap-1"
-                              : "text-slate-500"
+                              ? "text-rose-400 font-bold flex items-center gap-1"
+                              : "text-slate-400"
                           }`}
                         >
                           {isOverdue ? (
                             <>
-                              <AlertCircle className="w-3 h-3 text-[#E11D48]" aria-hidden="true" />
+                              <AlertCircle className="w-3 h-3 text-rose-400" aria-hidden="true" />
                               Terlambat: {formatDate(item.due_date)}
                             </>
                           ) : (
@@ -301,7 +302,7 @@ export function Debts() {
                         </p>
                       ) : null}
                       {item.note ? (
-                        <p className="text-[11px] text-slate-500 italic mt-0.5">{item.note}</p>
+                        <p className="text-[11px] text-slate-400 italic mt-0.5">{item.note}</p>
                       ) : null}
                     </div>
                   </button>
@@ -309,7 +310,7 @@ export function Debts() {
                   {/* Actions */}
                   <div className="flex items-center gap-2">
                     {isSettled ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0D9488] bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.3)]">
                         <CheckCircle2 className="w-3 h-3" aria-hidden="true" /> Lunas
                       </span>
                     ) : (
@@ -324,13 +325,13 @@ export function Debts() {
                         className="text-xs py-1 px-2.5 min-h-[30px] gap-0.5"
                       >
                         {activeTab === "debt" ? "Bayar" : "Terima"}
-                        <ChevronRight className="w-3 h-3 text-slate-500" aria-hidden="true" />
+                        <ChevronRight className="w-3 h-3 text-slate-400" aria-hidden="true" />
                       </Button>
                     )}
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="text-slate-400 hover:text-rose-600 p-1.5 rounded-md press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
+                      className="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-colors"
                       aria-label={`Hapus catatan ${item.person_name}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
@@ -341,30 +342,30 @@ export function Debts() {
                 {/* Progress & Numbers */}
                 <div className="space-y-1 pt-0.5">
                   <div className="flex justify-between text-xs num-tabular">
-                    <span className="text-slate-600 font-medium">
+                    <span className="text-slate-400 font-medium">
                       Sisa:{" "}
-                      <b className="text-slate-900 font-bold">
+                      <b className="text-white font-bold">
                         {formatCurrency(item.remaining_amount)}
                       </b>
                     </span>
-                    <span className="text-slate-500">
+                    <span className="text-slate-400">
                       Total: {formatCurrency(item.total_amount)}
                     </span>
                   </div>
                   <ProgressBar
                     ariaLabel={`Kemajuan pelunasan ${item.person_name}`}
                     progress={progress}
-                    color={isSettled ? "#0D9488" : activeTab === "debt" ? "#D97706" : "#4338CA"}
+                    color={isSettled ? "#10B981" : activeTab === "debt" ? "#F59E0B" : "#6366F1"}
                   />
-                  <div className="flex justify-end text-[10px] text-slate-500 num-tabular font-medium">
+                  <div className="flex justify-end text-[10px] text-slate-400 num-tabular font-medium">
                     {Math.round(progress)}% terbayar
                   </div>
                 </div>
 
                 {/* Accordion Payment History */}
                 {isExpanded ? (
-                  <div className="pt-2.5 border-t border-slate-100 space-y-1.5">
-                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                  <div className="pt-2.5 border-t border-white/[0.08] space-y-1.5">
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                       <History className="w-3 h-3" aria-hidden="true" /> Riwayat Cicilan ({history.length})
                     </p>
                     {history.length === 0 ? (
@@ -376,18 +377,18 @@ export function Debts() {
                         {history.map((p) => (
                           <div
                             key={p.id}
-                            className="flex justify-between items-center text-xs py-1 px-2 bg-slate-50 rounded-lg border border-slate-100"
+                            className="flex justify-between items-center text-xs py-1.5 px-2.5 bg-white/[0.03] rounded-xl border border-white/[0.06]"
                           >
                             <div>
-                              <span className="font-bold text-slate-800">{p.wallet_name}</span>
-                              <span className="text-slate-500 ml-1.5 text-[10px]">
+                              <span className="font-bold text-white">{p.wallet_name}</span>
+                              <span className="text-slate-400 ml-1.5 text-[10px]">
                                 {formatDate(p.payment_date)}
                               </span>
                               {p.note ? (
-                                <p className="text-[10px] text-slate-500 italic mt-0.5">{p.note}</p>
+                                <p className="text-[10px] text-slate-400 italic mt-0.5">{p.note}</p>
                               ) : null}
                             </div>
-                            <span className="font-extrabold text-slate-900 num-tabular">
+                            <span className="font-extrabold text-white num-tabular">
                               {formatCurrency(p.amount)}
                             </span>
                           </div>
@@ -413,9 +414,9 @@ export function Debts() {
           <div>
             <label
               htmlFor="debt-person-name"
-              className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1"
+              className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
             >
-              <User className="w-3.5 h-3.5" aria-hidden="true" />
+              <User className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
               {activeTab === "debt" ? "Berhutang Ke Siapa?" : "Siapa Yang Berhutang?"}
             </label>
             <input
@@ -423,7 +424,7 @@ export function Debts() {
               name="person_name"
               type="text"
               placeholder="Contoh: Budi, Bank Mandiri…"
-              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-900 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
+              className="w-full p-2.5 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
               value={personName}
               onChange={(e) => setPersonName(e.target.value)}
             />
@@ -435,15 +436,15 @@ export function Debts() {
             <div>
               <label
                 htmlFor="debt-due-date"
-                className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1"
+                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
               >
-                <Calendar className="w-3 h-3" aria-hidden="true" /> Jatuh Tempo
+                <Calendar className="w-3 h-3 text-indigo-400" aria-hidden="true" /> Jatuh Tempo
               </label>
               <input
                 id="debt-due-date"
                 name="due_date"
                 type="date"
-                className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
+                className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
               />
@@ -451,16 +452,16 @@ export function Debts() {
             <div>
               <label
                 htmlFor="debt-note"
-                className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1"
+                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
               >
-                <FileText className="w-3 h-3" aria-hidden="true" /> Catatan
+                <FileText className="w-3 h-3 text-indigo-400" aria-hidden="true" /> Catatan
               </label>
               <input
                 id="debt-note"
                 name="note"
                 type="text"
                 placeholder="Misal: Modal usaha…"
-                className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
+                className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-medium text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
@@ -488,8 +489,8 @@ export function Debts() {
           <div className="space-y-3">
             {/* Wallet Selector */}
             <div>
-              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1.5">
-                <WalletIcon className="w-3.5 h-3.5" aria-hidden="true" />
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                <WalletIcon className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
                 {activeTab === "debt" ? "Bayar Pakai Dompet" : "Terima Ke Dompet"}
               </span>
               <div
@@ -503,20 +504,20 @@ export function Debts() {
                     type="button"
                     onClick={() => setPayWalletId(w.id)}
                     aria-pressed={payWalletId === w.id}
-                    className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-colors duration-120 press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none ${
+                    className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-all press-scale cursor-pointer ${
                       payWalletId === w.id
-                        ? "bg-indigo-50 border-[#4338CA] text-slate-900 shadow-2xs"
-                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                        ? "bg-indigo-600/20 border-indigo-500 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)]"
+                        : "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.06]"
                     }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: w.color || "#4338CA" }}
+                      style={{ backgroundColor: w.color || "#6366F1" }}
                       aria-hidden="true"
                     />
                     <div className="truncate">
                       <p className="text-xs font-bold truncate">{w.name}</p>
-                      <p className="text-[10px] text-slate-500 num-tabular truncate">
+                      <p className="text-[10px] text-slate-400 num-tabular truncate">
                         {formatCurrency(w.current_balance)}
                       </p>
                     </div>
@@ -529,15 +530,15 @@ export function Debts() {
               <div>
                 <label
                   htmlFor="pay-date"
-                  className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1"
+                  className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
                 >
-                  <Calendar className="w-3 h-3" aria-hidden="true" /> Tanggal Bayar
+                  <Calendar className="w-3 h-3 text-indigo-400" aria-hidden="true" /> Tanggal Bayar
                 </label>
                 <input
                   id="pay-date"
                   name="payment_date"
                   type="date"
-                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
+                  className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
                   value={payDate}
                   onChange={(e) => setPayDate(e.target.value)}
                 />
@@ -545,16 +546,16 @@ export function Debts() {
               <div>
                 <label
                   htmlFor="pay-note"
-                  className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1 mb-1"
+                  className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
                 >
-                  <FileText className="w-3 h-3" aria-hidden="true" /> Catatan
+                  <FileText className="w-3 h-3 text-indigo-400" aria-hidden="true" /> Catatan
                 </label>
                 <input
                   id="pay-note"
                   name="payment_note"
                   type="text"
                   placeholder="Cicilan ke-… (opsional)"
-                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none shadow-2xs"
+                  className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-medium text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
                   value={payNote}
                   onChange={(e) => setPayNote(e.target.value)}
                 />

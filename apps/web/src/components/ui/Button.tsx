@@ -18,19 +18,19 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-semibold rounded-xl transition-colors duration-120 press-scale disabled:opacity-40 disabled:pointer-events-none cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:ring-offset-2 focus-visible:outline-none";
+    "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-120 press-scale disabled:opacity-40 disabled:pointer-events-none cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:ring-offset-2 focus-visible:ring-offset-[#08090E] focus-visible:outline-none";
 
   const variants = {
     primary:
-      "bg-[#4338CA] hover:bg-[#3730A3] active:bg-[#312E81] text-white shadow-[0_2px_8px_-1px_rgba(67,56,202,0.25)] border border-transparent",
+      "bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 active:from-indigo-700 active:to-indigo-800 text-white shadow-[0_0_20px_rgba(99,102,241,0.35)] border border-indigo-400/30",
     secondary:
-      "bg-indigo-50/70 hover:bg-indigo-100/80 text-[#312E81] border border-indigo-200/80 shadow-xs",
+      "bg-white/[0.06] hover:bg-white/[0.1] active:bg-white/[0.12] text-indigo-300 border border-white/[0.1] shadow-xs",
     outline:
-      "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-xs",
+      "bg-transparent hover:bg-white/[0.05] active:bg-white/[0.08] text-slate-300 border border-white/15 shadow-xs",
     danger:
-      "bg-[#E11D48] hover:bg-[#BE123C] text-white shadow-[0_2px_8px_-1px_rgba(225,29,72,0.25)] border border-transparent",
+      "bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white shadow-[0_0_20px_rgba(244,63,94,0.35)] border border-rose-400/30",
     ghost:
-      "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100",
+      "bg-transparent text-slate-400 hover:text-white hover:bg-white/[0.06]",
   };
 
   const sizes = {

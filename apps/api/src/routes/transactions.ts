@@ -8,6 +8,7 @@ export const transactionRoutes = new Hono<Env>();
 transactionRoutes.get("/", async (c) => {
   const walletId = c.req.query("wallet_id");
   const categoryId = c.req.query("category_id");
+  const projectId = c.req.query("project_id");
   const type = c.req.query("type");
   const dateFrom = c.req.query("date_from");
   const dateTo = c.req.query("date_to");
@@ -17,6 +18,7 @@ transactionRoutes.get("/", async (c) => {
       t.id,
       t.wallet_id,
       t.category_id,
+      t.project_id,
       t.type,
       t.amount,
       t.transfer_pair_id,
@@ -24,10 +26,14 @@ transactionRoutes.get("/", async (c) => {
       t.note,
       t.created_at,
       w.name as wallet_name,
-      c.name as category_name
+      c.name as category_name,
+      p.name as project_name,
+      p.color as project_color,
+      p.code as project_code
     FROM transactions t
     JOIN wallets w ON w.id = t.wallet_id
     LEFT JOIN categories c ON c.id = t.category_id
+    LEFT JOIN projects p ON p.id = t.project_id
     WHERE 1=1
   `;
   const params: any[] = [];
@@ -39,6 +45,10 @@ transactionRoutes.get("/", async (c) => {
   if (categoryId) {
     query += " AND t.category_id = ?";
     params.push(categoryId);
+  }
+  if (projectId) {
+    query += " AND t.project_id = ?";
+    params.push(projectId);
   }
   if (type) {
     query += " AND t.type = ?";
@@ -82,10 +92,10 @@ transactionRoutes.post("/", async (c) => {
 
     await c.env.DB.batch([
       c.env.DB.prepare(
-        "INSERT INTO transactions (id, wallet_id, category_id, type, amount, transfer_pair_id, date, note) VALUES (?, ?, NULL, 'transfer_out', ?, ?, ?, ?)"
+        "INSERT INTO transactions (id, wallet_id, category_id, project_id, type, amount, transfer_pair_id, date, note) VALUES (?, ?, NULL, NULL, 'transfer_out', ?, ?, ?, ?)"
       ).bind(outId, source_wallet_id, amount, pairId, date, note || "Transfer ke dompet lain"),
       c.env.DB.prepare(
-        "INSERT INTO transactions (id, wallet_id, category_id, type, amount, transfer_pair_id, date, note) VALUES (?, ?, NULL, 'transfer_in', ?, ?, ?, ?)"
+        "INSERT INTO transactions (id, wallet_id, category_id, project_id, type, amount, transfer_pair_id, date, note) VALUES (?, ?, NULL, NULL, 'transfer_in', ?, ?, ?, ?)"
       ).bind(inId, target_wallet_id, amount, pairId, date, note || "Transfer dari dompet lain"),
     ]);
 
@@ -98,11 +108,11 @@ transactionRoutes.post("/", async (c) => {
   }
 
   const id = generateId("tx");
-  const { wallet_id, category_id, type, amount, date, note } = parsed.data;
+  const { wallet_id, category_id, project_id, type, amount, date, note } = parsed.data;
 
   await c.env.DB.prepare(
-    "INSERT INTO transactions (id, wallet_id, category_id, type, amount, transfer_pair_id, date, note) VALUES (?, ?, ?, ?, ?, NULL, ?, ?)"
-  ).bind(id, wallet_id, category_id || null, type, amount, date, note || null).run();
+    "INSERT INTO transactions (id, wallet_id, category_id, project_id, type, amount, transfer_pair_id, date, note) VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?)"
+  ).bind(id, wallet_id, category_id || null, project_id || null, type, amount, date, note || null).run();
 
   return c.json({ success: true, data: { id, ...parsed.data } }, 201);
 });

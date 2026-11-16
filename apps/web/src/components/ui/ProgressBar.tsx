@@ -10,7 +10,7 @@ export interface ProgressBarProps {
 
 export function ProgressBar({
   progress,
-  color = "#4338CA",
+  color = "#6366F1",
   className,
   height = "md",
   ariaLabel = "Kemajuan",
@@ -31,7 +31,7 @@ export function ProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       className={cn(
-        "w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200",
+        "w-full bg-white/[0.08] rounded-full overflow-hidden border border-white/[0.04]",
         heightClasses[height],
         className
       )}
@@ -41,6 +41,7 @@ export function ProgressBar({
         style={{
           width: `${clamped}%`,
           backgroundColor: color,
+          boxShadow: `0 0 12px ${color}88`,
         }}
       />
     </div>

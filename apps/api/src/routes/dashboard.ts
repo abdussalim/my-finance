@@ -6,7 +6,7 @@ export const dashboardRoutes = new Hono<Env>();
 dashboardRoutes.get("/summary", async (c) => {
   const currentMonthPrefix = new Date().toISOString().slice(0, 7);
 
-  const [walletsRes, flowRes, debtsRes, recentRes] = await c.env.DB.batch([
+  const [walletsRes, flowRes, debtsRes, recentRes, projectsRes] = await c.env.DB.batch([
     c.env.DB.prepare(`
       SELECT 
         COALESCE(SUM(w.initial_balance), 0) + COALESCE((
@@ -42,14 +42,27 @@ dashboardRoutes.get("/summary", async (c) => {
     `),
     c.env.DB.prepare(`
       SELECT 
-        t.id, t.wallet_id, t.category_id, t.type, t.amount, t.date, t.note, t.created_at,
+        t.id, t.wallet_id, t.category_id, t.project_id, t.type, t.amount, t.date, t.note, t.created_at,
         w.name as wallet_name,
-        c.name as category_name
+        c.name as category_name,
+        p.name as project_name,
+        p.color as project_color,
+        p.code as project_code
       FROM transactions t
       JOIN wallets w ON w.id = t.wallet_id
       LEFT JOIN categories c ON c.id = t.category_id
+      LEFT JOIN projects p ON p.id = t.project_id
       ORDER BY t.date DESC, t.created_at DESC
-      LIMIT 5
+      LIMIT 6
+    `),
+    c.env.DB.prepare(`
+      SELECT 
+        COUNT(DISTINCT p.id) as total_projects,
+        SUM(CASE WHEN p.status = 'active' THEN 1 ELSE 0 END) as active_projects,
+        COALESCE(SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END), 0) as total_project_income,
+        COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0) as total_project_expense
+      FROM projects p
+      LEFT JOIN transactions t ON t.project_id = p.id
     `),
   ]);
 
@@ -64,6 +77,10 @@ dashboardRoutes.get("/summary", async (c) => {
     if (row.type === "receivable") totalReceivable = Math.max(0, row.remaining || 0);
   }
 
+  const projRow: any = projectsRes.results[0] || {};
+  const totalProjectIncome = Number(projRow.total_project_income || 0);
+  const totalProjectExpense = Number(projRow.total_project_expense || 0);
+
   return c.json({
     success: true,
     data: {
@@ -73,6 +90,13 @@ dashboardRoutes.get("/summary", async (c) => {
       total_debt: totalDebt,
       total_receivable: totalReceivable,
       recent_transactions: recentRes.results,
+      projects_summary: {
+        total_projects: Number(projRow.total_projects || 0),
+        active_projects: Number(projRow.active_projects || 0),
+        total_project_income: totalProjectIncome,
+        total_project_expense: totalProjectExpense,
+        total_project_profit: totalProjectIncome - totalProjectExpense,
+      },
     },
   });
 });

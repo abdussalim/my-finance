@@ -1,91 +1,101 @@
 # MyFinance Mobile DESIGN.md
-*Theme: Electric Indigo & Cool Chalk (Silicon Valley / Stripe / Linear Aesthetic)*
-
-## 1. Design Principles
-
-* **Sharp, Modern & Tech-Forward**: Inspired by the precision and confidence of modern Silicon Valley tools (Stripe, Linear, Wise). High typographic clarity, deliberate hierarchy, and zero generic template artifacts.
-* **Distinctive Color Identity**: Replaces generic corporate blues with Deep Ultramarine (`#4338CA`), Cool Chalk canvas (`#F4F6FB`), Crisp Teal for cash inflow (`#0D9488`), and Vivid Crimson/Coral for cash outflow (`#E11D48`).
-* **High Information Density**: Dense, analytical data dashboard layout. Numbers, cashflows, and debt progress take center stage with tabular numeric alignment (`font-variant-numeric: tabular-nums`).
-* **Tactile Micro-Interactions**: Active press feedback (`active:scale-[0.98]`), instant keyboard response, and smooth sheet transitions.
-* **Safe-Area Native & Mobile Optimized**: Clean docked bottom bar, dynamic viewport units (`100dvh`), `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)` compliance.
+*Theme: Cyber-Obsidian & Holographic Neon (High-Immersive Dark OLED Fintech & Venture Terminal)*
 
 ---
 
-## 2. Color System: Electric Indigo & Cool Chalk
+## 1. Design Philosophy & Vision
 
-### 2.1 Base Palette
-
-* **Primary / Brand**: `#4338CA` (Deep Ultramarine / Indigo 700)
-  * Hover / Focus: `#3730A3` (Indigo 800)
-  * Active: `#312E81` (Indigo 900)
-  * Light Container / Accent: `#EEF2FF` (Indigo 50)
-  * Border Accent: `#C7D2FE` (Indigo 200)
-* **Electric Accent**: `#6366F1` (Electric Indigo) & `#06B6D4` (Cyber Cyan)
-* **Background / Canvas**: `#F4F6FB` (Cool Chalk / Ice Slate — clean, modern, crisp contrast)
-* **Surface**: `#FFFFFF` (Pure white metric cards & panels)
-* **Surface Alt**: `#F8FAFC` / `#EEF2FF` (Secondary containers & chip backgrounds)
-* **Border Hairline**: `#E2E8F0` / `#E0E7FF` (Crisp 1px cool border)
-* **Text Primary**: `#0F172A` (Midnight Slate 900 — maximum contrast for figures)
-* **Text Secondary**: `#475569` (Slate 600 — labels & secondary descriptions)
-* **Text Muted / Caption**: `#64748B` (Slate 500 — timestamps & helper hints)
-
-### 2.2 Semantic Financial Roles
-
-* **Inflow / Pemasukan / Piutang**: `#0D9488` (Teal 600) & `#059669` (Emerald 600)
-  * Container / Badge: `#F0FDF4` / `#CCFBF1` (Teal/Emerald 50)
-  * Text Badge: `#0F766E` (Teal 700)
-* **Outflow / Pengeluaran / Utang**: `#E11D48` (Vivid Crimson / Rose 600)
-  * Container / Badge: `#FFF1F2` (Rose 50)
-  * Text Badge: `#BE123C` (Rose 700)
-* **Warning / Jatuh Tempo**: `#D97706` (Amber 600)
-  * Container / Badge: `#FFFBEB` (Amber 50)
-  * Text Badge: `#B45309` (Amber 700)
-* **Transfer / Netral**: `#4338CA` (Indigo 700)
-  * Container / Badge: `#EEF2FF` (Indigo 50)
+* **Ultra-Immersive OLED Void (`#08090E`)**:
+  Dissolves device bezels on modern AMOLED/OLED displays. Replaces sterile, flat white enterprise canvases with a deep, atmospheric space featuring ambient radial indigo and cyan optical flares.
+* **Obsidian Frosted Glass Architecture**:
+  Layered surfaces utilizing `rgba(17, 20, 29, 0.72)` to `rgba(22, 27, 40, 0.85)` with backdrop blurs (`backdrop-blur-md` to `backdrop-blur-xl`) and ultra-fine specular hairline edges (`border-white/[0.08]` to `border-white/[0.15]`).
+* **Holographic Neon Chromatic Telemetry**:
+  High-contrast luminous accents that give instant visual feedback:
+  * **Electric Indigo / Violet** (`#6366F1` / `#8B5CF6`): Brand authority, primary interactions, venture portfolio telemetry.
+  * **Neon Emerald** (`#10B981`): Inflow, profit, revenue targets, healthy margins.
+  * **Cyber Cyan** (`#06B6D4`): Operational flow, liquidity, active transfers.
+  * **Vivid Coral / Rose** (`#F43F5E`): Outflow, debt liabilities, high burn-rate warnings.
+  * **Solar Amber** (`#F59E0B`): Approaching budget caps, upcoming debt maturities.
+* **Haptic & Tactile Micro-Interactions**:
+  Dynamic spring scales (`active:scale-[0.98]`), luminous pill active indicators, glowing top tab lines, and smooth spring bottom sheets.
+* **Strict Edge Performance**:
+  Engineered for Cloudflare Workers Free Tier execution (< 10ms CPU-bound). All project aggregation calculations are executed within single, index-backed SQLite queries on Cloudflare D1.
 
 ---
 
-## 3. Typography & Numbers
+## 2. Color System & Design Tokens
 
-* **Font Family**: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif`
-* **Numbers**: Tabular figures throughout (`font-variant-numeric: tabular-nums`, `tabular-nums`) to ensure numbers never jitter during updates.
-* **Currency Standard**: Indonesian Rupiah format without decimals (`Rp 1.500.000`).
+### 2.1 Surface & Void Tokens
+* **Void Background**: `#08090E` (OLED Deep Pitch Black)
+* **Canvas Ambient Glow**:
+  * Top-right radial: `radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 60%)`
+  * Bottom-left radial: `radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 60%)`
+* **Glass Card Base**: `rgba(17, 20, 29, 0.75)`
+* **Glass Card Active / Elevated**: `rgba(22, 27, 40, 0.90)`
+* **Glass Panel Hairline Border**: `rgba(255, 255, 255, 0.08)`
+* **Glass Panel Highlight Border**: `rgba(255, 255, 255, 0.16)`
 
-### Type Scale
+### 2.2 Text Hierarchy
+* **Text High-Contrast / Headlines**: `#F8FAFC` (Slate 50 — maximum readability against obsidian)
+* **Text Primary**: `#E2E8F0` (Slate 200 — card values and titles)
+* **Text Secondary**: `#94A3B8` (Slate 400 — descriptive subtitles, project metrics)
+* **Text Muted**: `#64748B` (Slate 500 — timestamps, table metadata)
+* **Text Ghost**: `#475569` (Slate 600 — placeholder text, inactive tab labels)
 
-* **Large Metric**: `28–32px` / Bold (`font-extrabold tracking-tight text-slate-900`)
-* **Card Metric**: `18–22px` / Bold
-* **Title**: `16–18px` / SemiBold
-* **Body / Row Item**: `14–15px` / Medium
-* **Caption / Label**: `11–12px` / SemiBold uppercase tracking-wider
-* **Small**: `10–11px` / Medium
+### 2.3 Semantic Accents & Neon Signatures
+* **Brand / Inflow**: `#10B981` (Neon Emerald)
+  * Glow: `0 0 20px rgba(16, 185, 129, 0.35)`
+  * Container: `rgba(16, 185, 129, 0.10)`
+  * Border: `rgba(16, 185, 129, 0.25)`
+* **Brand / Outflow**: `#F43F5E` (Neon Rose / Coral)
+  * Glow: `0 0 20px rgba(244, 63, 94, 0.35)`
+  * Container: `rgba(244, 63, 94, 0.10)`
+  * Border: `rgba(244, 63, 94, 0.25)`
+* **Brand / Primary Action**: `#6366F1` (Electric Indigo)
+  * Glow: `0 0 24px rgba(99, 102, 241, 0.40)`
+  * Container: `rgba(99, 102, 241, 0.12)`
+  * Border: `rgba(99, 102, 241, 0.30)`
 
 ---
 
-## 4. Spacing & Layout Rhythm
+## 3. Multi-Venture Project Architecture
 
-* **Base Grid**: 4px base (`xs: 4px`, `sm: 8px`, `md: 12px`, `lg: 16px`, `xl: 20px`, `xxl: 24px`).
-* **Page Padding**: 16px horizontal screen margin (`px-4 sm:px-5`).
-* **Bottom Scroll Clearance**: `pb-24` ensuring docked bottom bar never covers content.
-* **Component Radius**: 14–16px (`rounded-xl` to `rounded-2xl`) for cards; 10–12px for buttons.
+### 3.1 Business Context & Venture Registry
+Designed specifically for entrepreneur multi-venture operational cashflow tracking, seeded with active ventures:
+1. **EDUNUSA** (`EDU`): Educational platform & tech initiative (`#6366F1` Electric Indigo).
+2. **SOBATPART** (`SOB`): Automotive / spare-parts distribution enterprise (`#06B6D4` Cyber Cyan).
+3. **ISTANA BLOCK** (`IBL`): Paving block, concrete & construction manufacturing (`#F59E0B` Solar Amber).
+
+### 3.2 Venture Metric Engine
+For each project, the system tracks and computes in real-time:
+* **Gross Inflow (Pendapatan)**: Total transactions tagged to the venture.
+* **Gross Outflow (Biaya / Operasional)**: Total expenses allocated to the venture.
+* **Net Profit / Margin %**: `((Inflow - Outflow) / Inflow) * 100`.
+* **Budget Burn Rate**: `(Outflow / Allocated Budget) * 100` with warning thresholds (>80% amber, >100% coral).
+* **Revenue Target Progress**: `(Inflow / Target Revenue) * 100` with luminous neon progress gauges.
+
+### 3.3 Seamless Cross-Entity Flow
+* **Bottom Navigation**: Direct access via 5 docked tabs:
+  1. `Ringkasan` (`LayoutDashboard`) — Top-level consolidated portfolio overview & venture carousel.
+  2. `Proyek` (`Briefcase`) — Dedicated multi-venture cockpit, individual cards, metrics, and linked transactions.
+  3. `Transaksi` (`ArrowLeftRight`) — Global ledger with interactive venture filter chips and venture badges.
+  4. `Hutang` (`HandCoins`) — Payables & receivables management.
+  5. `Setelan` (`Settings`) — Security, PIN, and system preferences.
+* **Fast-Tagging Modal**: When recording any income or expense, users can tag a specific project in a single tap via sleek obsidian chips.
 
 ---
 
-## 5. Components Anatomy
+## 4. Typography, Alignment & Formatting
 
-### 5.1 Docked Bottom Navigation Bar
-* Docked at screen bottom: `fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 bg-white border-t border-slate-200/80 pb-safe shadow-[0_-2px_12px_rgba(15,23,42,0.03)]`.
-* Height: 58px.
-* Active item: `#4338CA` (Indigo 700) text & icon with electric top accent indicator.
-* Inactive item: `#64748B`.
+* **Font Stack**: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif`
+* **Tabular Numeric Precision**: `font-variant-numeric: tabular-nums` ensures numbers never jitter during state updates or animated recalculations.
+* **Currency Standard**: Indonesian Rupiah format without decimals (`Rp 1.500.000`), formatted cleanly via `formatRupiah()`.
+* **Mobile Touch Ergonomics**: Minimum tap target size of `44x44px` across all buttons, segmented controls, and keypad buttons.
 
-### 5.2 Metric & Summary Cards
-* Card base: Pure white background `#FFFFFF`, 1px border `#E2E8F0`, subtle shadow `0 1px 3px rgba(15, 23, 42, 0.04)`.
-* Hero card accent: Electric indigo micro-badge or top accent.
-* Cashflow split: Teal `#0D9488` for Pemasukan, Crimson `#E11D48` for Pengeluaran.
-* Ratio Bar: Visual bar showing ratio of income vs expense in real-time.
+---
 
-### 5.3 NumberPad & Form Inputs
-* Keypad buttons: Clean crisp border `#E2E8F0` on white, active state `#EEF2FF`.
-* Preset amount chips: `#EEF2FF` background with `#4338CA` text.
-* Action buttons: Primary `#4338CA` with subtle glow shadow `0 2px 8px -1px rgba(67, 56, 202, 0.25)`.
+## 5. Screen & Shell Guidelines
+
+* **Container**: `max-w-md mx-auto min-h-dvh` pinned to center for responsive desktop viewports while feeling 100% native on mobile.
+* **Docked Glass Navigation**: `fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 bg-[#0E121D]/85 backdrop-blur-xl border-t border-white/[0.08]`.
+* **Safe-Area Insets**: Incorporates `pb-safe` and `pt-safe` for seamless edge-to-edge rendering under iOS/Android notch and gesture bars.

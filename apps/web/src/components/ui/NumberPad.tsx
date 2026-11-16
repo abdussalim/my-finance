@@ -34,13 +34,13 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
 
   return (
     <div className="flex flex-col items-center w-full">
-      {/* High-Contrast Amount Display */}
-      <div className="w-full text-center py-4 my-2 bg-indigo-50/40 rounded-xl border border-indigo-100/80">
-        <p className="text-[11px] font-semibold tracking-wider text-indigo-900/60 uppercase mb-1">
+      {/* High-Contrast Luminous Amount Display */}
+      <div className="w-full text-center py-4 my-2 bg-gradient-to-b from-white/[0.06] to-white/[0.02] rounded-2xl border border-white/[0.1] shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+        <p className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase mb-1">
           Nominal Transaksi
         </p>
         <div
-          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1E1B4B] num-tabular"
+          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white num-tabular drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]"
           aria-live="polite"
         >
           {formatCurrency(value)}
@@ -60,7 +60,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
             type="button"
             aria-label={`Tambah ${item.label}`}
             onClick={() => handleQuickAdd(item.val)}
-            className="py-1.5 px-1 bg-white hover:bg-indigo-50 active:bg-indigo-100/80 rounded-lg text-xs font-semibold text-[#4338CA] press-scale cursor-pointer border border-indigo-100 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
+            className="py-1.5 px-1 bg-white/[0.04] hover:bg-indigo-600/20 active:bg-indigo-600/30 rounded-xl text-xs font-semibold text-indigo-300 press-scale cursor-pointer border border-white/[0.08] hover:border-indigo-500/40 focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-colors"
           >
             {item.label}
           </button>
@@ -75,7 +75,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
             type="button"
             aria-label={`Digit ${btn}`}
             onClick={() => handleDigit(btn)}
-            className="h-12 bg-white hover:bg-slate-50 active:bg-indigo-50/50 rounded-xl text-lg font-bold text-slate-800 press-scale flex items-center justify-center cursor-pointer select-none border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
+            className="h-12 bg-white/[0.04] hover:bg-white/[0.08] active:bg-indigo-600/20 rounded-xl text-lg font-bold text-white press-scale flex items-center justify-center cursor-pointer select-none border border-white/[0.08] hover:border-white/20 focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-all shadow-xs"
           >
             {btn}
           </button>
@@ -84,9 +84,9 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
           type="button"
           aria-label="Hapus digit terakhir"
           onClick={handleDelete}
-          className="h-12 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 rounded-xl text-lg font-semibold text-slate-600 press-scale flex items-center justify-center cursor-pointer select-none border border-slate-200 shadow-2xs focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none"
+          className="h-12 bg-white/[0.02] hover:bg-white/[0.06] active:bg-rose-500/20 rounded-xl text-lg font-semibold text-slate-400 hover:text-white press-scale flex items-center justify-center cursor-pointer select-none border border-white/[0.08] focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-all"
         >
-          <Delete className="w-5 h-5 text-slate-600" aria-hidden="true" />
+          <Delete className="w-5 h-5 text-slate-400" aria-hidden="true" />
         </button>
       </div>
     </div>

@@ -15,18 +15,19 @@ export function Card({
   ...props
 }: CardProps) {
   const variantStyles = {
-    surface: "bg-white border border-slate-200/90 shadow-[0_1px_3px_rgba(15,23,42,0.03)]",
-    alt: "bg-slate-50 border border-slate-200/80 shadow-xs",
-    outline: "bg-transparent border border-slate-200",
+    surface:
+      "bg-[#11141E]/80 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.4)]",
+    alt: "bg-white/[0.03] border border-white/[0.06] shadow-sm",
+    outline: "bg-transparent border border-white/10",
   };
 
   return (
     <div
       className={cn(
-        "rounded-2xl p-4 transition-colors duration-120",
+        "rounded-2xl p-4 transition-all duration-150 text-[#F8FAFC]",
         variantStyles[variant],
         interactive &&
-          "press-scale cursor-pointer hover:border-indigo-300 focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:outline-none",
+          "press-scale cursor-pointer hover:border-indigo-500/40 hover:shadow-[0_0_20px_rgba(99,102,241,0.2)] focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none",
         className
       )}
       {...props}

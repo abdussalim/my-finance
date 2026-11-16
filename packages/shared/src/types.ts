@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   walletSchema,
   categorySchema,
+  projectSchema,
   transactionSchema,
   transferSchema,
   debtSchema,
@@ -11,6 +12,7 @@ import {
 
 export type WalletInput = z.infer<typeof walletSchema>;
 export type CategoryInput = z.infer<typeof categorySchema>;
+export type ProjectInput = z.infer<typeof projectSchema>;
 export type TransactionInput = z.infer<typeof transactionSchema>;
 export type TransferInput = z.infer<typeof transferSchema>;
 export type DebtInput = z.infer<typeof debtSchema>;
@@ -26,10 +28,26 @@ export interface Category extends CategoryInput {
   id: string;
 }
 
+export interface Project extends ProjectInput {
+  id: string;
+  created_at: string;
+}
+
+export interface ProjectWithStats extends Project {
+  total_income: number;
+  total_expense: number;
+  net_profit: number;
+  margin_percentage: number;
+  budget_burn_percentage: number;
+  revenue_progress_percentage: number;
+  transaction_count: number;
+}
+
 export interface Transaction {
   id: string;
   wallet_id: string;
   category_id: string | null;
+  project_id: string | null;
   type: "income" | "expense" | "transfer_in" | "transfer_out";
   amount: number;
   transfer_pair_id: string | null;
@@ -79,6 +97,9 @@ export interface DebtWithRemaining extends Debt {
 export interface TransactionWithDetails extends Transaction {
   wallet_name: string;
   category_name: string | null;
+  project_name?: string | null;
+  project_color?: string | null;
+  project_code?: string | null;
 }
 
 export interface DashboardSummary {
@@ -88,6 +109,13 @@ export interface DashboardSummary {
   total_debt: number;
   total_receivable: number;
   recent_transactions: TransactionWithDetails[];
+  projects_summary?: {
+    total_projects: number;
+    active_projects: number;
+    total_project_income: number;
+    total_project_expense: number;
+    total_project_profit: number;
+  };
 }
 
 export interface ApiResponse<T = unknown> {

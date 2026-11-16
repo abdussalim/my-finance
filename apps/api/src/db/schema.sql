@@ -16,10 +16,23 @@ CREATE TABLE IF NOT EXISTS categories (
   color TEXT
 );
 
+CREATE TABLE IF NOT EXISTS projects (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  code TEXT,
+  description TEXT,
+  color TEXT DEFAULT '#6366F1',
+  status TEXT NOT NULL DEFAULT 'active',
+  budget INTEGER DEFAULT 0,
+  target_revenue INTEGER DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS transactions (
   id TEXT PRIMARY KEY,
   wallet_id TEXT NOT NULL REFERENCES wallets(id),
   category_id TEXT REFERENCES categories(id),
+  project_id TEXT REFERENCES projects(id),
   type TEXT NOT NULL,
   amount INTEGER NOT NULL,
   transfer_pair_id TEXT,
@@ -60,6 +73,8 @@ CREATE TABLE IF NOT EXISTS auth_config (
 CREATE INDEX IF NOT EXISTS idx_transactions_wallet_id ON transactions(wallet_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
 CREATE INDEX IF NOT EXISTS idx_transactions_category_id ON transactions(category_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_project_id ON transactions(project_id);
+CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status);
 CREATE INDEX IF NOT EXISTS idx_debt_payments_debt_id ON debt_payments(debt_id);
 CREATE INDEX IF NOT EXISTS idx_debts_status ON debts(status);
 CREATE INDEX IF NOT EXISTS idx_debts_type ON debts(type);
