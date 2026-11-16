@@ -8,11 +8,15 @@ import {
   debtSchema,
   debtPaymentSchema,
   pinSchema,
+  projectTaskSchema,
+  updateProjectTaskSchema,
 } from "./schemas";
 
 export type WalletInput = z.infer<typeof walletSchema>;
 export type CategoryInput = z.infer<typeof categorySchema>;
 export type ProjectInput = z.infer<typeof projectSchema>;
+export type ProjectTaskInput = z.infer<typeof projectTaskSchema>;
+export type UpdateProjectTaskInput = z.infer<typeof updateProjectTaskSchema>;
 export type TransactionInput = z.infer<typeof transactionSchema>;
 export type TransferInput = z.infer<typeof transferSchema>;
 export type DebtInput = z.infer<typeof debtSchema>;
@@ -33,6 +37,18 @@ export interface Project extends ProjectInput {
   created_at: string;
 }
 
+export interface ProjectTask {
+  id: string;
+  project_id: string;
+  title: string;
+  description: string | null;
+  status: "pending" | "in_progress" | "completed";
+  priority: "low" | "medium" | "high";
+  due_date: string | null;
+  completed_at: string | null;
+  created_at: string;
+}
+
 export interface ProjectWithStats extends Project {
   total_income: number;
   total_expense: number;
@@ -41,6 +57,10 @@ export interface ProjectWithStats extends Project {
   budget_burn_percentage: number;
   revenue_progress_percentage: number;
   transaction_count: number;
+  total_tasks: number;
+  completed_tasks: number;
+  pending_tasks: number;
+  progress_percentage: number;
 }
 
 export interface Transaction {

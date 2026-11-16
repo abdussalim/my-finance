@@ -20,7 +20,7 @@ export function ProgressBar({
   const heightClasses = {
     sm: "h-1.5",
     md: "h-2",
-    lg: "h-3",
+    lg: "h-2.5",
   };
 
   return (
@@ -31,7 +31,7 @@ export function ProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       className={cn(
-        "w-full bg-white/[0.08] rounded-full overflow-hidden border border-white/[0.04]",
+        "w-full bg-[#1A1D2B] rounded-full overflow-hidden border border-white/[0.05]",
         heightClasses[height],
         className
       )}
@@ -41,7 +41,6 @@ export function ProgressBar({
         style={{
           width: `${clamped}%`,
           backgroundColor: color,
-          boxShadow: `0 0 12px ${color}88`,
         }}
       />
     </div>

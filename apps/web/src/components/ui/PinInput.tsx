@@ -55,7 +55,7 @@ export function PinInput({
         className="opacity-0 absolute -z-10 w-0 h-0"
       />
 
-      {/* 6 Passcode Indicators (Neon Glow Style) */}
+      {/* 6 Passcode Indicators */}
       <div
         className="flex gap-4 my-6 items-center justify-center"
         role="group"
@@ -67,10 +67,10 @@ export function PinInput({
             <div
               key={i}
               className={cn(
-                "w-3.5 h-3.5 rounded-full border-2 transition-all duration-200",
+                "w-3.5 h-3.5 rounded-full border-2 transition-all duration-150",
                 filled
-                  ? "bg-indigo-500 border-indigo-400 shadow-[0_0_12px_rgba(99,102,241,0.9)] scale-110"
-                  : "bg-white/[0.04] border-white/20"
+                  ? "bg-indigo-500 border-indigo-400 scale-105"
+                  : "bg-[#1E2333] border-white/20"
               )}
             />
           );
@@ -97,7 +97,7 @@ export function PinInput({
               aria-label={`Digit ${item.num} ${item.sub}`}
               disabled={disabled}
               onClick={() => handleDigit(item.num)}
-              className="h-14 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] active:bg-indigo-600/25 flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-white/[0.08] hover:border-indigo-500/40 focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-all"
+              className="h-14 rounded-2xl bg-[#141724] hover:bg-[#1C2133] active:bg-[#242B42] flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
             >
               <span className="text-xl font-bold text-white leading-none">{item.num}</span>
               {item.sub ? (
@@ -117,7 +117,7 @@ export function PinInput({
             aria-label="Digit 0"
             disabled={disabled}
             onClick={() => handleDigit("0")}
-            className="h-14 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] active:bg-indigo-600/25 flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-white/[0.08] hover:border-indigo-500/40 focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-all"
+            className="h-14 rounded-2xl bg-[#141724] hover:bg-[#1C2133] active:bg-[#242B42] flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
           >
             <span className="text-xl font-bold text-white leading-none">0</span>
           </button>
@@ -128,7 +128,7 @@ export function PinInput({
             aria-label="Hapus digit PIN"
             disabled={disabled}
             onClick={handleDelete}
-            className="h-14 rounded-2xl bg-white/[0.02] hover:bg-white/[0.06] active:bg-rose-500/20 flex items-center justify-center text-slate-400 hover:text-white press-scale cursor-pointer border border-white/[0.08] focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-all"
+            className="h-14 rounded-2xl bg-[#141724] hover:bg-[#1C2133] flex items-center justify-center text-slate-400 hover:text-white press-scale cursor-pointer border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
           >
             <Delete className="w-5 h-5 text-slate-400" aria-hidden="true" />
           </button>

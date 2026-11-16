@@ -28,6 +28,18 @@ CREATE TABLE IF NOT EXISTS projects (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS project_tasks (
+  id TEXT PRIMARY KEY,
+  project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
+  priority TEXT NOT NULL DEFAULT 'medium',
+  due_date TEXT,
+  completed_at TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS transactions (
   id TEXT PRIMARY KEY,
   wallet_id TEXT NOT NULL REFERENCES wallets(id),
@@ -78,3 +90,5 @@ CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status);
 CREATE INDEX IF NOT EXISTS idx_debt_payments_debt_id ON debt_payments(debt_id);
 CREATE INDEX IF NOT EXISTS idx_debts_status ON debts(status);
 CREATE INDEX IF NOT EXISTS idx_debts_type ON debts(type);
+CREATE INDEX IF NOT EXISTS idx_project_tasks_project_id ON project_tasks(project_id);
+CREATE INDEX IF NOT EXISTS idx_project_tasks_status ON project_tasks(status);

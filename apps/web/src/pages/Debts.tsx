@@ -177,7 +177,7 @@ export function Debts() {
         <Button
           size="sm"
           onClick={() => setIsAddOpen(true)}
-          className="gap-1 shadow-[0_0_15px_rgba(99,102,241,0.4)]"
+          className="gap-1.5"
           aria-label="Catat Hutang atau Piutang Baru"
         >
           <Plus className="w-4 h-4" aria-hidden="true" /> Catat
@@ -199,25 +199,19 @@ export function Debts() {
       />
 
       {/* Active Tab Highlight Summary Card */}
-      <div
-        className={`p-4 rounded-2xl border shadow-lg transition-all duration-150 ${
-          activeTab === "debt"
-            ? "bg-amber-500/10 border-amber-500/30"
-            : "bg-emerald-500/10 border-emerald-500/30"
-        }`}
-      >
+      <div className="p-4 rounded-2xl bg-[#12141D] border border-white/[0.08]">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             {activeTab === "debt" ? "Total Sisa Hutang" : "Total Sisa Piutang"}
           </span>
           {totalOverdue > 0 ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-400 bg-rose-500/20 border border-rose-500/30 px-2 py-0.5 rounded-full shadow-[0_0_10px_rgba(244,63,94,0.3)]">
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-full">
               <AlertCircle className="w-3 h-3" aria-hidden="true" />
               {totalOverdue} Jatuh Tempo
             </span>
           ) : null}
         </div>
-        <div className="text-3xl font-extrabold text-white num-tabular tracking-tight my-1">
+        <div className="text-3xl font-bold text-white num-tabular tracking-tight my-1">
           {formatCurrency(totalRemaining)}
         </div>
         <p className="text-xs text-slate-400 mt-1">

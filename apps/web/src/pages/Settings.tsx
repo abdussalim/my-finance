@@ -260,7 +260,7 @@ export function Settings() {
               >
                 <span
                   className={`w-2 h-2 rounded-full ${
-                    c.type === "income" ? "bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)]" : "bg-rose-400 shadow-[0_0_6px_rgba(244,63,94,0.8)]"
+                    c.type === "income" ? "bg-emerald-400" : "bg-rose-400"
                   }`}
                   aria-hidden="true"
                 />
@@ -312,15 +312,15 @@ export function Settings() {
       </div>
 
       {/* Section Architecture & System Badge */}
-      <Card className="p-3.5 bg-gradient-to-br from-indigo-950/30 to-purple-950/20 border-indigo-500/25">
+      <Card className="p-3.5 bg-[#12141D] border border-white/[0.07]">
         <div className="flex items-start gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-indigo-600/30 border border-indigo-500/40 text-indigo-400 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+          <div className="w-8 h-8 rounded-xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
             <Cpu className="w-4 h-4" aria-hidden="true" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-bold text-white" translate="no">My Finance v2.0</p>
-              <span className="text-[10px] font-extrabold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.2 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+              <p className="text-xs font-semibold text-white" translate="no">My Finance v2.0</p>
+              <span className="text-[10px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.2 rounded-md">
                 &lt; 10ms CPU
               </span>
             </div>
@@ -339,7 +339,7 @@ export function Settings() {
         variant="danger"
         size="lg"
         onClick={logout}
-        className="gap-2 shadow-[0_0_20px_rgba(244,63,94,0.3)]"
+        className="gap-2"
         aria-label="Kunci Aplikasi dan Keluar"
       >
         <LogOut className="w-4 h-4" aria-hidden="true" /> Kunci Aplikasi (Logout)

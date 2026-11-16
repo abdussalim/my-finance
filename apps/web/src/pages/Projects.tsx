@@ -8,35 +8,31 @@ import { SegmentedControl } from "../components/ui/SegmentedControl";
 import { ProgressBar } from "../components/ui/ProgressBar";
 import { EmptyState } from "../components/ui/EmptyState";
 import { formatCurrency, relativeDate } from "../lib/format";
-import { ProjectWithStats, WalletWithBalance, Category } from "@my-finance/shared";
+import { ProjectWithStats, ProjectTask, WalletWithBalance, Category } from "@my-finance/shared";
 import {
   Briefcase,
   Plus,
-  TrendingUp,
-  ArrowUpRight,
-  ArrowDownRight,
-  DollarSign,
-  PieChart,
+  CheckCircle2,
+  Circle,
+  Clock,
   Trash2,
   Edit3,
   Calendar,
   Layers,
-  CheckCircle2,
-  Clock,
   ChevronRight,
+  TrendingUp,
   Receipt,
-  FileText,
+  AlertCircle,
+  Filter,
 } from "lucide-react";
 
 const PROJECT_PALETTE = [
-  "#8B5CF6", // Violet (EDUNUSA)
-  "#F59E0B", // Amber (SOBATPART)
-  "#06B6D4", // Cyan (ISTANA BLOCK)
+  "#6366F1", // Indigo (EDUNUSA)
+  "#0EA5E9", // Sky Blue (SOBATPART)
+  "#F59E0B", // Amber (ISTANA BLOCK)
   "#10B981", // Emerald
   "#EC4899", // Pink
-  "#6366F1", // Indigo
-  "#3B82F6", // Blue
-  "#F43F5E", // Rose
+  "#8B5CF6", // Purple
 ];
 
 export function Projects() {
@@ -45,12 +41,21 @@ export function Projects() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Detail Sheet
+  // Detail Sheet (Project Management Cockpit)
   const [selectedProject, setSelectedProject] = useState<ProjectWithStats | null>(null);
+  const [projectTasks, setProjectTasks] = useState<ProjectTask[]>([]);
   const [projectTransactions, setProjectTransactions] = useState<any[]>([]);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [cockpitTab, setCockpitTab] = useState<"tasks" | "finance">("tasks");
+  const [taskFilter, setTaskFilter] = useState<"all" | "pending" | "completed">("all");
 
-  // Create / Edit Modal
+  // New Task Form inside Cockpit
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskPriority, setNewTaskPriority] = useState<"low" | "medium" | "high">("medium");
+  const [newTaskDueDate, setNewTaskDueDate] = useState("");
+  const [taskSubmitting, setTaskSubmitting] = useState(false);
+
+  // Create / Edit Project Modal
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pName, setPName] = useState("");
@@ -97,29 +102,138 @@ export function Projects() {
   const openProjectDetail = async (p: ProjectWithStats) => {
     setSelectedProject(p);
     setLoadingDetails(true);
+    setCockpitTab("tasks");
+    setTaskFilter("all");
     try {
-      const detail = await apiFetch<any>(`/api/projects/${p.id}`);
-      setProjectTransactions(detail.transactions || []);
+      const res = await apiFetch<any>(`/api/projects/${p.id}`);
+      setSelectedProject(res);
+      setProjectTasks(res.tasks || []);
+      setProjectTransactions(res.transactions || []);
     } catch (err) {
-      console.error(err);
+      console.error("Failed to load project details", err);
     } finally {
       setLoadingDetails(false);
     }
   };
 
-  const openCreateForm = () => {
+  const handleToggleTask = async (task: ProjectTask) => {
+    if (!selectedProject) return;
+    const newStatus = task.status === "completed" ? "pending" : "completed";
+    
+    // Optimistic local update
+    const updatedTasks = projectTasks.map((t) =>
+      t.id === task.id
+        ? {
+            ...t,
+            status: newStatus as any,
+            completed_at: newStatus === "completed" ? new Date().toISOString() : null,
+          }
+        : t
+    );
+    setProjectTasks(updatedTasks);
+
+    const completedCount = updatedTasks.filter((t) => t.status === "completed").length;
+    const totalCount = updatedTasks.length;
+    const progressPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+    setSelectedProject({
+      ...selectedProject,
+      completed_tasks: completedCount,
+      pending_tasks: totalCount - completedCount,
+      progress_percentage: progressPct,
+    });
+
+    setProjects((prev) =>
+      prev.map((pr) =>
+        pr.id === selectedProject.id
+          ? {
+              ...pr,
+              completed_tasks: completedCount,
+              pending_tasks: totalCount - completedCount,
+              progress_percentage: progressPct,
+            }
+          : pr
+      )
+    );
+
+    try {
+      await apiFetch(`/api/projects/${selectedProject.id}/tasks/${task.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ status: newStatus }),
+      });
+    } catch (err) {
+      console.error("Failed to toggle task", err);
+      // Revert on error
+      const refreshed = await apiFetch<any>(`/api/projects/${selectedProject.id}`);
+      setSelectedProject(refreshed);
+      setProjectTasks(refreshed.tasks || []);
+    }
+  };
+
+  const handleCreateTask = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTaskTitle.trim() || !selectedProject) return;
+
+    setTaskSubmitting(true);
+    try {
+      await apiFetch(`/api/projects/${selectedProject.id}/tasks`, {
+        method: "POST",
+        body: JSON.stringify({
+          title: newTaskTitle.trim(),
+          priority: newTaskPriority,
+          due_date: newTaskDueDate || null,
+          status: "pending",
+        }),
+      });
+
+      setNewTaskTitle("");
+      setNewTaskDueDate("");
+      setNewTaskPriority("medium");
+
+      // Reload project details and list
+      const refreshed = await apiFetch<any>(`/api/projects/${selectedProject.id}`);
+      setSelectedProject(refreshed);
+      setProjectTasks(refreshed.tasks || []);
+      loadData();
+    } catch (err) {
+      console.error("Failed to add task", err);
+    } finally {
+      setTaskSubmitting(false);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    if (!selectedProject) return;
+    const prevTasks = [...projectTasks];
+    setProjectTasks(projectTasks.filter((t) => t.id !== taskId));
+
+    try {
+      await apiFetch(`/api/projects/${selectedProject.id}/tasks/${taskId}`, {
+        method: "DELETE",
+      });
+      const refreshed = await apiFetch<any>(`/api/projects/${selectedProject.id}`);
+      setSelectedProject(refreshed);
+      setProjectTasks(refreshed.tasks || []);
+      loadData();
+    } catch (err) {
+      console.error("Failed to delete task", err);
+      setProjectTasks(prevTasks);
+    }
+  };
+
+  const handleOpenCreate = () => {
     setEditingId(null);
     setPName("");
     setPCode("");
     setPDesc("");
-    setPColor(PROJECT_PALETTE[projects.length % PROJECT_PALETTE.length]);
+    setPColor(PROJECT_PALETTE[0]);
     setPStatus("active");
     setPBudget(0);
     setPTargetRevenue(0);
     setIsFormOpen(true);
   };
 
-  const openEditForm = (p: ProjectWithStats) => {
+  const handleOpenEdit = (p: ProjectWithStats) => {
     setEditingId(p.id);
     setPName(p.name);
     setPCode(p.code || "");
@@ -131,8 +245,9 @@ export function Projects() {
     setIsFormOpen(true);
   };
 
-  const handleSaveProject = async () => {
-    if (!pName.trim()) return alert("Nama proyek wajib diisi");
+  const handleSaveProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pName.trim()) return;
 
     setFormSubmitting(true);
     try {
@@ -142,8 +257,8 @@ export function Projects() {
         description: pDesc.trim() || null,
         color: pColor,
         status: pStatus,
-        budget: pBudget,
-        target_revenue: pTargetRevenue,
+        budget: Number(pBudget) || 0,
+        target_revenue: Number(pTargetRevenue) || 0,
       };
 
       if (editingId) {
@@ -160,32 +275,32 @@ export function Projects() {
 
       setIsFormOpen(false);
       await loadData();
-      if (selectedProject && selectedProject.id === editingId) {
+      if (selectedProject && editingId === selectedProject.id) {
         const refreshed = await apiFetch<any>(`/api/projects/${editingId}`);
         setSelectedProject(refreshed);
       }
-    } catch (err: any) {
-      alert(err.message || "Gagal menyimpan proyek");
+    } catch (err) {
+      console.error(err);
     } finally {
       setFormSubmitting(false);
     }
   };
 
-  const handleDeleteProject = async (id: string, name: string) => {
-    if (!confirm(`Hapus proyek "${name}"? Transaksi yang sudah tercatat akan tetap ada dan dilepas dari proyek.`)) return;
+  const handleDeleteProject = async (id: string) => {
+    if (!window.confirm("Hapus proyek ini? Seluruh daftar pekerjaan akan ikut terhapus.")) return;
+
     try {
       await apiFetch(`/api/projects/${id}`, { method: "DELETE" });
       setSelectedProject(null);
       await loadData();
-    } catch (err: any) {
-      alert(err.message || "Gagal menghapus proyek");
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleCreateProjectTransaction = async () => {
-    if (!selectedProject) return;
-    if (txAmount <= 0) return alert("Masukkan nominal transaksi yang valid");
-    if (!txWalletId) return alert("Pilih dompet yang digunakan");
+  const handleSaveProjectTx = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedProject || txAmount <= 0 || !txWalletId) return;
 
     setTxSubmitting(true);
     try {
@@ -198,269 +313,201 @@ export function Projects() {
           type: txType,
           amount: txAmount,
           date: txDate,
-          note: txNote || `Transaksi proyek ${selectedProject.name}`,
+          note: txNote.trim() || null,
         }),
       });
 
       setIsAddTxOpen(false);
       setTxAmount(0);
       setTxNote("");
-      // Reload both list and detail
+
+      const refreshed = await apiFetch<any>(`/api/projects/${selectedProject.id}`);
+      setSelectedProject(refreshed);
+      setProjectTransactions(refreshed.transactions || []);
       await loadData();
-      const updated = await apiFetch<any>(`/api/projects/${selectedProject.id}`);
-      setSelectedProject(updated);
-      setProjectTransactions(updated.transactions || []);
-    } catch (err: any) {
-      alert(err.message || "Gagal mencatat transaksi proyek");
+    } catch (err) {
+      console.error(err);
     } finally {
       setTxSubmitting(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="py-6 space-y-4 animate-pulse" role="status" aria-label="Memuat data proyek…">
-        <div className="h-40 bg-white/[0.04] rounded-2xl border border-white/[0.08]" />
-        <div className="h-32 bg-white/[0.04] rounded-2xl border border-white/[0.08]" />
-        <div className="h-32 bg-white/[0.04] rounded-2xl border border-white/[0.08]" />
-      </div>
-    );
-  }
+  // Aggregate Portfolio Telemetry
+  const totalContractValue = projects.reduce((acc, p) => acc + (p.target_revenue || 0), 0);
+  const totalCompletedTasks = projects.reduce((acc, p) => acc + (p.completed_tasks || 0), 0);
+  const totalPendingTasks = projects.reduce((acc, p) => acc + (p.pending_tasks || 0), 0);
+  const allTasksCount = totalCompletedTasks + totalPendingTasks;
+  const portfolioProgress = allTasksCount > 0 ? Math.round((totalCompletedTasks / allTasksCount) * 100) : 0;
 
-  // Aggregate project statistics
-  const totalProjectRevenue = projects.reduce((acc, p) => acc + p.total_income, 0);
-  const totalProjectExpense = projects.reduce((acc, p) => acc + p.total_expense, 0);
-  const totalProjectProfit = totalProjectRevenue - totalProjectExpense;
-  const averageMargin =
-    totalProjectRevenue > 0
-      ? Math.round((totalProjectProfit / totalProjectRevenue) * 100)
-      : 0;
+  // Filtered tasks for cockpit
+  const filteredTasks = projectTasks.filter((t) => {
+    if (taskFilter === "pending") return t.status !== "completed";
+    if (taskFilter === "completed") return t.status === "completed";
+    return true;
+  });
+
+  const pendingTasksList = projectTasks.filter((t) => t.status !== "completed");
+  const completedTasksList = projectTasks.filter((t) => t.status === "completed");
 
   return (
-    <div className="space-y-4 pt-3">
-      {/* Top Header */}
-      <div className="flex items-center justify-between pb-1">
+    <div className="space-y-6 pb-6">
+      {/* 1. Header: Proximity & Clear Focal Identity */}
+      <div className="flex items-center justify-between pt-2">
         <div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-indigo-400/90 flex items-center gap-1">
-            <Layers className="w-3.5 h-3.5" aria-hidden="true" /> Multi-Venture Ledger
-          </span>
-          <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
-            Manajemen Proyek & Bisnis
-          </h1>
+          <h1 className="text-xl font-bold tracking-tight text-white">Manajemen Proyek</h1>
+          <p className="text-xs text-slate-400 mt-0.5">Pantau nilai proyek, progress kerja, dan pekerjaan</p>
         </div>
-        <Button
-          size="sm"
-          onClick={openCreateForm}
-          className="gap-1 shadow-[0_0_15px_rgba(99,102,241,0.4)]"
-          aria-label="Tambah Proyek Baru"
-        >
-          <Plus className="w-4 h-4" aria-hidden="true" /> Proyek Baru
+        <Button size="sm" onClick={handleOpenCreate} className="gap-1.5">
+          <Plus className="w-4 h-4" />
+          <span>Tambah</span>
         </Button>
       </div>
 
-      {/* Hero Telemetry Card */}
-      <Card className="p-4 relative overflow-hidden border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 via-[#11141E]/90 to-purple-950/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-cyan-400 to-purple-500" aria-hidden="true" />
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Total Laba Bersih Seluruh Proyek
+      {/* 2. Primary Focal Point: Portfolio Executive Summary */}
+      <Card className="bg-[#12141D] border border-white/[0.08] p-5">
+        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+          <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+            Total Nilai Proyek (Portofolio)
           </span>
-          <span
-            className={`inline-flex items-center gap-1 text-[11px] font-extrabold px-2 py-0.5 rounded-full border ${
-              totalProjectProfit >= 0
-                ? "text-emerald-400 bg-emerald-500/15 border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
-                : "text-rose-400 bg-rose-500/15 border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.3)]"
-            }`}
-          >
-            <TrendingUp className="w-3 h-3" aria-hidden="true" />
-            {averageMargin >= 0 ? `+${averageMargin}% Margin` : `${averageMargin}% Margin`}
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            {projects.length} Proyek Aktif
           </span>
         </div>
 
-        <div
-          className={`text-3xl font-extrabold num-tabular tracking-tight my-1 drop-shadow-[0_0_15px_rgba(255,255,255,0.15)] ${
-            totalProjectProfit >= 0 ? "text-emerald-400" : "text-rose-400"
-          }`}
-        >
-          {totalProjectProfit >= 0 ? "+" : ""}
-          {formatCurrency(totalProjectProfit)}
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-white/[0.08] text-xs">
-          <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-            <span className="text-slate-400 flex items-center gap-1 text-[11px] font-medium">
-              <ArrowDownRight className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" /> Omset Proyek
-            </span>
-            <p className="text-sm font-bold text-emerald-400 num-tabular mt-0.5">
-              {formatCurrency(totalProjectRevenue)}
-            </p>
+        <div className="pt-3 pb-2">
+          <div className="text-2xl sm:text-3xl font-bold tracking-tight text-white num-tabular">
+            {formatCurrency(totalContractValue)}
           </div>
-          <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-            <span className="text-slate-400 flex items-center gap-1 text-[11px] font-medium">
-              <ArrowUpRight className="w-3.5 h-3.5 text-rose-400" aria-hidden="true" /> Biaya Operasional
+        </div>
+
+        {/* Overall Task Progress Bar */}
+        <div className="space-y-2 pt-2">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-slate-400 font-medium">Progress Pekerjaan Gabungan</span>
+            <span className="text-white font-semibold num-tabular">{portfolioProgress}% Selesai</span>
+          </div>
+          <ProgressBar progress={portfolioProgress} color="#4F46E5" height="md" />
+          <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+            <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+              <CheckCircle2 className="w-3.5 h-3.5" /> {totalCompletedTasks} Selesai
             </span>
-            <p className="text-sm font-bold text-rose-400 num-tabular mt-0.5">
-              {formatCurrency(totalProjectExpense)}
-            </p>
+            <span className="flex items-center gap-1.5 text-amber-400 font-medium">
+              <Clock className="w-3.5 h-3.5" /> {totalPendingTasks} Tertunda
+            </span>
           </div>
         </div>
       </Card>
 
-      {/* Projects List Section */}
+      {/* 3. List of Projects (Gestalt: Common Region & Similarity) */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between px-0.5">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Briefcase className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" /> Portofolio Bisnis ({projects.length})
+        <div className="flex items-center justify-between px-1">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Daftar Portofolio Proyek
           </h2>
-          <span className="text-[11px] text-slate-400 font-medium">
-            Ketuk kartu untuk analisis & transaksi
-          </span>
+          <span className="text-xs text-slate-500">{projects.length} unit usaha</span>
         </div>
 
-        {projects.length === 0 ? (
+        {loading ? (
+          <div className="py-12 text-center text-slate-500 text-sm">Memuat data proyek…</div>
+        ) : projects.length === 0 ? (
           <EmptyState
             icon={<Briefcase className="w-6 h-6" />}
-            title="Belum ada proyek"
-            description="Tambahkan proyek usaha atau bisnis Anda (seperti EDUNUSA, SOBATPART, ISTANA BLOCK) untuk memantau omset dan profit secara terpisah."
+            title="Belum Ada Proyek"
+            description="Tambahkan proyek usaha seperti EDUNUSA, SOBATPART, atau ISTANA BLOCK untuk mulai memantau progress kerja dan nilainya."
             action={
-              <Button size="sm" onClick={openCreateForm}>
-                <Plus className="w-4 h-4 mr-1" aria-hidden="true" /> Buat Proyek Pertama
+              <Button size="sm" onClick={handleOpenCreate}>
+                Buat Proyek Pertama
               </Button>
             }
           />
         ) : (
           projects.map((p) => {
-            const hasTarget = (p.target_revenue || 0) > 0;
-            const hasBudget = (p.budget || 0) > 0;
+            const taskCount = (p.total_tasks || 0);
+            const progress = p.progress_percentage || 0;
+            const completedCount = p.completed_tasks || 0;
+            const pendingCount = p.pending_tasks || 0;
 
             return (
               <Card
                 key={p.id}
                 interactive
                 onClick={() => openProjectDetail(p)}
-                className="p-4 space-y-3 border-white/[0.09] hover:border-indigo-500/40 relative overflow-hidden group shadow-lg"
+                className="bg-[#12141D] border border-white/[0.07] p-4.5 space-y-3.5 hover:border-white/[0.14] transition-all"
               >
-                {/* Accent top stripe */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-1"
-                  style={{ backgroundColor: p.color || "#6366F1", boxShadow: `0 0 10px ${p.color || "#6366F1"}` }}
-                  aria-hidden="true"
-                />
-
                 {/* Project Header */}
-                <div className="flex items-start justify-between gap-2 pt-0.5">
+                <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center font-extrabold text-sm text-white shadow-md border border-white/20 shrink-0"
+                      className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs shrink-0"
                       style={{
-                        backgroundColor: p.color || "#6366F1",
-                        boxShadow: `0 0 15px ${p.color || "#6366F1"}55`,
+                        backgroundColor: `${p.color || "#6366F1"}18`,
+                        color: p.color || "#6366F1",
+                        border: `1px solid ${p.color || "#6366F1"}30`,
                       }}
                     >
                       {p.code || p.name.slice(0, 3).toUpperCase()}
                     </div>
                     <div>
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
-                          {p.name}
-                        </h3>
-                        <span
-                          className={`inline-flex items-center text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
-                            p.status === "active"
-                              ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                              : p.status === "completed"
-                              ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
-                              : "bg-amber-500/15 text-amber-400 border border-amber-500/30"
-                          }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full mr-1 ${
-                              p.status === "active" ? "bg-emerald-400 animate-pulse" : "bg-current"
-                            }`}
-                          />
-                          {p.status === "active" ? "Aktif" : p.status === "completed" ? "Selesai" : "Pending"}
-                        </span>
-                      </div>
+                      <h3 className="text-sm font-bold text-white tracking-tight leading-tight">
+                        {p.name}
+                      </h3>
                       {p.description ? (
-                        <p className="text-[11px] text-slate-400 line-clamp-1 mt-0.5">
-                          {p.description}
-                        </p>
+                        <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{p.description}</p>
                       ) : null}
                     </div>
                   </div>
 
-                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors shrink-0 mt-2" aria-hidden="true" />
+                  <span
+                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 ${
+                      p.status === "completed"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : p.status === "on_hold"
+                        ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                        : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+                    }`}
+                  >
+                    {p.status === "completed" ? "Selesai" : p.status === "on_hold" ? "Hold" : "Aktif"}
+                  </span>
                 </div>
 
-                {/* Metrics Breakdown Grid */}
-                <div className="grid grid-cols-3 gap-2 py-2 px-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+                {/* Key Metrics: Nilai Proyek & Progress */}
+                <div className="grid grid-cols-2 gap-2 p-2.5 bg-[#171A26] rounded-xl border border-white/[0.04]">
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold">Omset</span>
-                    <p className="text-xs font-bold text-emerald-400 num-tabular truncate mt-0.5">
-                      {formatCurrency(p.total_income)}
+                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+                      Nilai Proyek
+                    </span>
+                    <p className="text-sm font-bold text-white num-tabular mt-0.5">
+                      {p.target_revenue ? formatCurrency(p.target_revenue) : "Belum diatur"}
                     </p>
                   </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold">Biaya</span>
-                    <p className="text-xs font-bold text-rose-400 num-tabular truncate mt-0.5">
-                      {formatCurrency(p.total_expense)}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold">Laba Bersih</span>
-                    <p
-                      className={`text-xs font-extrabold num-tabular truncate mt-0.5 ${
-                        p.net_profit >= 0 ? "text-emerald-400" : "text-rose-400"
-                      }`}
-                    >
-                      {p.net_profit >= 0 ? "+" : ""}
-                      {formatCurrency(p.net_profit)}
+                  <div className="text-right">
+                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+                      Progress Kerja
+                    </span>
+                    <p className="text-sm font-bold text-indigo-400 num-tabular mt-0.5">
+                      {progress}% Selesai
                     </p>
                   </div>
                 </div>
 
-                {/* Progress Indicators */}
-                <div className="space-y-1.5 pt-0.5 text-[11px]">
-                  {hasTarget ? (
-                    <div>
-                      <div className="flex justify-between text-slate-400 mb-1 num-tabular">
-                        <span>Pencapaian Target ({p.revenue_progress_percentage}%)</span>
-                        <span className="text-slate-300 font-medium">
-                          {formatCurrency(p.total_income)} / {formatCurrency(p.target_revenue)}
-                        </span>
-                      </div>
-                      <ProgressBar
-                        progress={p.revenue_progress_percentage}
-                        color={p.color || "#10B981"}
-                        height="sm"
-                      />
-                    </div>
-                  ) : null}
-
-                  {hasBudget ? (
-                    <div>
-                      <div className="flex justify-between text-slate-400 mb-1 num-tabular">
-                        <span>Serapan Anggaran ({p.budget_burn_percentage}%)</span>
-                        <span className="text-slate-300 font-medium">
-                          {formatCurrency(p.total_expense)} / {formatCurrency(p.budget)}
-                        </span>
-                      </div>
-                      <ProgressBar
-                        progress={p.budget_burn_percentage}
-                        color={p.budget_burn_percentage > 90 ? "#F43F5E" : "#6366F1"}
-                        height="sm"
-                      />
-                    </div>
-                  ) : null}
-
-                  {!hasTarget && !hasBudget ? (
-                    <div className="flex items-center justify-between text-slate-400 text-[11px]">
-                      <span>{p.transaction_count} transaksi tercatat</span>
-                      <span className="font-semibold text-indigo-400">
-                        Margin: {p.margin_percentage}%
-                      </span>
-                    </div>
-                  ) : null}
+                {/* Task Breakdown Indicator */}
+                <div className="space-y-1.5">
+                  <ProgressBar progress={progress} color={p.color || "#6366F1"} height="sm" />
+                  <div className="flex items-center justify-between text-[11px] text-slate-400">
+                    <span>
+                      {taskCount > 0 ? (
+                        <>
+                          <strong className="text-emerald-400 font-medium">{completedCount}</strong> Selesai •{" "}
+                          <strong className="text-amber-400 font-medium">{pendingCount}</strong> Tertunda
+                        </>
+                      ) : (
+                        "Belum ada list pekerjaan"
+                      )}
+                    </span>
+                    <span className="flex items-center gap-0.5 text-indigo-400 font-medium text-xs hover:text-indigo-300">
+                      Buka Detail <ChevronRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
                 </div>
               </Card>
             );
@@ -468,403 +515,600 @@ export function Projects() {
         )}
       </div>
 
-      {/* Project Detail Bottom Sheet */}
+      {/* 4. Project Management Cockpit (Detailed BottomSheet) */}
       <BottomSheet
-        isOpen={Boolean(selectedProject)}
+        isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
-        title={selectedProject?.name || "Rincian Proyek"}
-        subtitle={selectedProject?.description || "Detail kinerja finansial proyek"}
+        title={selectedProject?.name || "Detail Proyek"}
+        subtitle={selectedProject?.code ? `Kode: ${selectedProject.code}` : undefined}
       >
         {selectedProject ? (
-          <div className="space-y-4">
-            {/* Action Bar */}
-            <div className="flex gap-2">
-              <Button
-                size="md"
-                className="flex-1 gap-1.5"
-                onClick={() => {
-                  setTxAmount(0);
-                  setTxNote("");
-                  setIsAddTxOpen(true);
-                }}
-              >
-                <Plus className="w-4 h-4" aria-hidden="true" /> Catat Transaksi Proyek
-              </Button>
-              <Button
-                variant="outline"
-                size="md"
-                onClick={() => {
-                  openEditForm(selectedProject);
-                }}
-                className="px-3"
-                aria-label="Edit Proyek"
-              >
-                <Edit3 className="w-4 h-4" aria-hidden="true" />
-              </Button>
-              <Button
-                variant="danger"
-                size="md"
-                onClick={() => handleDeleteProject(selectedProject.id, selectedProject.name)}
-                className="px-3"
-                aria-label="Hapus Proyek"
-              >
-                <Trash2 className="w-4 h-4" aria-hidden="true" />
-              </Button>
+          <div className="space-y-5">
+            {/* Project Executive Summary Header */}
+            <div className="p-4 bg-[#161925] rounded-2xl border border-white/[0.07] space-y-3">
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wide">
+                    Nilai Proyek (Kontrak)
+                  </span>
+                  <div className="text-xl font-bold text-white num-tabular mt-0.5">
+                    {selectedProject.target_revenue
+                      ? formatCurrency(selectedProject.target_revenue)
+                      : "Rp 0"}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEdit(selectedProject)}
+                    className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 press-scale cursor-pointer"
+                    aria-label="Edit Proyek"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteProject(selectedProject.id)}
+                    className="p-2 rounded-xl bg-white/[0.05] hover:bg-red-500/20 text-slate-400 hover:text-red-400 press-scale cursor-pointer"
+                    aria-label="Hapus Proyek"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Progress Summary */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400 font-medium">Realisasi Pekerjaan Fisik</span>
+                  <span className="text-indigo-400 font-bold num-tabular">
+                    {selectedProject.progress_percentage || 0}% Selesai
+                  </span>
+                </div>
+                <ProgressBar
+                  progress={selectedProject.progress_percentage || 0}
+                  color={selectedProject.color || "#6366F1"}
+                  height="md"
+                />
+                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+                  <span className="text-emerald-400 font-medium">
+                    {selectedProject.completed_tasks || 0} Pekerjaan Selesai
+                  </span>
+                  <span className="text-amber-400 font-medium">
+                    {selectedProject.pending_tasks || 0} Pekerjaan Tertunda
+                  </span>
+                </div>
+              </div>
             </div>
 
-            {/* Performance Metric Box */}
-            <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.08] space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Kinerja Finansial
-                </span>
-                <span
-                  className={`text-xs font-extrabold px-2 py-0.5 rounded-full ${
-                    selectedProject.net_profit >= 0
-                      ? "text-emerald-400 bg-emerald-500/15"
-                      : "text-rose-400 bg-rose-500/15"
-                  }`}
+            {/* Navigation Tabs: Pekerjaan (Tasks) vs Keuangan (Finance) */}
+            <SegmentedControl
+              value={cockpitTab}
+              onChange={(val) => setCockpitTab(val)}
+              options={[
+                { value: "tasks", label: `Pekerjaan (${projectTasks.length})` },
+                { value: "finance", label: "Keuangan & Arus Kas" },
+              ]}
+            />
+
+            {/* TAB CONTENT: PEKERJAAN (TASKS & WORK MANAGEMENT) */}
+            {cockpitTab === "tasks" ? (
+              <div className="space-y-4">
+                {/* Form Quick Add Task */}
+                <form
+                  onSubmit={handleCreateTask}
+                  className="p-3 bg-[#171A27] rounded-xl border border-white/[0.06] space-y-2.5"
                 >
-                  Margin: {selectedProject.margin_percentage}%
-                </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-white">Tambah Pekerjaan Baru</span>
+                    <span className="text-[10px] text-slate-400">Milestone / To-Do</span>
+                  </div>
+
+                  <input
+                    type="text"
+                    value={newTaskTitle}
+                    onChange={(e) => setNewTaskTitle(e.target.value)}
+                    placeholder="Contoh: Pengiriman Batch 2 Paving Block"
+                    className="w-full px-3 py-2 bg-[#10121A] rounded-lg border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                    required
+                  />
+
+                  <div className="grid grid-cols-2 gap-2 pt-0.5">
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">Prioritas</label>
+                      <select
+                        value={newTaskPriority}
+                        onChange={(e) => setNewTaskPriority(e.target.value as any)}
+                        className="w-full px-2 py-1.5 bg-[#10121A] rounded-lg border border-white/[0.08] text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                      >
+                        <option value="high">Tinggi (Mendesak)</option>
+                        <option value="medium">Sedang</option>
+                        <option value="low">Rendah</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">Target Selesai</label>
+                      <input
+                        type="date"
+                        value={newTaskDueDate}
+                        onChange={(e) => setNewTaskDueDate(e.target.value)}
+                        className="w-full px-2 py-1.5 bg-[#10121A] rounded-lg border border-white/[0.08] text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    size="sm"
+                    loading={taskSubmitting}
+                    disabled={!newTaskTitle.trim()}
+                    className="w-full mt-1"
+                  >
+                    + Simpan Pekerjaan
+                  </Button>
+                </form>
+
+                {/* Filter Tabs for Tasks */}
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <div className="flex gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setTaskFilter("all")}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
+                        taskFilter === "all"
+                          ? "bg-indigo-600 text-white"
+                          : "bg-white/[0.04] text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      Semua ({projectTasks.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTaskFilter("pending")}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
+                        taskFilter === "pending"
+                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                          : "bg-white/[0.04] text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      Tertunda ({pendingTasksList.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTaskFilter("completed")}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
+                        taskFilter === "completed"
+                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                          : "bg-white/[0.04] text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      Selesai ({completedTasksList.length})
+                    </button>
+                  </div>
+                </div>
+
+                {/* List of Tasks */}
+                {filteredTasks.length === 0 ? (
+                  <div className="py-8 text-center text-slate-500 text-xs bg-[#151722] rounded-xl border border-white/[0.05]">
+                    {taskFilter === "completed"
+                      ? "Belum ada pekerjaan yang diselesaikan"
+                      : taskFilter === "pending"
+                      ? "Semua pekerjaan telah selesai!"
+                      : "Belum ada daftar pekerjaan untuk proyek ini"}
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {/* SECTION: PEKERJAAN TERTUNDA */}
+                    {(taskFilter === "all" || taskFilter === "pending") && pendingTasksList.length > 0 ? (
+                      <div className="space-y-2">
+                        {taskFilter === "all" ? (
+                          <div className="text-[11px] font-semibold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 pt-1">
+                            <Clock className="w-3 h-3" /> Pekerjaan Tertunda ({pendingTasksList.length})
+                          </div>
+                        ) : null}
+
+                        {pendingTasksList.map((task) => (
+                          <div
+                            key={task.id}
+                            className="flex items-start justify-between gap-3 p-3 bg-[#161824] rounded-xl border border-white/[0.06] hover:border-white/[0.12] transition-colors"
+                          >
+                            <button
+                              type="button"
+                              onClick={() => handleToggleTask(task)}
+                              className="mt-0.5 text-slate-400 hover:text-emerald-400 cursor-pointer press-scale shrink-0"
+                              aria-label="Tandai selesai"
+                            >
+                              <Circle className="w-5 h-5" />
+                            </button>
+
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold text-white leading-snug">
+                                {task.title}
+                              </p>
+                              {task.description ? (
+                                <p className="text-[11px] text-slate-400 mt-0.5">{task.description}</p>
+                              ) : null}
+
+                              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                <span
+                                  className={`text-[9.5px] font-medium px-1.5 py-0.5 rounded ${
+                                    task.priority === "high"
+                                      ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                                      : task.priority === "medium"
+                                      ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                                      : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                                  }`}
+                                >
+                                  Prioritas: {task.priority === "high" ? "Tinggi" : task.priority === "medium" ? "Sedang" : "Rendah"}
+                                </span>
+                                {task.due_date ? (
+                                  <span className="text-[10px] text-slate-400 flex items-center gap-1">
+                                    <Calendar className="w-3 h-3" /> Deadline: {relativeDate(task.due_date)}
+                                  </span>
+                                ) : null}
+                              </div>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteTask(task.id)}
+                              className="text-slate-500 hover:text-red-400 p-1 press-scale cursor-pointer"
+                              aria-label="Hapus pekerjaan"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {/* SECTION: PEKERJAAN SELESAI */}
+                    {(taskFilter === "all" || taskFilter === "completed") && completedTasksList.length > 0 ? (
+                      <div className="space-y-2 pt-2">
+                        {taskFilter === "all" ? (
+                          <div className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5 pt-2">
+                            <CheckCircle2 className="w-3 h-3" /> Pekerjaan Selesai ({completedTasksList.length})
+                          </div>
+                        ) : null}
+
+                        {completedTasksList.map((task) => (
+                          <div
+                            key={task.id}
+                            className="flex items-start justify-between gap-3 p-3 bg-[#13151E] rounded-xl border border-white/[0.04] opacity-80 transition-colors"
+                          >
+                            <button
+                              type="button"
+                              onClick={() => handleToggleTask(task)}
+                              className="mt-0.5 text-emerald-400 hover:text-slate-400 cursor-pointer press-scale shrink-0"
+                              aria-label="Batal selesai"
+                            >
+                              <CheckCircle2 className="w-5 h-5 fill-emerald-500/20" />
+                            </button>
+
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium text-slate-300 line-through leading-snug">
+                                {task.title}
+                              </p>
+                              {task.completed_at ? (
+                                <p className="text-[10px] text-emerald-400/80 mt-1 flex items-center gap-1">
+                                  <CheckCircle2 className="w-3 h-3" /> Selesai pada {relativeDate(task.completed_at)}
+                                </p>
+                              ) : null}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteTask(task.id)}
+                              className="text-slate-500 hover:text-red-400 p-1 press-scale cursor-pointer"
+                              aria-label="Hapus pekerjaan"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                )}
               </div>
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 rounded-xl bg-white/[0.03]">
-                  <p className="text-[10px] text-slate-400 uppercase">Omset</p>
-                  <p className="text-xs font-bold text-emerald-400 num-tabular mt-0.5">
-                    {formatCurrency(selectedProject.total_income)}
-                  </p>
+            ) : (
+              /* TAB CONTENT: KEUANGAN & ARUS KAS */
+              <div className="space-y-4">
+                {/* Financial Overview Cards */}
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="p-3 bg-[#161925] rounded-xl border border-white/[0.06]">
+                    <span className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">
+                      Uang Masuk
+                    </span>
+                    <div className="text-base font-bold text-white num-tabular mt-0.5">
+                      {formatCurrency(selectedProject.total_income || 0)}
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-[#161925] rounded-xl border border-white/[0.06]">
+                    <span className="text-[10px] text-rose-400 font-semibold uppercase tracking-wider">
+                      Biaya Proyek
+                    </span>
+                    <div className="text-base font-bold text-white num-tabular mt-0.5">
+                      {formatCurrency(selectedProject.total_expense || 0)}
+                    </div>
+                  </div>
                 </div>
-                <div className="p-2 rounded-xl bg-white/[0.03]">
-                  <p className="text-[10px] text-slate-400 uppercase">Biaya</p>
-                  <p className="text-xs font-bold text-rose-400 num-tabular mt-0.5">
-                    {formatCurrency(selectedProject.total_expense)}
-                  </p>
-                </div>
-                <div className="p-2 rounded-xl bg-white/[0.03]">
-                  <p className="text-[10px] text-slate-400 uppercase">Laba Bersih</p>
-                  <p
-                    className={`text-xs font-extrabold num-tabular mt-0.5 ${
-                      selectedProject.net_profit >= 0 ? "text-emerald-400" : "text-rose-400"
+
+                <div className="p-3 bg-[#161925] rounded-xl border border-white/[0.06] flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">
+                      Laba Bersih Proyek
+                    </span>
+                    <div className="text-base font-bold text-white num-tabular mt-0.5">
+                      {formatCurrency(selectedProject.net_profit || 0)}
+                    </div>
+                  </div>
+                  <span
+                    className={`text-xs font-bold px-2 py-1 rounded-lg ${
+                      (selectedProject.net_profit || 0) >= 0
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                     }`}
                   >
-                    {formatCurrency(selectedProject.net_profit)}
-                  </p>
+                    Margin {selectedProject.margin_percentage || 0}%
+                  </span>
                 </div>
-              </div>
-            </div>
 
-            {/* Linked Transactions List */}
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-                <span>Riwayat Transaksi Proyek ({projectTransactions.length})</span>
-              </h4>
+                <Button
+                  size="md"
+                  onClick={() => setIsAddTxOpen(true)}
+                  className="w-full gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>+ Catat Transaksi Proyek</span>
+                </Button>
 
-              {loadingDetails ? (
-                <p className="text-xs text-slate-500 py-3 text-center">Memuat transaksi…</p>
-              ) : projectTransactions.length === 0 ? (
-                <div className="p-4 text-center text-xs text-slate-400 bg-white/[0.02] rounded-xl border border-white/[0.06]">
-                  Belum ada transaksi tercatat untuk proyek ini. Klik tombol di atas untuk mencatat.
-                </div>
-              ) : (
-                <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1">
-                  {projectTransactions.map((tx: any) => (
-                    <div
-                      key={tx.id}
-                      className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`w-7 h-7 rounded-lg flex items-center justify-center ${
-                            tx.type === "income"
-                              ? "bg-emerald-500/20 text-emerald-400"
-                              : "bg-rose-500/20 text-rose-400"
-                          }`}
-                        >
-                          {tx.type === "income" ? (
-                            <ArrowDownRight className="w-3.5 h-3.5" aria-hidden="true" />
-                          ) : (
-                            <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
-                          )}
-                        </div>
+                {/* Linked Transactions */}
+                <div className="space-y-2 pt-2">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                      Riwayat Keuangan Terkait
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      {projectTransactions.length} transaksi
+                    </span>
+                  </div>
+
+                  {projectTransactions.length === 0 ? (
+                    <div className="py-6 text-center text-slate-500 text-xs bg-[#161925] rounded-xl border border-white/[0.05]">
+                      Belum ada transaksi yang dialokasikan ke proyek ini.
+                    </div>
+                  ) : (
+                    projectTransactions.map((tx) => (
+                      <div
+                        key={tx.id}
+                        className="flex items-center justify-between p-3 bg-[#161925] rounded-xl border border-white/[0.06]"
+                      >
                         <div>
-                          <p className="text-xs font-bold text-white leading-tight">
-                            {tx.note || tx.category_name || "Transaksi Proyek"}
+                          <p className="text-xs font-semibold text-white">
+                            {tx.category_name || (tx.type === "income" ? "Pemasukan" : "Pengeluaran")}
                           </p>
                           <p className="text-[10px] text-slate-400 mt-0.5">
                             {tx.wallet_name} • {relativeDate(tx.date)}
+                            {tx.note ? ` • ${tx.note}` : ""}
                           </p>
                         </div>
+                        <span
+                          className={`text-xs font-bold num-tabular ${
+                            tx.type === "income" ? "text-emerald-400" : "text-rose-400"
+                          }`}
+                        >
+                          {tx.type === "income" ? "+" : "-"} {formatCurrency(tx.amount)}
+                        </span>
                       </div>
-
-                      <span
-                        className={`text-xs font-extrabold num-tabular ${
-                          tx.type === "income" ? "text-emerald-400" : "text-rose-400"
-                        }`}
-                      >
-                        {tx.type === "income" ? "+" : "-"}
-                        {formatCurrency(tx.amount)}
-                      </span>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         ) : null}
       </BottomSheet>
 
-      {/* Create / Edit Project Bottom Sheet */}
+      {/* 5. Create / Edit Project Modal */}
       <BottomSheet
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? "Edit Informasi Proyek" : "Buat Proyek Baru"}
-        subtitle="Kelola inisiatif bisnis atau unit usaha Anda"
+        title={editingId ? "Edit Proyek Usaha" : "Tambah Proyek Baru"}
+        subtitle="Kelola parameter nilai kontrak dan target omset proyek"
       >
-        <div className="space-y-3.5">
+        <form onSubmit={handleSaveProject} className="space-y-4">
           <div>
-            <label
-              htmlFor="project-name"
-              className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1"
-            >
-              Nama Proyek / Bisnis
+            <label className="text-xs font-medium text-slate-300 block mb-1">
+              Nama Proyek / Ventura *
             </label>
             <input
-              id="project-name"
-              name="project_name"
               type="text"
-              placeholder="Contoh: EDUNUSA, SOBATPART…"
-              className="w-full p-2.5 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
               value={pName}
               onChange={(e) => setPName(e.target.value)}
+              placeholder="Contoh: EDUNUSA, SOBATPART, ISTANA BLOCK"
+              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              required
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label
-                htmlFor="project-code"
-                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1"
-              >
-                Kode Singkat (3-4 Huruf)
-              </label>
+              <label className="text-xs font-medium text-slate-300 block mb-1">Kode Singkat</label>
               <input
-                id="project-code"
-                name="project_code"
                 type="text"
-                maxLength={6}
-                placeholder="Misal: EDU, SOB, IBL…"
-                className="w-full p-2.5 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white uppercase focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
+                maxLength={5}
                 value={pCode}
                 onChange={(e) => setPCode(e.target.value.toUpperCase())}
+                placeholder="EDU, SOB, IBL"
+                className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
               />
             </div>
             <div>
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                Status
-              </span>
-              <SegmentedControl
-                ariaLabel="Pilih status proyek"
-                size="sm"
-                options={[
-                  { value: "active", label: "Aktif" },
-                  { value: "on_hold", label: "Tunda" },
-                  { value: "completed", label: "Selesai" },
-                ]}
+              <label className="text-xs font-medium text-slate-300 block mb-1">Status Proyek</label>
+              <select
                 value={pStatus}
-                onChange={(val) => setPStatus(val as any)}
-              />
+                onChange={(e) => setPStatus(e.target.value as any)}
+                className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+              >
+                <option value="active">Aktif</option>
+                <option value="on_hold">Ditunda (On Hold)</option>
+                <option value="completed">Selesai</option>
+              </select>
             </div>
           </div>
 
           <div>
-            <label
-              htmlFor="project-desc"
-              className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1"
-            >
-              Deskripsi Singkat / Sektor
+            <label className="text-xs font-medium text-slate-300 block mb-1">
+              Nilai Proyek / Target Omset (Rp)
             </label>
             <input
-              id="project-desc"
-              name="project_description"
-              type="text"
-              placeholder="Misal: Distribusi sparepart otomotif…"
-              className="w-full p-2.5 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-medium text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
-              value={pDesc}
-              onChange={(e) => setPDesc(e.target.value)}
+              type="number"
+              min="0"
+              step="500000"
+              value={pTargetRevenue || ""}
+              onChange={(e) => setPTargetRevenue(Number(e.target.value))}
+              placeholder="Contoh: 150000000"
+              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
             />
           </div>
 
-          {/* Color Swatch */}
-          <div className="space-y-1.5">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-              Warna Identitas Proyek
-            </span>
-            <div className="flex gap-2 py-1" role="group" aria-label="Pilih warna proyek">
-              {PROJECT_PALETTE.map((col) => (
+          <div>
+            <label className="text-xs font-medium text-slate-300 block mb-1">
+              Pagu Anggaran / Biaya Maksimal (Rp)
+            </label>
+            <input
+              type="number"
+              min="0"
+              step="500000"
+              value={pBudget || ""}
+              onChange={(e) => setPBudget(Number(e.target.value))}
+              placeholder="Contoh: 50000000"
+              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-slate-300 block mb-1">Deskripsi Singkat</label>
+            <textarea
+              rows={2}
+              value={pDesc}
+              onChange={(e) => setPDesc(e.target.value)}
+              placeholder="Ruang lingkup pekerjaan dan keterangan spesifikasi…"
+              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-slate-300 block mb-2">Warna Identitas</label>
+            <div className="flex gap-2 flex-wrap">
+              {PROJECT_PALETTE.map((color) => (
                 <button
-                  key={col}
+                  key={color}
                   type="button"
-                  aria-label={`Pilih warna ${col}`}
-                  onClick={() => setPColor(col)}
-                  className={`w-7 h-7 rounded-xl cursor-pointer transition-transform duration-120 press-scale border border-white/20 focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none ${
-                    pColor === col ? "scale-115 ring-2 ring-offset-2 ring-indigo-400 shadow-[0_0_12px_rgba(99,102,241,0.6)]" : ""
+                  onClick={() => setPColor(color)}
+                  className={`w-7 h-7 rounded-full cursor-pointer press-scale transition-transform ${
+                    pColor === color ? "ring-2 ring-white scale-110" : "opacity-75 hover:opacity-100"
                   }`}
-                  style={{ backgroundColor: col }}
+                  style={{ backgroundColor: color }}
+                  aria-label={`Pilih warna ${color}`}
                 />
               ))}
             </div>
           </div>
 
-          {/* Targets */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            <div>
-              <label
-                htmlFor="project-target"
-                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1"
-              >
-                Target Omset (Rp)
-              </label>
-              <input
-                id="project-target"
-                name="project_target"
-                type="number"
-                placeholder="0"
-                className="w-full p-2.5 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-bold text-white num-tabular focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
-                value={pTargetRevenue || ""}
-                onChange={(e) => setPTargetRevenue(parseInt(e.target.value, 10) || 0)}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="project-budget"
-                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1"
-              >
-                Anggaran Biaya (Rp)
-              </label>
-              <input
-                id="project-budget"
-                name="project_budget"
-                type="number"
-                placeholder="0"
-                className="w-full p-2.5 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-bold text-white num-tabular focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
-                value={pBudget || ""}
-                onChange={(e) => setPBudget(parseInt(e.target.value, 10) || 0)}
-              />
-            </div>
-          </div>
-
-          <Button
-            size="lg"
-            onClick={handleSaveProject}
-            loading={formSubmitting}
-            className="mt-2"
-          >
+          <Button type="submit" size="lg" loading={formSubmitting} className="w-full mt-4">
             {editingId ? "Simpan Perubahan" : "Buat Proyek Baru"}
           </Button>
-        </div>
+        </form>
       </BottomSheet>
 
-      {/* Quick Add Transaction for this Project */}
+      {/* 6. Quick Record Transaction for Project */}
       <BottomSheet
         isOpen={isAddTxOpen}
         onClose={() => setIsAddTxOpen(false)}
         title={`Catat Transaksi: ${selectedProject?.name}`}
-        subtitle="Transaksi ini akan otomatis terhubung ke proyek"
+        subtitle="Alokasikan pendapatan atau pengeluaran ke proyek ini"
       >
-        <div className="space-y-3.5">
+        <form onSubmit={handleSaveProjectTx} className="space-y-4">
           <SegmentedControl
-            ariaLabel="Pilih jenis transaksi proyek"
-            options={[
-              { value: "income", label: "Pemasukan Proyek (Omset)" },
-              { value: "expense", label: "Biaya / Operasional Proyek" },
-            ]}
             value={txType}
-            onChange={(val) => setTxType(val as any)}
+            onChange={(val) => setTxType(val)}
+            options={[
+              { value: "income", label: "Pemasukan (Termin)" },
+              { value: "expense", label: "Pengeluaran (Biaya)" },
+            ]}
           />
 
-          <NumberPad value={txAmount} onChange={setTxAmount} />
+          <NumberPad value={txAmount} onChange={(val) => setTxAmount(val)} />
 
-          {/* Wallet Selector */}
-          <div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
-              Masuk/Keluar Melalui Dompet
-            </span>
-            <div className="grid grid-cols-2 gap-2" role="group" aria-label="Pilih dompet transaksi">
-              {wallets.map((w) => (
-                <button
-                  key={w.id}
-                  type="button"
-                  onClick={() => setTxWalletId(w.id)}
-                  aria-pressed={txWalletId === w.id}
-                  className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-all press-scale cursor-pointer ${
-                    txWalletId === w.id
-                      ? "bg-indigo-600/20 border-indigo-500 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)]"
-                      : "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.06]"
-                  }`}
-                >
-                  <span
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: w.color || "#6366F1" }}
-                    aria-hidden="true"
-                  />
-                  <div className="truncate">
-                    <p className="text-xs font-bold truncate">{w.name}</p>
-                    <p className="text-[10px] text-slate-400 num-tabular truncate">
-                      {formatCurrency(w.current_balance)}
-                    </p>
-                  </div>
-                </button>
-              ))}
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <div>
+              <label className="text-xs font-medium text-slate-300 block mb-1">Rekening Dompet</label>
+              <select
+                value={txWalletId}
+                onChange={(e) => setTxWalletId(e.target.value)}
+                className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-xs text-white focus:outline-none focus:border-indigo-500"
+              >
+                {wallets.map((w) => (
+                  <option key={w.id} value={w.id}>
+                    {w.name} ({formatCurrency(w.current_balance)})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-slate-300 block mb-1">Kategori</label>
+              <select
+                value={txCategoryId}
+                onChange={(e) => setTxCategoryId(e.target.value)}
+                className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-xs text-white focus:outline-none focus:border-indigo-500"
+              >
+                <option value="">(Tanpa Kategori)</option>
+                {categories
+                  .filter((c) => c.type === txType)
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+              </select>
             </div>
           </div>
 
-          {/* Date & Note Inputs */}
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label
-                htmlFor="prj-tx-date"
-                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
-              >
-                <Calendar className="w-3 h-3" aria-hidden="true" /> Tanggal
-              </label>
-              <input
-                id="prj-tx-date"
-                name="project_transaction_date"
-                type="date"
-                className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
-                value={txDate}
-                onChange={(e) => setTxDate(e.target.value)}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="prj-tx-note"
-                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
-              >
-                <FileText className="w-3 h-3" aria-hidden="true" /> Catatan
-              </label>
-              <input
-                id="prj-tx-note"
-                name="project_transaction_note"
-                type="text"
-                placeholder="Misal: Pembayaran klien…"
-                className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-medium text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
-                value={txNote}
-                onChange={(e) => setTxNote(e.target.value)}
-              />
-            </div>
+          <div>
+            <label className="text-xs font-medium text-slate-300 block mb-1">Tanggal</label>
+            <input
+              type="date"
+              value={txDate}
+              onChange={(e) => setTxDate(e.target.value)}
+              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-xs text-white focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-slate-300 block mb-1">Keterangan Catatan</label>
+            <input
+              type="text"
+              value={txNote}
+              onChange={(e) => setTxNote(e.target.value)}
+              placeholder="Contoh: Pembayaran Termin 1 / Beli Semen 50 Sak"
+              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+            />
           </div>
 
           <Button
+            type="submit"
             size="lg"
-            onClick={handleCreateProjectTransaction}
             loading={txSubmitting}
-            className="mt-2"
+            disabled={txAmount <= 0}
+            className="w-full mt-2"
           >
             Simpan Transaksi Proyek
           </Button>
-        </div>
+        </form>
       </BottomSheet>
     </div>
   );

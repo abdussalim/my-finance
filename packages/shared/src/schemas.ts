@@ -63,3 +63,19 @@ export const debtPaymentSchema = z.object({
 export const pinSchema = z.object({
   pin: z.string().length(6, "PIN harus 6 digit").regex(/^\d{6}$/, "PIN hanya boleh berupa angka"),
 });
+
+export const projectTaskSchema = z.object({
+  title: z.string().min(1, "Judul pekerjaan wajib diisi"),
+  description: z.string().optional().nullable(),
+  status: z.enum(["pending", "in_progress", "completed"]).default("pending"),
+  priority: z.enum(["low", "medium", "high"]).default("medium"),
+  due_date: z.string().optional().nullable(),
+});
+
+export const updateProjectTaskSchema = z.object({
+  title: z.string().min(1).optional(),
+  description: z.string().optional().nullable(),
+  status: z.enum(["pending", "in_progress", "completed"]).optional(),
+  priority: z.enum(["low", "medium", "high"]).optional(),
+  due_date: z.string().optional().nullable(),
+});
