@@ -1,7 +1,6 @@
 name = "my-finance"
 compatibility_date = "2024-12-01"
 pages_build_output_dir = "apps/web/dist"
-account_id = "bb017c178af5d5eefcc49d58010a2351"
 
 [[d1_databases]]
 binding = "DB"
