@@ -163,28 +163,24 @@ export function Debts() {
   }).length;
 
   return (
-    <div className="space-y-4 pt-3">
-      {/* Top Header */}
-      <div className="flex items-center justify-between pb-1">
+    <div className="space-y-5 pt-2 pb-6">
+      {/* 1. iOS Large Title Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-indigo-400">
-            Kewajiban & Hak
-          </span>
-          <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
-            Hutang & Piutang
-          </h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Hutang & Piutang</h1>
+          <p className="text-xs text-[#8E8E93] mt-0.5">Pantau pinjaman dan tagihan jatuh tempo</p>
         </div>
         <Button
           size="sm"
           onClick={() => setIsAddOpen(true)}
-          className="gap-1.5"
+          className="gap-1.5 shadow-sm"
           aria-label="Catat Hutang atau Piutang Baru"
         >
-          <Plus className="w-4 h-4" aria-hidden="true" /> Catat
+          <Plus className="w-4 h-4" /> Catat
         </Button>
       </div>
 
-      {/* Segmented Switch */}
+      {/* 2. iOS Segmented Switch */}
       <SegmentedControl
         ariaLabel="Pilih jenis catatan hutang atau piutang"
         options={[
@@ -198,15 +194,15 @@ export function Debts() {
         }}
       />
 
-      {/* Active Tab Highlight Summary Card */}
-      <div className="p-4 rounded-2xl bg-[#12141D] border border-white/[0.08]">
+      {/* 3. iOS Inset Grouped Summary Card */}
+      <Card className="p-5 bg-[#1C1C1E] border border-white/[0.06]">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8E8E93]">
             {activeTab === "debt" ? "Total Sisa Hutang" : "Total Sisa Piutang"}
           </span>
           {totalOverdue > 0 ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-full">
-              <AlertCircle className="w-3 h-3" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#FF453A] bg-[#FF453A]/15 px-2 py-0.5 rounded-full">
+              <AlertCircle className="w-3.5 h-3.5" aria-hidden="true" />
               {totalOverdue} Jatuh Tempo
             </span>
           ) : null}
@@ -214,12 +210,12 @@ export function Debts() {
         <div className="text-3xl font-bold text-white num-tabular tracking-tight my-1">
           {formatCurrency(totalRemaining)}
         </div>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[#8E8E93] mt-1">
           {filteredDebts.length} catatan ({filteredDebts.filter((d) => d.remaining_amount <= 0).length} lunas)
         </p>
-      </div>
+      </Card>
 
-      {/* Debts List */}
+      {/* 4. iOS Debts List */}
       <div className="space-y-2.5">
         {filteredDebts.length === 0 ? (
           <EmptyState
@@ -246,48 +242,48 @@ export function Debts() {
             const history = paymentsByDebt[item.id] || [];
 
             return (
-              <Card key={item.id} className="p-3.5 space-y-3 border-white/[0.08] shadow-sm">
+              <Card key={item.id} className="p-4 space-y-3 bg-[#1C1C1E] border border-white/[0.06] rounded-[20px]">
                 {/* Person Header */}
                 <div className="flex items-center justify-between">
                   <button
                     type="button"
-                    className="flex items-center gap-2.5 cursor-pointer flex-1 text-left focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none rounded-xl"
+                    className="flex items-center gap-2.5 cursor-pointer flex-1 text-left focus-visible:ring-2 focus-visible:ring-[#0A84FF] focus-visible:outline-none rounded-[12px]"
                     onClick={() => toggleHistory(item.id)}
                     aria-expanded={isExpanded}
                     aria-label={`Rincian cicilan untuk ${item.person_name}`}
                   >
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs border ${
+                      className={`w-9 h-9 rounded-[10px] flex items-center justify-center font-bold text-xs ${
                         isSettled
-                          ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                          ? "bg-[#30D158]/15 text-[#30D158]"
                           : activeTab === "debt"
-                          ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
-                          : "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
+                          ? "bg-[#FF9F0A]/15 text-[#FF9F0A]"
+                          : "bg-[#0A84FF]/15 text-[#0A84FF]"
                       }`}
                     >
                       <User className="w-4 h-4" aria-hidden="true" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-white flex items-center gap-1">
+                      <p className="text-sm font-semibold text-white flex items-center gap-1">
                         {item.person_name}
                         <ChevronDown
                           aria-hidden="true"
-                          className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-150 ${
+                          className={`w-3.5 h-3.5 text-[#8E8E93] transition-transform duration-150 ${
                             isExpanded ? "rotate-180" : ""
                           }`}
                         />
                       </p>
                       {item.due_date ? (
                         <p
-                          className={`text-[11px] ${
+                          className={`text-xs ${
                             isOverdue
-                              ? "text-rose-400 font-bold flex items-center gap-1"
-                              : "text-slate-400"
+                              ? "text-[#FF453A] font-semibold flex items-center gap-1"
+                              : "text-[#8E8E93]"
                           }`}
                         >
                           {isOverdue ? (
                             <>
-                              <AlertCircle className="w-3 h-3 text-rose-400" aria-hidden="true" />
+                              <AlertCircle className="w-3 h-3 text-[#FF453A]" aria-hidden="true" />
                               Terlambat: {formatDate(item.due_date)}
                             </>
                           ) : (
@@ -296,15 +292,15 @@ export function Debts() {
                         </p>
                       ) : null}
                       {item.note ? (
-                        <p className="text-[11px] text-slate-400 italic mt-0.5">{item.note}</p>
+                        <p className="text-xs text-[#8E8E93] italic mt-0.5">{item.note}</p>
                       ) : null}
                     </div>
                   </button>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     {isSettled ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#30D158] bg-[#30D158]/15 px-2.5 py-1 rounded-full">
                         <CheckCircle2 className="w-3 h-3" aria-hidden="true" /> Lunas
                       </span>
                     ) : (
@@ -316,73 +312,73 @@ export function Debts() {
                           setPayAmount(item.remaining_amount);
                           setIsPayOpen(true);
                         }}
-                        className="text-xs py-1 px-2.5 min-h-[30px] gap-0.5"
+                        className="text-xs py-1 px-3 min-h-[32px] gap-1 rounded-[12px] bg-[#2C2C2E] hover:bg-[#3A3A3C] text-white"
                       >
                         {activeTab === "debt" ? "Bayar" : "Terima"}
-                        <ChevronRight className="w-3 h-3 text-slate-400" aria-hidden="true" />
+                        <ChevronRight className="w-3 h-3 text-[#8E8E93]" aria-hidden="true" />
                       </Button>
                     )}
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg press-scale cursor-pointer focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none transition-colors"
+                      className="text-[#8E8E93] hover:text-[#FF453A] p-2 rounded-[10px] ios-press cursor-pointer focus-visible:ring-2 focus-visible:ring-[#0A84FF] focus-visible:outline-none transition-colors"
                       aria-label={`Hapus catatan ${item.person_name}`}
                     >
-                      <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+                      <Trash2 className="w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>
                 </div>
 
                 {/* Progress & Numbers */}
-                <div className="space-y-1 pt-0.5">
+                <div className="space-y-1.5 pt-1">
                   <div className="flex justify-between text-xs num-tabular">
-                    <span className="text-slate-400 font-medium">
+                    <span className="text-[#8E8E93] font-medium">
                       Sisa:{" "}
-                      <b className="text-white font-bold">
+                      <b className="text-white font-semibold">
                         {formatCurrency(item.remaining_amount)}
                       </b>
                     </span>
-                    <span className="text-slate-400">
+                    <span className="text-[#8E8E93]">
                       Total: {formatCurrency(item.total_amount)}
                     </span>
                   </div>
                   <ProgressBar
                     ariaLabel={`Kemajuan pelunasan ${item.person_name}`}
                     progress={progress}
-                    color={isSettled ? "#10B981" : activeTab === "debt" ? "#F59E0B" : "#6366F1"}
+                    color={isSettled ? "#30D158" : activeTab === "debt" ? "#FF9F0A" : "#0A84FF"}
                   />
-                  <div className="flex justify-end text-[10px] text-slate-400 num-tabular font-medium">
+                  <div className="flex justify-end text-[10px] text-[#8E8E93] num-tabular font-medium">
                     {Math.round(progress)}% terbayar
                   </div>
                 </div>
 
                 {/* Accordion Payment History */}
                 {isExpanded ? (
-                  <div className="pt-2.5 border-t border-white/[0.08] space-y-1.5">
-                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  <div className="pt-3 border-t border-white/[0.06] space-y-2">
+                    <p className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1">
                       <History className="w-3 h-3" aria-hidden="true" /> Riwayat Cicilan ({history.length})
                     </p>
                     {history.length === 0 ? (
-                      <p className="text-xs text-slate-500 py-1 italic">
+                      <p className="text-xs text-[#8E8E93] py-1 italic">
                         Belum ada pembayaran cicilan yang dicatat.
                       </p>
                     ) : (
-                      <div className="space-y-1">
+                      <div className="space-y-1.5">
                         {history.map((p) => (
                           <div
                             key={p.id}
-                            className="flex justify-between items-center text-xs py-1.5 px-2.5 bg-white/[0.03] rounded-xl border border-white/[0.06]"
+                            className="flex justify-between items-center text-xs py-2 px-3 bg-[#2C2C2E]/60 rounded-[12px] border border-white/[0.04]"
                           >
                             <div>
-                              <span className="font-bold text-white">{p.wallet_name}</span>
-                              <span className="text-slate-400 ml-1.5 text-[10px]">
+                              <span className="font-semibold text-white">{p.wallet_name}</span>
+                              <span className="text-[#8E8E93] ml-1.5 text-[10px]">
                                 {formatDate(p.payment_date)}
                               </span>
                               {p.note ? (
-                                <p className="text-[10px] text-slate-400 italic mt-0.5">{p.note}</p>
+                                <p className="text-[10px] text-[#8E8E93] italic mt-0.5">{p.note}</p>
                               ) : null}
                             </div>
-                            <span className="font-extrabold text-white num-tabular">
+                            <span className="font-bold text-white num-tabular">
                               {formatCurrency(p.amount)}
                             </span>
                           </div>
@@ -404,13 +400,13 @@ export function Debts() {
         title={activeTab === "debt" ? "Catat Hutang Baru" : "Catat Piutang Baru"}
         subtitle="Rincian pihak dan total nominal pinjaman"
       >
-        <div className="space-y-3.5">
+        <div className="space-y-4">
           <div>
             <label
               htmlFor="debt-person-name"
-              className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
+              className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5 mb-1.5"
             >
-              <User className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
+              <User className="w-3.5 h-3.5 text-[#0A84FF]" aria-hidden="true" />
               {activeTab === "debt" ? "Berhutang Ke Siapa?" : "Siapa Yang Berhutang?"}
             </label>
             <input
@@ -418,7 +414,7 @@ export function Debts() {
               name="person_name"
               type="text"
               placeholder="Contoh: Budi, Bank Mandiri…"
-              className="w-full p-2.5 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-semibold text-white placeholder-[#8E8E93]/60 focus:outline-none"
               value={personName}
               onChange={(e) => setPersonName(e.target.value)}
             />
@@ -426,19 +422,19 @@ export function Debts() {
 
           <NumberPad value={totalAmount} onChange={setTotalAmount} />
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2.5">
             <div>
               <label
                 htmlFor="debt-due-date"
-                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
+                className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5 mb-1.5"
               >
-                <Calendar className="w-3 h-3 text-indigo-400" aria-hidden="true" /> Jatuh Tempo
+                <Calendar className="w-3 h-3 text-[#0A84FF]" aria-hidden="true" /> Jatuh Tempo
               </label>
               <input
                 id="debt-due-date"
                 name="due_date"
                 type="date"
-                className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
+                className="w-full px-3 py-2 bg-[#2C2C2E] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-semibold text-white [color-scheme:dark] focus:outline-none"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
               />
@@ -446,23 +442,23 @@ export function Debts() {
             <div>
               <label
                 htmlFor="debt-note"
-                className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
+                className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5 mb-1.5"
               >
-                <FileText className="w-3 h-3 text-indigo-400" aria-hidden="true" /> Catatan
+                <FileText className="w-3 h-3 text-[#0A84FF]" aria-hidden="true" /> Catatan
               </label>
               <input
                 id="debt-note"
                 name="note"
                 type="text"
                 placeholder="Misal: Modal usaha…"
-                className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-medium text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
+                className="w-full px-3 py-2 bg-[#2C2C2E] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-medium text-white placeholder-[#8E8E93]/60 focus:outline-none"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
             </div>
           </div>
 
-          <Button size="lg" onClick={handleCreate} loading={loading} className="mt-2">
+          <Button size="lg" onClick={handleCreate} loading={loading} className="mt-2 w-full rounded-[14px]">
             Simpan Catatan
           </Button>
         </div>
@@ -477,14 +473,14 @@ export function Debts() {
           selectedDebt?.remaining_amount || 0
         )})`}
       >
-        <div className="space-y-3.5">
+        <div className="space-y-4">
           <NumberPad value={payAmount} onChange={setPayAmount} />
 
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             {/* Wallet Selector */}
             <div>
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1.5">
-                <WalletIcon className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
+              <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                <WalletIcon className="w-3.5 h-3.5 text-[#0A84FF]" aria-hidden="true" />
                 {activeTab === "debt" ? "Bayar Pakai Dompet" : "Terima Ke Dompet"}
               </span>
               <div
@@ -498,20 +494,20 @@ export function Debts() {
                     type="button"
                     onClick={() => setPayWalletId(w.id)}
                     aria-pressed={payWalletId === w.id}
-                    className={`p-2 rounded-xl border text-left flex items-center gap-2 transition-all press-scale cursor-pointer ${
+                    className={`p-2.5 rounded-[14px] border text-left flex items-center gap-2.5 transition-all ios-press cursor-pointer ${
                       payWalletId === w.id
-                        ? "bg-indigo-600/20 border-indigo-500 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)]"
-                        : "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.06]"
+                        ? "bg-[#0A84FF]/15 border-[#0A84FF] text-white shadow-xs"
+                        : "bg-[#2C2C2E] border-transparent text-[#8E8E93] hover:text-white"
                     }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: w.color || "#6366F1" }}
+                      style={{ backgroundColor: w.color || "#0A84FF" }}
                       aria-hidden="true"
                     />
                     <div className="truncate">
-                      <p className="text-xs font-bold truncate">{w.name}</p>
-                      <p className="text-[10px] text-slate-400 num-tabular truncate">
+                      <p className="text-xs font-semibold truncate text-white">{w.name}</p>
+                      <p className="text-[10px] text-[#8E8E93] num-tabular truncate">
                         {formatCurrency(w.current_balance)}
                       </p>
                     </div>
@@ -520,19 +516,19 @@ export function Debts() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2.5">
               <div>
                 <label
                   htmlFor="pay-date"
-                  className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
+                  className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5 mb-1.5"
                 >
-                  <Calendar className="w-3 h-3 text-indigo-400" aria-hidden="true" /> Tanggal Bayar
+                  <Calendar className="w-3 h-3 text-[#0A84FF]" aria-hidden="true" /> Tanggal Bayar
                 </label>
                 <input
                   id="pay-date"
                   name="payment_date"
                   type="date"
-                  className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-semibold text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-semibold text-white [color-scheme:dark] focus:outline-none"
                   value={payDate}
                   onChange={(e) => setPayDate(e.target.value)}
                 />
@@ -540,23 +536,23 @@ export function Debts() {
               <div>
                 <label
                   htmlFor="pay-note"
-                  className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"
+                  className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5 mb-1.5"
                 >
-                  <FileText className="w-3 h-3 text-indigo-400" aria-hidden="true" /> Catatan
+                  <FileText className="w-3 h-3 text-[#0A84FF]" aria-hidden="true" /> Catatan
                 </label>
                 <input
                   id="pay-note"
                   name="payment_note"
                   type="text"
                   placeholder="Cicilan ke-… (opsional)"
-                  className="w-full p-2 bg-white/[0.05] border border-white/10 rounded-xl text-xs font-medium text-white focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:outline-none"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-medium text-white placeholder-[#8E8E93]/60 focus:outline-none"
                   value={payNote}
                   onChange={(e) => setPayNote(e.target.value)}
                 />
               </div>
             </div>
 
-            <Button size="lg" onClick={handlePay} loading={loading} className="mt-2">
+            <Button size="lg" onClick={handlePay} loading={loading} className="mt-2 w-full rounded-[14px]">
               Konfirmasi Pembayaran
             </Button>
           </div>

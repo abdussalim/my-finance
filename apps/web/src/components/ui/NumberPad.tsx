@@ -34,21 +34,21 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
 
   return (
     <div className="flex flex-col items-center w-full">
-      {/* Clean Amount Display */}
-      <div className="w-full text-center py-3.5 my-2 bg-[#12141D] rounded-2xl border border-white/[0.08]">
-        <p className="text-[11px] font-medium tracking-wider text-slate-400 uppercase mb-1">
+      {/* iOS Large Currency Display */}
+      <div className="w-full text-center py-4 my-1 bg-[#1C1C1E] rounded-[20px] border border-white/[0.06]">
+        <p className="text-[11px] font-medium tracking-wide text-[#8E8E93] uppercase mb-0.5">
           Nominal Transaksi
         </p>
         <div
-          className="text-2xl sm:text-3xl font-bold tracking-tight text-white num-tabular"
+          className="text-3xl sm:text-4xl font-bold tracking-tight text-white num-tabular"
           aria-live="polite"
         >
           {formatCurrency(value)}
         </div>
       </div>
 
-      {/* Quick Add Presets */}
-      <div className="grid grid-cols-4 gap-2 w-full mt-1 mb-2.5">
+      {/* iOS Quick Add Preset Chips */}
+      <div className="grid grid-cols-4 gap-2 w-full mt-2 mb-3">
         {[
           { label: "+50rb", val: 50000 },
           { label: "+100rb", val: 100000 },
@@ -60,22 +60,22 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
             type="button"
             aria-label={`Tambah ${item.label}`}
             onClick={() => handleQuickAdd(item.val)}
-            className="py-1.5 px-1 bg-[#1A1D2B] hover:bg-[#22273A] rounded-xl text-xs font-medium text-indigo-300 press-scale cursor-pointer border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
+            className="py-1.5 px-1 bg-[#2C2C2E] hover:bg-[#3A3A3C] active:bg-[#48484A] rounded-full text-xs font-semibold text-[#0A84FF] ios-press cursor-pointer border border-white/[0.04] transition-colors"
           >
             {item.label}
           </button>
         ))}
       </div>
 
-      {/* Grid Keypad */}
-      <div className="grid grid-cols-3 gap-1.5 w-full">
+      {/* iOS Keypad Grid */}
+      <div className="grid grid-cols-3 gap-2 w-full">
         {["1", "2", "3", "4", "5", "6", "7", "8", "9", "000", "0"].map((btn) => (
           <button
             key={btn}
             type="button"
             aria-label={`Digit ${btn}`}
             onClick={() => handleDigit(btn)}
-            className="h-12 bg-[#161924] hover:bg-[#1E2232] active:bg-[#252A3E] rounded-xl text-lg font-semibold text-white press-scale flex items-center justify-center cursor-pointer select-none border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
+            className="h-13 bg-[#1C1C1E] hover:bg-[#2C2C2E] active:bg-[#3A3A3C] rounded-[16px] text-xl font-medium text-white ios-press flex items-center justify-center cursor-pointer select-none border border-white/[0.04] transition-colors"
           >
             {btn}
           </button>
@@ -84,9 +84,9 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
           type="button"
           aria-label="Hapus digit terakhir"
           onClick={handleDelete}
-          className="h-12 bg-[#161924] hover:bg-[#1E2232] rounded-xl text-lg font-semibold text-slate-400 hover:text-white press-scale flex items-center justify-center cursor-pointer select-none border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
+          className="h-13 bg-[#1C1C1E] hover:bg-[#2C2C2E] active:bg-[#3A3A3C] rounded-[16px] text-xl font-medium text-[#8E8E93] hover:text-white ios-press flex items-center justify-center cursor-pointer select-none border border-white/[0.04] transition-colors"
         >
-          <Delete className="w-5 h-5 text-slate-400" aria-hidden="true" />
+          <Delete className="w-5 h-5 text-[#8E8E93]" aria-hidden="true" />
         </button>
       </div>
     </div>

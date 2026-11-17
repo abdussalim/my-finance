@@ -29,7 +29,7 @@ export function SegmentedControl<T extends string>({
       role="tablist"
       aria-label={ariaLabel}
       className={cn(
-        "flex p-1 bg-[#12141D] rounded-xl border border-white/[0.07] select-none",
+        "flex p-0.5 bg-[#2C2C2E] rounded-[10px] select-none border border-white/[0.04]",
         className
       )}
     >
@@ -43,15 +43,15 @@ export function SegmentedControl<T extends string>({
             type="button"
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex-1 flex items-center justify-center gap-1.5 rounded-lg transition-colors duration-150 cursor-pointer press-scale focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
-              size === "sm" ? "py-1.5 text-xs font-medium" : "py-2 text-xs font-medium",
+              "flex-1 flex items-center justify-center gap-1.5 rounded-[8px] transition-all duration-150 cursor-pointer select-none focus-visible:outline-none",
+              size === "sm" ? "py-1 px-2 text-xs" : "py-1.5 px-3 text-[13px]",
               active
-                ? "bg-indigo-600 text-white font-semibold shadow-xs"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-[#636366] text-white font-semibold shadow-xs"
+                : "text-[#8E8E93] hover:text-[#EBEBF5] font-medium"
             )}
           >
             {opt.icon}
-            <span>{opt.label}</span>
+            <span className="truncate">{opt.label}</span>
           </button>
         );
       })}

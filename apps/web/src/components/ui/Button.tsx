@@ -18,25 +18,25 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-120 press-scale disabled:opacity-40 disabled:pointer-events-none cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0B10] focus-visible:outline-none";
+    "inline-flex items-center justify-center font-semibold rounded-[14px] transition-all duration-120 ios-press disabled:opacity-40 disabled:pointer-events-none cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A84FF]";
 
   const variants = {
     primary:
-      "bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white shadow-sm",
+      "bg-[#0A84FF] text-white hover:bg-[#0071E3] active:bg-[#0058B3]",
     secondary:
-      "bg-[#1C2030] hover:bg-[#23283D] active:bg-[#2A3048] text-indigo-300 border border-white/[0.08]",
+      "bg-[#2C2C2E] text-[#0A84FF] hover:bg-[#3A3A3C] active:bg-[#48484A] border border-white/[0.04]",
     outline:
-      "bg-transparent hover:bg-white/[0.05] active:bg-white/[0.08] text-slate-300 border border-white/[0.12]",
+      "bg-transparent hover:bg-white/[0.06] text-[#0A84FF] border border-white/[0.16]",
     danger:
-      "bg-red-600 hover:bg-red-500 text-white shadow-sm",
+      "bg-[#FF453A] text-white hover:bg-[#D70015] active:bg-[#B30006]",
     ghost:
-      "bg-transparent text-slate-400 hover:text-white hover:bg-white/[0.06]",
+      "bg-transparent text-[#0A84FF] hover:bg-white/[0.06] active:bg-white/[0.1]",
   };
 
   const sizes = {
-    sm: "px-3 py-1.5 text-xs rounded-lg min-h-[36px]",
-    md: "px-4 py-2 text-sm rounded-xl min-h-[40px]",
-    lg: "w-full py-2.5 text-sm sm:text-base rounded-xl min-h-[46px]",
+    sm: "px-3 py-1.5 text-xs rounded-[10px] min-h-[34px]",
+    md: "px-4 py-2 text-sm rounded-[14px] min-h-[42px]",
+    lg: "w-full py-3 text-base rounded-[16px] min-h-[48px]",
   };
 
   return (

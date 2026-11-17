@@ -55,7 +55,7 @@ export function PinInput({
         className="opacity-0 absolute -z-10 w-0 h-0"
       />
 
-      {/* 6 Passcode Indicators */}
+      {/* iOS Passcode Dots */}
       <div
         className="flex gap-4 my-6 items-center justify-center"
         role="group"
@@ -67,19 +67,19 @@ export function PinInput({
             <div
               key={i}
               className={cn(
-                "w-3.5 h-3.5 rounded-full border-2 transition-all duration-150",
+                "w-3.5 h-3.5 rounded-full transition-all duration-120",
                 filled
-                  ? "bg-indigo-500 border-indigo-400 scale-105"
-                  : "bg-[#1E2333] border-white/20"
+                  ? "bg-white border-2 border-white scale-105"
+                  : "border-2 border-white/35 bg-transparent"
               )}
             />
           );
         })}
       </div>
 
-      {/* Structured Numeric Keypad */}
+      {/* iOS Round Passcode Keypad */}
       {showKeypad ? (
-        <div className="grid grid-cols-3 gap-2.5 w-full max-w-[270px] mt-2">
+        <div className="grid grid-cols-3 gap-4 w-full max-w-[260px] mt-2 justify-items-center">
           {[
             { num: "1", sub: "" },
             { num: "2", sub: "ABC" },
@@ -97,11 +97,11 @@ export function PinInput({
               aria-label={`Digit ${item.num} ${item.sub}`}
               disabled={disabled}
               onClick={() => handleDigit(item.num)}
-              className="h-14 rounded-2xl bg-[#141724] hover:bg-[#1C2133] active:bg-[#242B42] flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
+              className="w-16 h-16 rounded-full bg-[#1C1C1E] hover:bg-[#2C2C2E] active:bg-[#3A3A3C] flex flex-col items-center justify-center ios-press cursor-pointer select-none border border-white/[0.04] transition-colors"
             >
-              <span className="text-xl font-bold text-white leading-none">{item.num}</span>
+              <span className="text-2xl font-light text-white leading-none">{item.num}</span>
               {item.sub ? (
-                <span className="text-[8px] font-semibold text-slate-500 tracking-wider mt-0.5" aria-hidden="true">
+                <span className="text-[8px] font-semibold text-[#8E8E93] tracking-widest mt-0.5" aria-hidden="true">
                   {item.sub}
                 </span>
               ) : null}
@@ -109,7 +109,7 @@ export function PinInput({
           ))}
 
           {/* Empty placeholder */}
-          <div className="h-14" aria-hidden="true" />
+          <div className="w-16 h-16" aria-hidden="true" />
 
           {/* Zero Button */}
           <button
@@ -117,9 +117,9 @@ export function PinInput({
             aria-label="Digit 0"
             disabled={disabled}
             onClick={() => handleDigit("0")}
-            className="h-14 rounded-2xl bg-[#141724] hover:bg-[#1C2133] active:bg-[#242B42] flex flex-col items-center justify-center press-scale cursor-pointer select-none border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
+            className="w-16 h-16 rounded-full bg-[#1C1C1E] hover:bg-[#2C2C2E] active:bg-[#3A3A3C] flex flex-col items-center justify-center ios-press cursor-pointer select-none border border-white/[0.04] transition-colors"
           >
-            <span className="text-xl font-bold text-white leading-none">0</span>
+            <span className="text-2xl font-light text-white leading-none">0</span>
           </button>
 
           {/* Delete Button */}
@@ -128,9 +128,9 @@ export function PinInput({
             aria-label="Hapus digit PIN"
             disabled={disabled}
             onClick={handleDelete}
-            className="h-14 rounded-2xl bg-[#141724] hover:bg-[#1C2133] flex items-center justify-center text-slate-400 hover:text-white press-scale cursor-pointer border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none transition-colors"
+            className="w-16 h-16 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white ios-press cursor-pointer transition-colors"
           >
-            <Delete className="w-5 h-5 text-slate-400" aria-hidden="true" />
+            <Delete className="w-6 h-6 stroke-[1.8]" aria-hidden="true" />
           </button>
         </div>
       ) : null}

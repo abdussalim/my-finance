@@ -12,27 +12,22 @@ import { ProjectWithStats, ProjectTask, WalletWithBalance, Category } from "@my-
 import {
   Briefcase,
   Plus,
-  CheckCircle2,
-  Circle,
+  Check,
   Clock,
   Trash2,
   Edit3,
   Calendar,
-  Layers,
   ChevronRight,
   TrendingUp,
-  Receipt,
-  AlertCircle,
-  Filter,
 } from "lucide-react";
 
 const PROJECT_PALETTE = [
-  "#6366F1", // Indigo (EDUNUSA)
-  "#0EA5E9", // Sky Blue (SOBATPART)
-  "#F59E0B", // Amber (ISTANA BLOCK)
-  "#10B981", // Emerald
-  "#EC4899", // Pink
-  "#8B5CF6", // Purple
+  "#0A84FF", // Apple Blue
+  "#5E5CE6", // Apple Indigo (EDUNUSA)
+  "#64D2FF", // Apple Cyan (SOBATPART)
+  "#FF9F0A", // Apple Amber (ISTANA BLOCK)
+  "#30D158", // Apple Green
+  "#FF375F", // Apple Pink
 ];
 
 export function Projects() {
@@ -163,7 +158,6 @@ export function Projects() {
       });
     } catch (err) {
       console.error("Failed to toggle task", err);
-      // Revert on error
       const refreshed = await apiFetch<any>(`/api/projects/${selectedProject.id}`);
       setSelectedProject(refreshed);
       setProjectTasks(refreshed.tasks || []);
@@ -190,7 +184,6 @@ export function Projects() {
       setNewTaskDueDate("");
       setNewTaskPriority("medium");
 
-      // Reload project details and list
       const refreshed = await apiFetch<any>(`/api/projects/${selectedProject.id}`);
       setSelectedProject(refreshed);
       setProjectTasks(refreshed.tasks || []);
@@ -350,32 +343,32 @@ export function Projects() {
   const completedTasksList = projectTasks.filter((t) => t.status === "completed");
 
   return (
-    <div className="space-y-6 pb-6">
-      {/* 1. Header: Proximity & Clear Focal Identity */}
-      <div className="flex items-center justify-between pt-2">
+    <div className="space-y-6 pt-2 pb-6">
+      {/* 1. iOS Large Title Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-white">Manajemen Proyek</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Pantau nilai proyek, progress kerja, dan pekerjaan</p>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Proyek</h1>
+          <p className="text-xs text-[#8E8E93] mt-0.5">Nilai kontrak, progress fisik, dan daftar pekerjaan</p>
         </div>
-        <Button size="sm" onClick={handleOpenCreate} className="gap-1.5">
+        <Button size="sm" onClick={handleOpenCreate} className="gap-1.5 shadow-sm">
           <Plus className="w-4 h-4" />
           <span>Tambah</span>
         </Button>
       </div>
 
-      {/* 2. Primary Focal Point: Portfolio Executive Summary */}
-      <Card className="bg-[#12141D] border border-white/[0.08] p-5">
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-          <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-            Total Nilai Proyek (Portofolio)
+      {/* 2. iOS Inset Grouped: Portfolio Telemetry Card */}
+      <Card className="bg-[#1C1C1E] border border-white/[0.06] p-5">
+        <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+          <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider">
+            Total Nilai Portofolio
           </span>
-          <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-            {projects.length} Proyek Aktif
+          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#2C2C2E] text-[#8E8E93]">
+            {projects.length} Proyek
           </span>
         </div>
 
         <div className="pt-3 pb-2">
-          <div className="text-2xl sm:text-3xl font-bold tracking-tight text-white num-tabular">
+          <div className="text-3xl font-bold tracking-tight text-white num-tabular">
             {formatCurrency(totalContractValue)}
           </div>
         </div>
@@ -383,32 +376,32 @@ export function Projects() {
         {/* Overall Task Progress Bar */}
         <div className="space-y-2 pt-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-400 font-medium">Progress Pekerjaan Gabungan</span>
-            <span className="text-white font-semibold num-tabular">{portfolioProgress}% Selesai</span>
+            <span className="text-[#8E8E93] font-medium">Realisasi Pekerjaan Gabungan</span>
+            <span className="text-[#0A84FF] font-semibold num-tabular">{portfolioProgress}% Selesai</span>
           </div>
-          <ProgressBar progress={portfolioProgress} color="#4F46E5" height="md" />
-          <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-            <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-              <CheckCircle2 className="w-3.5 h-3.5" /> {totalCompletedTasks} Selesai
+          <ProgressBar progress={portfolioProgress} color="#0A84FF" height="md" />
+          <div className="flex items-center justify-between text-[11px] text-[#8E8E93] pt-1">
+            <span className="flex items-center gap-1.5 text-[#30D158] font-medium">
+              <Check className="w-3.5 h-3.5 stroke-[2.5]" /> {totalCompletedTasks} Selesai
             </span>
-            <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-              <Clock className="w-3.5 h-3.5" /> {totalPendingTasks} Tertunda
+            <span className="flex items-center gap-1.5 text-[#FF9F0A] font-medium">
+              <Clock className="w-3.5 h-3.5 stroke-[2]" /> {totalPendingTasks} Tertunda
             </span>
           </div>
         </div>
       </Card>
 
-      {/* 3. List of Projects (Gestalt: Common Region & Similarity) */}
-      <div className="space-y-3">
+      {/* 3. iOS Inset Grouped: List of Projects */}
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Daftar Portofolio Proyek
+          <h2 className="text-[13px] font-semibold uppercase tracking-wider text-[#8E8E93]">
+            Daftar Portofolio
           </h2>
-          <span className="text-xs text-slate-500">{projects.length} unit usaha</span>
+          <span className="text-xs text-[#8E8E93]">{projects.length} unit usaha</span>
         </div>
 
         {loading ? (
-          <div className="py-12 text-center text-slate-500 text-sm">Memuat data proyek…</div>
+          <div className="py-12 text-center text-[#8E8E93] text-sm">Memuat data proyek…</div>
         ) : projects.length === 0 ? (
           <EmptyState
             icon={<Briefcase className="w-6 h-6" />}
@@ -432,48 +425,44 @@ export function Projects() {
                 key={p.id}
                 interactive
                 onClick={() => openProjectDetail(p)}
-                className="bg-[#12141D] border border-white/[0.07] p-4.5 space-y-3.5 hover:border-white/[0.14] transition-all"
+                className="bg-[#1C1C1E] border border-white/[0.06] p-4.5 space-y-3.5 hover:border-white/[0.12] transition-colors"
               >
                 {/* Project Header */}
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs shrink-0"
-                      style={{
-                        backgroundColor: `${p.color || "#6366F1"}18`,
-                        color: p.color || "#6366F1",
-                        border: `1px solid ${p.color || "#6366F1"}30`,
-                      }}
+                      className="w-10 h-10 rounded-[11px] flex items-center justify-center font-bold text-xs text-white shrink-0 shadow-xs"
+                      style={{ backgroundColor: p.color || "#0A84FF" }}
                     >
                       {p.code || p.name.slice(0, 3).toUpperCase()}
                     </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-white tracking-tight leading-tight">
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-bold text-white tracking-tight truncate">
                         {p.name}
                       </h3>
                       {p.description ? (
-                        <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{p.description}</p>
+                        <p className="text-xs text-[#8E8E93] line-clamp-1 mt-0.5">{p.description}</p>
                       ) : null}
                     </div>
                   </div>
 
                   <span
-                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 ${
+                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0 ${
                       p.status === "completed"
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        ? "bg-[#30D158]/15 text-[#30D158]"
                         : p.status === "on_hold"
-                        ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                        : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+                        ? "bg-[#FF9F0A]/15 text-[#FF9F0A]"
+                        : "bg-[#0A84FF]/15 text-[#0A84FF]"
                     }`}
                   >
                     {p.status === "completed" ? "Selesai" : p.status === "on_hold" ? "Hold" : "Aktif"}
                   </span>
                 </div>
 
-                {/* Key Metrics: Nilai Proyek & Progress */}
-                <div className="grid grid-cols-2 gap-2 p-2.5 bg-[#171A26] rounded-xl border border-white/[0.04]">
+                {/* iOS Sub-Card for Metrics */}
+                <div className="grid grid-cols-2 gap-2 p-3 bg-[#2C2C2E] rounded-[14px]">
                   <div>
-                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+                    <span className="text-[10px] text-[#8E8E93] font-medium uppercase tracking-wide">
                       Nilai Proyek
                     </span>
                     <p className="text-sm font-bold text-white num-tabular mt-0.5">
@@ -481,10 +470,10 @@ export function Projects() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">
+                    <span className="text-[10px] text-[#8E8E93] font-medium uppercase tracking-wide">
                       Progress Kerja
                     </span>
-                    <p className="text-sm font-bold text-indigo-400 num-tabular mt-0.5">
+                    <p className="text-sm font-bold text-[#0A84FF] num-tabular mt-0.5">
                       {progress}% Selesai
                     </p>
                   </div>
@@ -492,20 +481,20 @@ export function Projects() {
 
                 {/* Task Breakdown Indicator */}
                 <div className="space-y-1.5">
-                  <ProgressBar progress={progress} color={p.color || "#6366F1"} height="sm" />
-                  <div className="flex items-center justify-between text-[11px] text-slate-400">
+                  <ProgressBar progress={progress} color={p.color || "#0A84FF"} height="sm" />
+                  <div className="flex items-center justify-between text-[11px] text-[#8E8E93]">
                     <span>
                       {taskCount > 0 ? (
                         <>
-                          <strong className="text-emerald-400 font-medium">{completedCount}</strong> Selesai •{" "}
-                          <strong className="text-amber-400 font-medium">{pendingCount}</strong> Tertunda
+                          <strong className="text-[#30D158] font-semibold">{completedCount}</strong> Selesai •{" "}
+                          <strong className="text-[#FF9F0A] font-semibold">{pendingCount}</strong> Tertunda
                         </>
                       ) : (
                         "Belum ada list pekerjaan"
                       )}
                     </span>
-                    <span className="flex items-center gap-0.5 text-indigo-400 font-medium text-xs hover:text-indigo-300">
-                      Buka Detail <ChevronRight className="w-3.5 h-3.5" />
+                    <span className="flex items-center gap-0.5 text-[#0A84FF] font-medium text-xs">
+                      Detail <ChevronRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
                 </div>
@@ -515,33 +504,33 @@ export function Projects() {
         )}
       </div>
 
-      {/* 4. Project Management Cockpit (Detailed BottomSheet) */}
+      {/* 4. iOS Project Cockpit Modal Sheet */}
       <BottomSheet
         isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
         title={selectedProject?.name || "Detail Proyek"}
-        subtitle={selectedProject?.code ? `Kode: ${selectedProject.code}` : undefined}
+        subtitle={selectedProject?.code ? `Kode Proyek: ${selectedProject.code}` : undefined}
       >
         {selectedProject ? (
           <div className="space-y-5">
             {/* Project Executive Summary Header */}
-            <div className="p-4 bg-[#161925] rounded-2xl border border-white/[0.07] space-y-3">
+            <div className="p-4 bg-[#2C2C2E] rounded-[20px] space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wide">
+                  <span className="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wide">
                     Nilai Proyek (Kontrak)
                   </span>
-                  <div className="text-xl font-bold text-white num-tabular mt-0.5">
+                  <div className="text-2xl font-bold text-white num-tabular mt-0.5">
                     {selectedProject.target_revenue
                       ? formatCurrency(selectedProject.target_revenue)
                       : "Rp 0"}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(selectedProject)}
-                    className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 press-scale cursor-pointer"
+                    className="p-2 rounded-full bg-[#3A3A3C] hover:bg-[#48484A] text-[#0A84FF] ios-press cursor-pointer"
                     aria-label="Edit Proyek"
                   >
                     <Edit3 className="w-4 h-4" />
@@ -549,7 +538,7 @@ export function Projects() {
                   <button
                     type="button"
                     onClick={() => handleDeleteProject(selectedProject.id)}
-                    className="p-2 rounded-xl bg-white/[0.05] hover:bg-red-500/20 text-slate-400 hover:text-red-400 press-scale cursor-pointer"
+                    className="p-2 rounded-full bg-[#3A3A3C] hover:bg-[#FF453A]/20 text-[#8E8E93] hover:text-[#FF453A] ios-press cursor-pointer"
                     aria-label="Hapus Proyek"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -560,28 +549,28 @@ export function Projects() {
               {/* Progress Summary */}
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400 font-medium">Realisasi Pekerjaan Fisik</span>
-                  <span className="text-indigo-400 font-bold num-tabular">
+                  <span className="text-[#8E8E93] font-medium">Realisasi Pekerjaan Fisik</span>
+                  <span className="text-[#0A84FF] font-bold num-tabular">
                     {selectedProject.progress_percentage || 0}% Selesai
                   </span>
                 </div>
                 <ProgressBar
                   progress={selectedProject.progress_percentage || 0}
-                  color={selectedProject.color || "#6366F1"}
+                  color={selectedProject.color || "#0A84FF"}
                   height="md"
                 />
-                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
-                  <span className="text-emerald-400 font-medium">
-                    {selectedProject.completed_tasks || 0} Pekerjaan Selesai
+                <div className="flex items-center justify-between text-[11px] text-[#8E8E93] pt-0.5">
+                  <span className="text-[#30D158] font-medium">
+                    {selectedProject.completed_tasks || 0} Selesai
                   </span>
-                  <span className="text-amber-400 font-medium">
-                    {selectedProject.pending_tasks || 0} Pekerjaan Tertunda
+                  <span className="text-[#FF9F0A] font-medium">
+                    {selectedProject.pending_tasks || 0} Tertunda
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Navigation Tabs: Pekerjaan (Tasks) vs Keuangan (Finance) */}
+            {/* iOS Segmented Navigation Tabs */}
             <SegmentedControl
               value={cockpitTab}
               onChange={(val) => setCockpitTab(val)}
@@ -594,14 +583,14 @@ export function Projects() {
             {/* TAB CONTENT: PEKERJAAN (TASKS & WORK MANAGEMENT) */}
             {cockpitTab === "tasks" ? (
               <div className="space-y-4">
-                {/* Form Quick Add Task */}
+                {/* iOS Quick Add Task Box */}
                 <form
                   onSubmit={handleCreateTask}
-                  className="p-3 bg-[#171A27] rounded-xl border border-white/[0.06] space-y-2.5"
+                  className="p-3.5 bg-[#2C2C2E] rounded-[18px] space-y-2.5"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-white">Tambah Pekerjaan Baru</span>
-                    <span className="text-[10px] text-slate-400">Milestone / To-Do</span>
+                    <span className="text-[10px] text-[#8E8E93]">Milestone / Task</span>
                   </div>
 
                   <input
@@ -609,17 +598,17 @@ export function Projects() {
                     value={newTaskTitle}
                     onChange={(e) => setNewTaskTitle(e.target.value)}
                     placeholder="Contoh: Pengiriman Batch 2 Paving Block"
-                    className="w-full px-3 py-2 bg-[#10121A] rounded-lg border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3.5 py-2.5 bg-[#1C1C1E] rounded-[12px] border border-white/[0.06] text-xs text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
                     required
                   />
 
                   <div className="grid grid-cols-2 gap-2 pt-0.5">
                     <div>
-                      <label className="text-[10px] text-slate-400 block mb-1">Prioritas</label>
+                      <label className="text-[10px] text-[#8E8E93] block mb-1">Prioritas</label>
                       <select
                         value={newTaskPriority}
                         onChange={(e) => setNewTaskPriority(e.target.value as any)}
-                        className="w-full px-2 py-1.5 bg-[#10121A] rounded-lg border border-white/[0.08] text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                        className="w-full px-2.5 py-2 bg-[#1C1C1E] rounded-[10px] border border-white/[0.06] text-xs text-[#EBEBF5] focus:outline-none focus:border-[#0A84FF]"
                       >
                         <option value="high">Tinggi (Mendesak)</option>
                         <option value="medium">Sedang</option>
@@ -627,12 +616,12 @@ export function Projects() {
                       </select>
                     </div>
                     <div>
-                      <label className="text-[10px] text-slate-400 block mb-1">Target Selesai</label>
+                      <label className="text-[10px] text-[#8E8E93] block mb-1">Target Selesai</label>
                       <input
                         type="date"
                         value={newTaskDueDate}
                         onChange={(e) => setNewTaskDueDate(e.target.value)}
-                        className="w-full px-2 py-1.5 bg-[#10121A] rounded-lg border border-white/[0.08] text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                        className="w-full px-2.5 py-2 bg-[#1C1C1E] rounded-[10px] border border-white/[0.06] text-xs text-[#EBEBF5] focus:outline-none focus:border-[#0A84FF]"
                       />
                     </div>
                   </div>
@@ -648,16 +637,16 @@ export function Projects() {
                   </Button>
                 </form>
 
-                {/* Filter Tabs for Tasks */}
-                <div className="flex items-center justify-between text-xs pt-1">
+                {/* Filter Pills for Tasks */}
+                <div className="flex items-center justify-between text-xs pt-0.5">
                   <div className="flex gap-1.5">
                     <button
                       type="button"
                       onClick={() => setTaskFilter("all")}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
+                      className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer ios-press transition-colors ${
                         taskFilter === "all"
-                          ? "bg-indigo-600 text-white"
-                          : "bg-white/[0.04] text-slate-400 hover:text-white"
+                          ? "bg-[#0A84FF] text-white"
+                          : "bg-[#2C2C2E] text-[#8E8E93] hover:text-white"
                       }`}
                     >
                       Semua ({projectTasks.length})
@@ -665,10 +654,10 @@ export function Projects() {
                     <button
                       type="button"
                       onClick={() => setTaskFilter("pending")}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
+                      className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer ios-press transition-colors ${
                         taskFilter === "pending"
-                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                          : "bg-white/[0.04] text-slate-400 hover:text-white"
+                          ? "bg-[#FF9F0A]/20 text-[#FF9F0A] border border-[#FF9F0A]/30"
+                          : "bg-[#2C2C2E] text-[#8E8E93] hover:text-white"
                       }`}
                     >
                       Tertunda ({pendingTasksList.length})
@@ -676,10 +665,10 @@ export function Projects() {
                     <button
                       type="button"
                       onClick={() => setTaskFilter("completed")}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
+                      className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer ios-press transition-colors ${
                         taskFilter === "completed"
-                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                          : "bg-white/[0.04] text-slate-400 hover:text-white"
+                          ? "bg-[#30D158]/20 text-[#30D158] border border-[#30D158]/30"
+                          : "bg-[#2C2C2E] text-[#8E8E93] hover:text-white"
                       }`}
                     >
                       Selesai ({completedTasksList.length})
@@ -687,9 +676,9 @@ export function Projects() {
                   </div>
                 </div>
 
-                {/* List of Tasks */}
+                {/* iOS Task List Items */}
                 {filteredTasks.length === 0 ? (
-                  <div className="py-8 text-center text-slate-500 text-xs bg-[#151722] rounded-xl border border-white/[0.05]">
+                  <div className="py-8 text-center text-[#8E8E93] text-xs bg-[#2C2C2E] rounded-[18px]">
                     {taskFilter === "completed"
                       ? "Belum ada pekerjaan yang diselesaikan"
                       : taskFilter === "pending"
@@ -702,63 +691,64 @@ export function Projects() {
                     {(taskFilter === "all" || taskFilter === "pending") && pendingTasksList.length > 0 ? (
                       <div className="space-y-2">
                         {taskFilter === "all" ? (
-                          <div className="text-[11px] font-semibold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 pt-1">
-                            <Clock className="w-3 h-3" /> Pekerjaan Tertunda ({pendingTasksList.length})
+                          <div className="text-[11px] font-semibold uppercase tracking-wider text-[#FF9F0A] flex items-center gap-1.5 px-1 pt-1">
+                            <Clock className="w-3.5 h-3.5" /> Pekerjaan Tertunda ({pendingTasksList.length})
                           </div>
                         ) : null}
 
-                        {pendingTasksList.map((task) => (
-                          <div
-                            key={task.id}
-                            className="flex items-start justify-between gap-3 p-3 bg-[#161824] rounded-xl border border-white/[0.06] hover:border-white/[0.12] transition-colors"
-                          >
-                            <button
-                              type="button"
-                              onClick={() => handleToggleTask(task)}
-                              className="mt-0.5 text-slate-400 hover:text-emerald-400 cursor-pointer press-scale shrink-0"
-                              aria-label="Tandai selesai"
+                        <div className="bg-[#2C2C2E] rounded-[18px] overflow-hidden divide-y divide-white/[0.06]">
+                          {pendingTasksList.map((task) => (
+                            <div
+                              key={task.id}
+                              className="flex items-start justify-between gap-3 p-3.5 hover:bg-white/[0.02] transition-colors"
                             >
-                              <Circle className="w-5 h-5" />
-                            </button>
+                              {/* Apple Reminders Empty Circle Checkbox */}
+                              <button
+                                type="button"
+                                onClick={() => handleToggleTask(task)}
+                                className="mt-0.5 w-5 h-5 rounded-full border-2 border-white/35 hover:border-[#30D158] transition-colors cursor-pointer shrink-0"
+                                aria-label="Tandai selesai"
+                              />
 
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs font-semibold text-white leading-snug">
-                                {task.title}
-                              </p>
-                              {task.description ? (
-                                <p className="text-[11px] text-slate-400 mt-0.5">{task.description}</p>
-                              ) : null}
-
-                              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                                <span
-                                  className={`text-[9.5px] font-medium px-1.5 py-0.5 rounded ${
-                                    task.priority === "high"
-                                      ? "bg-red-500/10 text-red-400 border border-red-500/20"
-                                      : task.priority === "medium"
-                                      ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                                      : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                                  }`}
-                                >
-                                  Prioritas: {task.priority === "high" ? "Tinggi" : task.priority === "medium" ? "Sedang" : "Rendah"}
-                                </span>
-                                {task.due_date ? (
-                                  <span className="text-[10px] text-slate-400 flex items-center gap-1">
-                                    <Calendar className="w-3 h-3" /> Deadline: {relativeDate(task.due_date)}
-                                  </span>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-semibold text-white leading-snug">
+                                  {task.title}
+                                </p>
+                                {task.description ? (
+                                  <p className="text-[11px] text-[#8E8E93] mt-0.5">{task.description}</p>
                                 ) : null}
-                              </div>
-                            </div>
 
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteTask(task.id)}
-                              className="text-slate-500 hover:text-red-400 p-1 press-scale cursor-pointer"
-                              aria-label="Hapus pekerjaan"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        ))}
+                                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                  <span
+                                    className={`text-[9.5px] font-semibold px-1.5 py-0.2 rounded-full ${
+                                      task.priority === "high"
+                                        ? "bg-[#FF453A]/15 text-[#FF453A]"
+                                        : task.priority === "medium"
+                                        ? "bg-[#FF9F0A]/15 text-[#FF9F0A]"
+                                        : "bg-[#0A84FF]/15 text-[#0A84FF]"
+                                    }`}
+                                  >
+                                    {task.priority === "high" ? "Tinggi" : task.priority === "medium" ? "Sedang" : "Rendah"}
+                                  </span>
+                                  {task.due_date ? (
+                                    <span className="text-[10px] text-[#8E8E93] flex items-center gap-1">
+                                      <Calendar className="w-3 h-3" /> {relativeDate(task.due_date)}
+                                    </span>
+                                  ) : null}
+                                </div>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteTask(task.id)}
+                                className="text-[#8E8E93] hover:text-[#FF453A] p-1 ios-press cursor-pointer"
+                                aria-label="Hapus pekerjaan"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     ) : null}
 
@@ -766,46 +756,49 @@ export function Projects() {
                     {(taskFilter === "all" || taskFilter === "completed") && completedTasksList.length > 0 ? (
                       <div className="space-y-2 pt-2">
                         {taskFilter === "all" ? (
-                          <div className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5 pt-2">
-                            <CheckCircle2 className="w-3 h-3" /> Pekerjaan Selesai ({completedTasksList.length})
+                          <div className="text-[11px] font-semibold uppercase tracking-wider text-[#30D158] flex items-center gap-1.5 px-1 pt-1">
+                            <Check className="w-3.5 h-3.5 stroke-[2.5]" /> Pekerjaan Selesai ({completedTasksList.length})
                           </div>
                         ) : null}
 
-                        {completedTasksList.map((task) => (
-                          <div
-                            key={task.id}
-                            className="flex items-start justify-between gap-3 p-3 bg-[#13151E] rounded-xl border border-white/[0.04] opacity-80 transition-colors"
-                          >
-                            <button
-                              type="button"
-                              onClick={() => handleToggleTask(task)}
-                              className="mt-0.5 text-emerald-400 hover:text-slate-400 cursor-pointer press-scale shrink-0"
-                              aria-label="Batal selesai"
+                        <div className="bg-[#2C2C2E] rounded-[18px] overflow-hidden divide-y divide-white/[0.06] opacity-80">
+                          {completedTasksList.map((task) => (
+                            <div
+                              key={task.id}
+                              className="flex items-start justify-between gap-3 p-3.5 hover:bg-white/[0.02] transition-colors"
                             >
-                              <CheckCircle2 className="w-5 h-5 fill-emerald-500/20" />
-                            </button>
+                              {/* Apple Reminders Completed Circle Checkbox */}
+                              <button
+                                type="button"
+                                onClick={() => handleToggleTask(task)}
+                                className="mt-0.5 w-5 h-5 rounded-full bg-[#30D158] flex items-center justify-center text-white cursor-pointer shrink-0"
+                                aria-label="Batal selesai"
+                              >
+                                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                              </button>
 
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs font-medium text-slate-300 line-through leading-snug">
-                                {task.title}
-                              </p>
-                              {task.completed_at ? (
-                                <p className="text-[10px] text-emerald-400/80 mt-1 flex items-center gap-1">
-                                  <CheckCircle2 className="w-3 h-3" /> Selesai pada {relativeDate(task.completed_at)}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium text-[#8E8E93] line-through leading-snug">
+                                  {task.title}
                                 </p>
-                              ) : null}
-                            </div>
+                                {task.completed_at ? (
+                                  <p className="text-[10px] text-[#30D158]/80 mt-1 flex items-center gap-1">
+                                    Selesai pada {relativeDate(task.completed_at)}
+                                  </p>
+                                ) : null}
+                              </div>
 
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteTask(task.id)}
-                              className="text-slate-500 hover:text-red-400 p-1 press-scale cursor-pointer"
-                              aria-label="Hapus pekerjaan"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        ))}
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteTask(task.id)}
+                                className="text-[#8E8E93] hover:text-[#FF453A] p-1 ios-press cursor-pointer"
+                                aria-label="Hapus pekerjaan"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     ) : null}
                   </div>
@@ -816,8 +809,8 @@ export function Projects() {
               <div className="space-y-4">
                 {/* Financial Overview Cards */}
                 <div className="grid grid-cols-2 gap-2.5">
-                  <div className="p-3 bg-[#161925] rounded-xl border border-white/[0.06]">
-                    <span className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">
+                  <div className="p-3.5 bg-[#2C2C2E] rounded-[16px]">
+                    <span className="text-[10px] text-[#30D158] font-semibold uppercase tracking-wider">
                       Uang Masuk
                     </span>
                     <div className="text-base font-bold text-white num-tabular mt-0.5">
@@ -825,8 +818,8 @@ export function Projects() {
                     </div>
                   </div>
 
-                  <div className="p-3 bg-[#161925] rounded-xl border border-white/[0.06]">
-                    <span className="text-[10px] text-rose-400 font-semibold uppercase tracking-wider">
+                  <div className="p-3.5 bg-[#2C2C2E] rounded-[16px]">
+                    <span className="text-[10px] text-[#FF453A] font-semibold uppercase tracking-wider">
                       Biaya Proyek
                     </span>
                     <div className="text-base font-bold text-white num-tabular mt-0.5">
@@ -835,9 +828,9 @@ export function Projects() {
                   </div>
                 </div>
 
-                <div className="p-3 bg-[#161925] rounded-xl border border-white/[0.06] flex items-center justify-between">
+                <div className="p-3.5 bg-[#2C2C2E] rounded-[16px] flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">
+                    <span className="text-[10px] text-[#8E8E93] uppercase tracking-wider font-medium">
                       Laba Bersih Proyek
                     </span>
                     <div className="text-base font-bold text-white num-tabular mt-0.5">
@@ -845,10 +838,10 @@ export function Projects() {
                     </div>
                   </div>
                   <span
-                    className={`text-xs font-bold px-2 py-1 rounded-lg ${
+                    className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                       (selectedProject.net_profit || 0) >= 0
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                        ? "bg-[#30D158]/15 text-[#30D158]"
+                        : "bg-[#FF453A]/15 text-[#FF453A]"
                     }`}
                   >
                     Margin {selectedProject.margin_percentage || 0}%
@@ -865,45 +858,44 @@ export function Projects() {
                 </Button>
 
                 {/* Linked Transactions */}
-                <div className="space-y-2 pt-2">
+                <div className="space-y-2 pt-1">
                   <div className="flex items-center justify-between px-1">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                      Riwayat Keuangan Terkait
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {projectTransactions.length} transaksi
+                    <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider">
+                      Riwayat Transaksi Terkait ({projectTransactions.length})
                     </span>
                   </div>
 
-                  {projectTransactions.length === 0 ? (
-                    <div className="py-6 text-center text-slate-500 text-xs bg-[#161925] rounded-xl border border-white/[0.05]">
-                      Belum ada transaksi yang dialokasikan ke proyek ini.
-                    </div>
-                  ) : (
-                    projectTransactions.map((tx) => (
-                      <div
-                        key={tx.id}
-                        className="flex items-center justify-between p-3 bg-[#161925] rounded-xl border border-white/[0.06]"
-                      >
-                        <div>
-                          <p className="text-xs font-semibold text-white">
-                            {tx.category_name || (tx.type === "income" ? "Pemasukan" : "Pengeluaran")}
-                          </p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">
-                            {tx.wallet_name} • {relativeDate(tx.date)}
-                            {tx.note ? ` • ${tx.note}` : ""}
-                          </p>
-                        </div>
-                        <span
-                          className={`text-xs font-bold num-tabular ${
-                            tx.type === "income" ? "text-emerald-400" : "text-rose-400"
-                          }`}
-                        >
-                          {tx.type === "income" ? "+" : "-"} {formatCurrency(tx.amount)}
-                        </span>
+                  <div className="bg-[#2C2C2E] rounded-[18px] overflow-hidden divide-y divide-white/[0.06]">
+                    {projectTransactions.length === 0 ? (
+                      <div className="py-6 text-center text-[#8E8E93] text-xs">
+                        Belum ada transaksi yang dialokasikan ke proyek ini.
                       </div>
-                    ))
-                  )}
+                    ) : (
+                      projectTransactions.map((tx) => (
+                        <div
+                          key={tx.id}
+                          className="flex items-center justify-between p-3.5"
+                        >
+                          <div>
+                            <p className="text-xs font-semibold text-white">
+                              {tx.category_name || (tx.type === "income" ? "Pemasukan" : "Pengeluaran")}
+                            </p>
+                            <p className="text-[10px] text-[#8E8E93] mt-0.5">
+                              {tx.wallet_name} • {relativeDate(tx.date)}
+                              {tx.note ? ` • ${tx.note}` : ""}
+                            </p>
+                          </div>
+                          <span
+                            className={`text-xs font-bold num-tabular ${
+                              tx.type === "income" ? "text-[#30D158]" : "text-[#FF453A]"
+                            }`}
+                          >
+                            {tx.type === "income" ? "+" : "-"} {formatCurrency(tx.amount)}
+                          </span>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
             )}
@@ -920,7 +912,7 @@ export function Projects() {
       >
         <form onSubmit={handleSaveProject} className="space-y-4">
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">
+            <label className="text-xs font-medium text-[#8E8E93] block mb-1">
               Nama Proyek / Ventura *
             </label>
             <input
@@ -928,29 +920,29 @@ export function Projects() {
               value={pName}
               onChange={(e) => setPName(e.target.value)}
               placeholder="Contoh: EDUNUSA, SOBATPART, ISTANA BLOCK"
-              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Kode Singkat</label>
+              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Kode Singkat</label>
               <input
                 type="text"
                 maxLength={5}
                 value={pCode}
                 onChange={(e) => setPCode(e.target.value.toUpperCase())}
                 placeholder="EDU, SOB, IBL"
-                className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Status Proyek</label>
+              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Status Proyek</label>
               <select
                 value={pStatus}
                 onChange={(e) => setPStatus(e.target.value as any)}
-                className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-[#EBEBF5] focus:outline-none focus:border-[#0A84FF]"
               >
                 <option value="active">Aktif</option>
                 <option value="on_hold">Ditunda (On Hold)</option>
@@ -960,7 +952,7 @@ export function Projects() {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">
+            <label className="text-xs font-medium text-[#8E8E93] block mb-1">
               Nilai Proyek / Target Omset (Rp)
             </label>
             <input
@@ -970,12 +962,12 @@ export function Projects() {
               value={pTargetRevenue || ""}
               onChange={(e) => setPTargetRevenue(Number(e.target.value))}
               placeholder="Contoh: 150000000"
-              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">
+            <label className="text-xs font-medium text-[#8E8E93] block mb-1">
               Pagu Anggaran / Biaya Maksimal (Rp)
             </label>
             <input
@@ -985,31 +977,31 @@ export function Projects() {
               value={pBudget || ""}
               onChange={(e) => setPBudget(Number(e.target.value))}
               placeholder="Contoh: 50000000"
-              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">Deskripsi Singkat</label>
+            <label className="text-xs font-medium text-[#8E8E93] block mb-1">Deskripsi Singkat</label>
             <textarea
               rows={2}
               value={pDesc}
               onChange={(e) => setPDesc(e.target.value)}
               placeholder="Ruang lingkup pekerjaan dan keterangan spesifikasi…"
-              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-2">Warna Identitas</label>
-            <div className="flex gap-2 flex-wrap">
+            <label className="text-xs font-medium text-[#8E8E93] block mb-2">Warna Identitas</label>
+            <div className="flex gap-2.5 flex-wrap">
               {PROJECT_PALETTE.map((color) => (
                 <button
                   key={color}
                   type="button"
                   onClick={() => setPColor(color)}
-                  className={`w-7 h-7 rounded-full cursor-pointer press-scale transition-transform ${
-                    pColor === color ? "ring-2 ring-white scale-110" : "opacity-75 hover:opacity-100"
+                  className={`w-7 h-7 rounded-full cursor-pointer ios-press transition-transform ${
+                    pColor === color ? "ring-2 ring-white scale-110" : "opacity-80 hover:opacity-100"
                   }`}
                   style={{ backgroundColor: color }}
                   aria-label={`Pilih warna ${color}`}
@@ -1045,11 +1037,11 @@ export function Projects() {
 
           <div className="grid grid-cols-2 gap-3 pt-2">
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Rekening Dompet</label>
+              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Rekening Dompet</label>
               <select
                 value={txWalletId}
                 onChange={(e) => setTxWalletId(e.target.value)}
-                className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
               >
                 {wallets.map((w) => (
                   <option key={w.id} value={w.id}>
@@ -1060,11 +1052,11 @@ export function Projects() {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Kategori</label>
+              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Kategori</label>
               <select
                 value={txCategoryId}
                 onChange={(e) => setTxCategoryId(e.target.value)}
-                className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
               >
                 <option value="">(Tanpa Kategori)</option>
                 {categories
@@ -1078,25 +1070,27 @@ export function Projects() {
             </div>
           </div>
 
-          <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">Tanggal</label>
-            <input
-              type="date"
-              value={txDate}
-              onChange={(e) => setTxDate(e.target.value)}
-              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-xs text-white focus:outline-none focus:border-indigo-500"
-            />
-          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Tanggal</label>
+              <input
+                type="date"
+                value={txDate}
+                onChange={(e) => setTxDate(e.target.value)}
+                className="w-full px-3.5 py-2 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+              />
+            </div>
 
-          <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">Keterangan Catatan</label>
-            <input
-              type="text"
-              value={txNote}
-              onChange={(e) => setTxNote(e.target.value)}
-              placeholder="Contoh: Pembayaran Termin 1 / Beli Semen 50 Sak"
-              className="w-full px-3 py-2 bg-[#171A27] rounded-xl border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-            />
+            <div>
+              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Keterangan</label>
+              <input
+                type="text"
+                value={txNote}
+                onChange={(e) => setTxNote(e.target.value)}
+                placeholder="Contoh: Termin 1 / Beli Semen"
+                className="w-full px-3.5 py-2 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-xs text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+              />
+            </div>
           </div>
 
           <Button

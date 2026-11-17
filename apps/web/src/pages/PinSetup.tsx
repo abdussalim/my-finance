@@ -41,19 +41,19 @@ export function PinSetup() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-dvh px-5 py-6 text-center max-w-sm mx-auto select-none">
-      {/* Clean Shield Icon */}
+    <div className="flex flex-col items-center justify-center min-h-dvh px-5 py-6 text-center max-w-sm mx-auto select-none bg-black">
+      {/* iOS Round Shield Icon */}
       <div
-        className="w-14 h-14 bg-[#141724] border border-white/[0.08] text-indigo-400 rounded-2xl flex items-center justify-center mb-4"
+        className="w-14 h-14 bg-[#1C1C1E] border border-white/[0.06] text-[#0A84FF] rounded-[18px] flex items-center justify-center mb-3 shadow-sm"
         aria-hidden="true"
       >
-        <ShieldCheck className="w-6 h-6" />
+        <ShieldCheck className="w-6 h-6 stroke-[2]" />
       </div>
 
-      <h1 className="text-xl font-bold tracking-tight text-white">
+      <h1 className="text-2xl font-bold tracking-tight text-white">
         {step === "create" ? "Buat Master PIN" : "Konfirmasi PIN"}
       </h1>
-      <p className="text-xs text-slate-400 mt-1 mb-2 max-w-xs">
+      <p className="text-xs text-[#8E8E93] mt-1 mb-2 max-w-xs">
         {step === "create"
           ? "Atur 6-digit PIN untuk mengamankan data keuangan dan proyek Anda."
           : "Masukkan kembali 6-digit PIN yang telah dibuat."}
@@ -67,7 +67,7 @@ export function PinSetup() {
           showKeypad
         />
         {error ? (
-          <p role="alert" aria-live="polite" className="text-xs text-red-400 font-medium mt-3">
+          <p role="alert" aria-live="polite" className="text-xs text-[#FF453A] font-medium mt-3">
             {error}
           </p>
         ) : null}
@@ -75,9 +75,9 @@ export function PinSetup() {
           <p
             role="status"
             aria-live="polite"
-            className="text-xs text-slate-400 mt-3 flex items-center justify-center gap-1.5"
+            className="text-xs text-[#8E8E93] mt-3 flex items-center justify-center gap-1.5"
           >
-            <span className="w-3.5 h-3.5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+            <span className="w-3.5 h-3.5 border-2 border-[#0A84FF] border-t-transparent rounded-full animate-spin" />
             Menyimpan PIN…
           </p>
         ) : null}

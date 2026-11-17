@@ -2,27 +2,31 @@
 
 @layer base {
   :root {
-    --bg-canvas: #0A0B10;
-    --surface: #12141D;
-    --surface-elevated: #1A1D2A;
-    --surface-hover: #222638;
-    --border: rgba(255, 255, 255, 0.08);
-    --border-subtle: rgba(255, 255, 255, 0.05);
-    --border-focus: #6366F1;
+    /* Apple iOS Dark Mode System Colors */
+    --bg-system: #000000;
+    --bg-secondary: #1C1C1E;
+    --bg-tertiary: #2C2C2E;
+    --bg-quaternary: #3A3A3C;
+    --border-separator: rgba(255, 255, 255, 0.08);
+    --border-hairline: rgba(255, 255, 255, 0.05);
+
     --text-primary: #FFFFFF;
-    --text-secondary: #94A3B8;
-    --text-muted: #64748B;
-    --primary: #4F46E5;
-    --primary-hover: #4338CA;
-    --positive: #10B981;
-    --negative: #EF4444;
-    --warning: #F59E0B;
+    --text-secondary: #8E8E93;
+    --text-tertiary: #636366;
+
+    /* Apple System Tints */
+    --ios-blue: #0A84FF;
+    --ios-green: #30D158;
+    --ios-red: #FF453A;
+    --ios-orange: #FF9F0A;
+    --ios-indigo: #5E5CE6;
+    --ios-teal: #64D2FF;
   }
 
   body {
-    background-color: var(--bg-canvas);
+    background-color: var(--bg-system);
     color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     overscroll-behavior-y: none;
@@ -37,54 +41,62 @@
   }
 }
 
-/* Accessible visible focus states */
+/* Accessible focus visible */
 :focus-visible {
-  outline: 2px solid #6366F1;
+  outline: 2px solid #0A84FF;
   outline-offset: 2px;
 }
 
-/* Clean, disciplined surfaces adhering to Gestalt Law of Common Region */
-.surface-card {
-  background-color: #12141D;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 1rem;
+/* iOS Inset Grouped Card */
+.ios-card {
+  background-color: #1C1C1E;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.surface-elevated {
-  background-color: #1A1D2A;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 0.875rem;
+/* iOS Inset Grouped Row */
+.ios-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  transition: background-color 120ms ease;
+}
+.ios-row:active {
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
-.surface-interactive {
-  transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms ease, border-color 150ms ease;
-}
-.surface-interactive:active {
-  transform: scale(0.985);
-}
-
-.docked-nav {
-  background-color: rgba(14, 16, 24, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+/* iOS Translucent Glass Blur */
+.ios-glass {
+  background-color: rgba(28, 28, 30, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Touch & Interaction */
-.press-scale {
+/* iOS Minimalist Bottom Tab Bar */
+.ios-tab-bar {
+  background-color: rgba(22, 22, 24, 0.85);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.12);
+}
+
+/* iOS Active Press Feedback */
+.ios-press {
   transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1), opacity 120ms ease;
 }
-.press-scale:active {
-  transform: scale(0.975);
+.ios-press:active {
+  transform: scale(0.97);
+  opacity: 0.75;
 }
 
-/* Tabular figures for non-jitter numbers */
+/* Tabular figures for financial numbers */
 .num-tabular {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
 }
 
-/* Safe Area Helpers */
+/* Safe Area Inset Helpers */
 .pt-safe {
   padding-top: max(env(safe-area-inset-top, 0px), 16px);
 }
@@ -92,7 +104,7 @@
   padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
 }
 
-/* Scrollbar Utility */
+/* Scrollbar Hide */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
@@ -101,7 +113,7 @@
   scrollbar-width: none;
 }
 
-/* Accessibility: Honor prefers-reduced-motion */
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
@@ -109,7 +121,7 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .press-scale:active, .surface-interactive:active {
+  .ios-press:active {
     transform: none !important;
   }
 }
