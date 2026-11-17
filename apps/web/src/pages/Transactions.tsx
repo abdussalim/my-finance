@@ -165,7 +165,7 @@ export function Transactions() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Transaksi</h1>
-          <p className="text-xs text-[#8E8E93] mt-0.5">Catatan arus kas pribadi dan proyek bisnis</p>
+          <p className="text-xs text-[rgba(235,235,245,0.60)] mt-0.5">Catatan arus kas pribadi dan proyek bisnis</p>
         </div>
         <Button
           size="sm"
@@ -205,7 +205,7 @@ export function Transactions() {
               className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press cursor-pointer ${
                 filterProject === ""
                   ? "bg-[#0A84FF] text-white"
-                  : "bg-[#1C1C1E] text-[#8E8E93] hover:text-white"
+                  : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.70)] hover:text-white"
               }`}
             >
               Semua Proyek
@@ -219,7 +219,7 @@ export function Transactions() {
                 className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press flex items-center gap-1.5 cursor-pointer ${
                   filterProject === p.id
                     ? "bg-[#0A84FF] text-white"
-                    : "bg-[#1C1C1E] text-[#8E8E93] hover:text-white"
+                    : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.70)] hover:text-white"
                 }`}
               >
                 <span
@@ -247,7 +247,7 @@ export function Transactions() {
               className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press cursor-pointer ${
                 filterWallet === ""
                   ? "bg-[#3A3A3C] text-white"
-                  : "bg-[#1C1C1E] text-[#8E8E93] hover:text-white"
+                  : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.70)] hover:text-white"
               }`}
             >
               Semua Dompet
@@ -261,7 +261,7 @@ export function Transactions() {
                 className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press flex items-center gap-1.5 cursor-pointer ${
                   filterWallet === w.id
                     ? "bg-[#3A3A3C] text-white"
-                    : "bg-[#1C1C1E] text-[#8E8E93] hover:text-white"
+                    : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.70)] hover:text-white"
                 }`}
               >
                 <span
@@ -293,7 +293,7 @@ export function Transactions() {
           groupedByDate.map(([groupDate, { items, dayNet }]) => (
             <div key={groupDate} className="space-y-1.5">
               {/* Date Header with Daily Net Summary */}
-              <div className="flex items-center justify-between px-2 text-[12px] font-semibold text-[#8E8E93] uppercase tracking-wider">
+              <div className="flex items-center justify-between px-2 text-[12px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider">
                 <span>{relativeDate(groupDate)}</span>
                 <span
                   className={`num-tabular font-semibold ${
@@ -350,7 +350,7 @@ export function Transactions() {
                             </span>
                           ) : null}
                         </div>
-                        <p className="text-[11px] text-[#8E8E93] mt-0.5 truncate">
+                        <p className="text-[11px] text-[rgba(235,235,245,0.60)] mt-0.5 truncate">
                           <span className="font-medium text-[#EBEBF5]">{tx.wallet_name}</span>
                           {tx.category_name && tx.note ? ` • ${tx.category_name}` : ""}
                         </p>
@@ -371,7 +371,7 @@ export function Transactions() {
                       <button
                         type="button"
                         onClick={() => handleDelete(tx.id)}
-                        className="text-[#8E8E93] hover:text-[#FF453A] p-1.5 rounded-lg ios-press cursor-pointer transition-colors"
+                        className="text-[rgba(235,235,245,0.60)] hover:text-[#FF453A] p-1.5 rounded-lg ios-press cursor-pointer transition-colors"
                         aria-label={`Hapus transaksi ${tx.note || tx.category_name || "ini"}`}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -413,7 +413,7 @@ export function Transactions() {
             {/* Project Selector (Tautkan ke Proyek Bisnis) */}
             {type !== "transfer" && projects.length > 0 ? (
               <div>
-                <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                <span className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider flex items-center gap-1 mb-1.5">
                   <Briefcase className="w-3.5 h-3.5 text-[#0A84FF]" aria-hidden="true" /> Tautkan ke Proyek (Opsional)
                 </span>
                 <div
@@ -428,7 +428,7 @@ export function Transactions() {
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press ${
                       projectId === ""
                         ? "bg-[#0A84FF] text-white"
-                        : "bg-[#2C2C2E] text-[#8E8E93] hover:text-white"
+                        : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.60)] hover:text-white"
                     }`}
                   >
                     Pribadi / Umum
@@ -442,7 +442,7 @@ export function Transactions() {
                       className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press flex items-center gap-1.5 ${
                         projectId === p.id
                           ? "bg-[#0A84FF] text-white"
-                          : "bg-[#2C2C2E] text-[#8E8E93] hover:text-white"
+                          : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.60)] hover:text-white"
                       }`}
                     >
                       <span
@@ -460,11 +460,11 @@ export function Transactions() {
             {type === "transfer" ? (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+                  <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
                     Dari Dompet
                   </label>
                   <select
-                    className="w-full bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+                    className="w-full bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
                     value={walletId}
                     onChange={(e) => setWalletId(e.target.value)}
                   >
@@ -476,11 +476,11 @@ export function Transactions() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+                  <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
                     Ke Dompet
                   </label>
                   <select
-                    className="w-full bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+                    className="w-full bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
                     value={targetWalletId}
                     onChange={(e) => setTargetWalletId(e.target.value)}
                   >
@@ -497,11 +497,11 @@ export function Transactions() {
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+                  <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
                     Dompet
                   </label>
                   <select
-                    className="w-full bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+                    className="w-full bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
                     value={walletId}
                     onChange={(e) => setWalletId(e.target.value)}
                   >
@@ -513,11 +513,11 @@ export function Transactions() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+                  <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
                     Kategori
                   </label>
                   <select
-                    className="w-full bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+                    className="w-full bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
                   >
@@ -534,24 +534,24 @@ export function Transactions() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+                <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
                   Tanggal
                 </label>
                 <input
                   type="date"
-                  className="w-full bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+                  className="w-full bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#0A84FF]"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
               </div>
               <div>
-                <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+                <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
                   Keterangan
                 </label>
                 <input
                   type="text"
                   placeholder="Catatan transaksi…"
-                  className="w-full bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+                  className="w-full bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] px-3.5 py-2.5 text-xs text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                 />

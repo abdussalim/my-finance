@@ -3,7 +3,7 @@ import { cn } from "../../lib/cn";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  variant?: "surface" | "alt" | "outline";
+  variant?: "surface" | "hero" | "alt" | "outline";
   interactive?: boolean;
 }
 
@@ -15,7 +15,8 @@ export function Card({
   ...props
 }: CardProps) {
   const variantStyles = {
-    surface: "bg-[#1C1C1E] border border-white/[0.06]",
+    surface: "bg-[#1C1C1E] border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_2px_8px_rgba(0,0,0,0.3)]",
+    hero: "ios-hero-card",
     alt: "bg-[#2C2C2E] border border-white/[0.08]",
     outline: "bg-transparent border border-white/[0.12]",
   };
@@ -25,7 +26,7 @@ export function Card({
       className={cn(
         "rounded-[20px] p-4 text-[#FFFFFF] transition-all duration-120",
         variantStyles[variant],
-        interactive && "ios-press cursor-pointer hover:border-white/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A84FF]",
+        interactive && "ios-press cursor-pointer hover:border-white/[0.14] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A84FF]",
         className
       )}
       {...props}

@@ -170,13 +170,13 @@ export function Settings() {
       {/* 1. iOS Large Title */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight">Setelan</h1>
-        <p className="text-xs text-[#8E8E93] mt-0.5">Konfigurasi dompet, kategori, dan keamanan</p>
+        <p className="text-xs text-[rgba(235,235,245,0.60)] mt-0.5">Konfigurasi dompet, kategori, dan keamanan</p>
       </div>
 
       {/* 2. Inset Grouped Section: Wallets */}
       <div className="space-y-2">
         <div className="flex items-center justify-between px-3">
-          <span className="text-[12px] font-medium text-[#8E8E93] uppercase tracking-wider">
+          <span className="text-[12px] font-medium text-[rgba(235,235,245,0.60)] uppercase tracking-wider">
             Dompet & Rekening ({wallets.length})
           </span>
           <button
@@ -191,7 +191,7 @@ export function Settings() {
 
         <div className="bg-[#1C1C1E] border border-white/[0.06] rounded-[20px] overflow-hidden divide-y divide-white/[0.06]">
           {wallets.length === 0 ? (
-            <p className="p-4 text-xs text-[#8E8E93] text-center">
+            <p className="p-4 text-xs text-[rgba(235,235,245,0.60)] text-center">
               Belum ada dompet. Tambahkan rekening atau dompet kas Anda.
             </p>
           ) : (
@@ -206,7 +206,7 @@ export function Settings() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-white">{w.name}</p>
-                    <p className="text-[10px] text-[#8E8E93] uppercase font-medium">{w.type}</p>
+                    <p className="text-[10px] text-[rgba(235,235,245,0.60)] uppercase font-medium">{w.type}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2.5">
@@ -216,7 +216,7 @@ export function Settings() {
                   <button
                     type="button"
                     onClick={() => handleDeleteWallet(w.id, w.name)}
-                    className="text-[#8E8E93] hover:text-[#FF453A] p-1.5 rounded-[8px] ios-press cursor-pointer transition-colors"
+                    className="text-[rgba(235,235,245,0.60)] hover:text-[#FF453A] p-1.5 rounded-[8px] ios-press cursor-pointer transition-colors"
                     aria-label={`Hapus dompet ${w.name}`}
                   >
                     <Trash2 className="w-4 h-4" aria-hidden="true" />
@@ -231,7 +231,7 @@ export function Settings() {
       {/* 3. Inset Grouped Section: Categories */}
       <div className="space-y-2">
         <div className="flex items-center justify-between px-3">
-          <span className="text-[12px] font-medium text-[#8E8E93] uppercase tracking-wider">
+          <span className="text-[12px] font-medium text-[rgba(235,235,245,0.60)] uppercase tracking-wider">
             Kategori Transaksi ({categories.length})
           </span>
           <button
@@ -250,7 +250,7 @@ export function Settings() {
               <span
                 key={c.id}
                 role="listitem"
-                className="inline-flex items-center gap-1.5 text-xs font-medium pl-3 pr-2 py-1.5 bg-[#2C2C2E] rounded-full text-white"
+                className="inline-flex items-center gap-1.5 text-xs font-medium pl-3 pr-2 py-1.5 bg-[rgba(118,118,128,0.24)] rounded-full text-white"
               >
                 <span
                   className={`w-2 h-2 rounded-full ${
@@ -262,7 +262,7 @@ export function Settings() {
                 <button
                   type="button"
                   onClick={() => handleDeleteCategory(c.id, c.name)}
-                  className="text-[#8E8E93] hover:text-[#FF453A] ml-0.5 p-0.5 rounded-full cursor-pointer focus:outline-none transition-colors"
+                  className="text-[rgba(235,235,245,0.60)] hover:text-[#FF453A] ml-0.5 p-0.5 rounded-full cursor-pointer focus:outline-none transition-colors"
                   aria-label={`Hapus kategori ${c.name}`}
                 >
                   <X className="w-3.5 h-3.5" aria-hidden="true" />
@@ -276,7 +276,7 @@ export function Settings() {
       {/* 4. Inset Grouped Section: Security */}
       <div className="space-y-2">
         <div className="px-3">
-          <span className="text-[12px] font-medium text-[#8E8E93] uppercase tracking-wider">
+          <span className="text-[12px] font-medium text-[rgba(235,235,245,0.60)] uppercase tracking-wider">
             Keamanan
           </span>
         </div>
@@ -291,7 +291,7 @@ export function Settings() {
               setPinError(null);
               setIsPinOpen(true);
             }}
-            className="w-full px-4 py-3.5 flex items-center justify-between text-left ios-press cursor-pointer hover:bg-[#2C2C2E]/40 transition-colors"
+            className="w-full px-4 py-3.5 flex items-center justify-between text-left ios-press cursor-pointer hover:bg-[rgba(118,118,128,0.24)]/40 transition-colors"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-[9px] bg-[#30D158] flex items-center justify-center text-white shrink-0 shadow-xs">
@@ -299,10 +299,10 @@ export function Settings() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Master PIN 6-Digit</p>
-                <p className="text-xs text-[#8E8E93]">Kunci pengaman transaksi & akun</p>
+                <p className="text-xs text-[rgba(235,235,245,0.60)]">Kunci pengaman transaksi & akun</p>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-[#8E8E93]">
+            <div className="flex items-center gap-1.5 text-xs text-[rgba(235,235,245,0.60)]">
               <span>Ubah</span>
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
             </div>
@@ -323,10 +323,10 @@ export function Settings() {
                 &lt; 10ms CPU
               </span>
             </div>
-            <p className="text-xs text-[#8E8E93] mt-0.5">
+            <p className="text-xs text-[rgba(235,235,245,0.60)] mt-0.5">
               Cloudflare Pages + Edge Workers + D1 Database
             </p>
-            <p className="text-[11px] text-[#8E8E93]/80 mt-1 flex items-center gap-1" translate="no">
+            <p className="text-[11px] text-[rgba(235,235,245,0.60)]/80 mt-1 flex items-center gap-1" translate="no">
               <Layers className="w-3.5 h-3.5" aria-hidden="true" /> finance.abdussalim.my.id
             </p>
           </div>
@@ -337,7 +337,7 @@ export function Settings() {
       <button
         type="button"
         onClick={logout}
-        className="w-full bg-[#1C1C1E] border border-white/[0.06] rounded-[20px] p-3.5 text-center text-[#FF453A] font-semibold text-sm ios-press cursor-pointer flex items-center justify-center gap-2 hover:bg-[#2C2C2E]/50 transition-colors"
+        className="w-full bg-[#1C1C1E] border border-white/[0.06] rounded-[20px] p-3.5 text-center text-[#FF453A] font-semibold text-sm ios-press cursor-pointer flex items-center justify-center gap-2 hover:bg-[rgba(118,118,128,0.24)]/50 transition-colors"
         aria-label="Kunci Aplikasi dan Keluar"
       >
         <LogOut className="w-4 h-4" aria-hidden="true" /> Kunci Aplikasi (Logout)
@@ -352,7 +352,7 @@ export function Settings() {
       >
         <div className="space-y-4">
           <div>
-            <label htmlFor="wallet-name" className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-1.5 block">
+            <label htmlFor="wallet-name" className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider mb-1.5 block">
               Nama Dompet
             </label>
             <input
@@ -360,14 +360,14 @@ export function Settings() {
               name="wallet_name"
               type="text"
               placeholder="Contoh: BCA, Kas Tunai, GoPay…"
-              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-semibold text-white placeholder-[#8E8E93]/60 focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-semibold text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none"
               value={wName}
               onChange={(e) => setWName(e.target.value)}
             />
           </div>
 
           <div className="space-y-1.5">
-            <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block">
+            <span className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider block">
               Tipe Dompet
             </span>
             <SegmentedControl
@@ -383,7 +383,7 @@ export function Settings() {
           </div>
 
           <div className="space-y-1.5">
-            <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block">
+            <span className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider block">
               Warna Kartu
             </span>
             <div className="flex gap-2.5 py-1" role="group" aria-label="Pilih warna dompet">
@@ -403,7 +403,7 @@ export function Settings() {
           </div>
 
           <div>
-            <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-1.5 block">
+            <span className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider mb-1.5 block">
               Saldo Awal
             </span>
             <NumberPad value={wBalance} onChange={setWBalance} />
@@ -424,7 +424,7 @@ export function Settings() {
       >
         <div className="space-y-4">
           <div>
-            <label htmlFor="category-name" className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-1.5 block">
+            <label htmlFor="category-name" className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider mb-1.5 block">
               Nama Kategori
             </label>
             <input
@@ -432,14 +432,14 @@ export function Settings() {
               name="category_name"
               type="text"
               placeholder="Contoh: Kopi, Makanan, Gaji…"
-              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-semibold text-white placeholder-[#8E8E93]/60 focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] border border-transparent focus:border-[#0A84FF] rounded-[14px] text-xs font-semibold text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none"
               value={cName}
               onChange={(e) => setCName(e.target.value)}
             />
           </div>
 
           <div className="space-y-1.5">
-            <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block">
+            <span className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider block">
               Jenis Kategori
             </span>
             <SegmentedControl

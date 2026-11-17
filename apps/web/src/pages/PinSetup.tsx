@@ -53,7 +53,7 @@ export function PinSetup() {
       <h1 className="text-2xl font-bold tracking-tight text-white">
         {step === "create" ? "Buat Master PIN" : "Konfirmasi PIN"}
       </h1>
-      <p className="text-xs text-[#8E8E93] mt-1 mb-2 max-w-xs">
+      <p className="text-xs text-[rgba(235,235,245,0.60)] mt-1 mb-2 max-w-xs">
         {step === "create"
           ? "Atur 6-digit PIN untuk mengamankan data keuangan dan proyek Anda."
           : "Masukkan kembali 6-digit PIN yang telah dibuat."}
@@ -75,7 +75,7 @@ export function PinSetup() {
           <p
             role="status"
             aria-live="polite"
-            className="text-xs text-[#8E8E93] mt-3 flex items-center justify-center gap-1.5"
+            className="text-xs text-[rgba(235,235,245,0.60)] mt-3 flex items-center justify-center gap-1.5"
           >
             <span className="w-3.5 h-3.5 border-2 border-[#0A84FF] border-t-transparent rounded-full animate-spin" />
             Menyimpan PIN…

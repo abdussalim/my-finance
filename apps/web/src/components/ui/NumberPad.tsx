@@ -35,8 +35,8 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
   return (
     <div className="flex flex-col items-center w-full">
       {/* iOS Large Currency Display */}
-      <div className="w-full text-center py-4 my-1 bg-[#1C1C1E] rounded-[20px] border border-white/[0.06]">
-        <p className="text-[11px] font-medium tracking-wide text-[#8E8E93] uppercase mb-0.5">
+      <div className="w-full text-center py-4 my-1 bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+        <p className="text-[12px] font-medium tracking-wide text-[rgba(235,235,245,0.60)] uppercase mb-0.5">
           Nominal Transaksi
         </p>
         <div
@@ -60,7 +60,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
             type="button"
             aria-label={`Tambah ${item.label}`}
             onClick={() => handleQuickAdd(item.val)}
-            className="py-1.5 px-1 bg-[#2C2C2E] hover:bg-[#3A3A3C] active:bg-[#48484A] rounded-full text-xs font-semibold text-[#0A84FF] ios-press cursor-pointer border border-white/[0.04] transition-colors"
+            className="py-1.5 px-1 bg-[rgba(118,118,128,0.24)] hover:bg-[rgba(118,118,128,0.36)] rounded-full text-xs font-semibold text-[#0A84FF] ios-press cursor-pointer border border-white/[0.04] transition-colors"
           >
             {item.label}
           </button>
@@ -75,7 +75,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
             type="button"
             aria-label={`Digit ${btn}`}
             onClick={() => handleDigit(btn)}
-            className="h-13 bg-[#1C1C1E] hover:bg-[#2C2C2E] active:bg-[#3A3A3C] rounded-[16px] text-xl font-medium text-white ios-press flex items-center justify-center cursor-pointer select-none border border-white/[0.04] transition-colors"
+            className="h-12 bg-[#1C1C1E] active:bg-[#2C2C2E] rounded-[14px] text-xl font-medium text-white ios-press flex items-center justify-center cursor-pointer select-none border border-white/[0.05] transition-colors"
           >
             {btn}
           </button>
@@ -84,9 +84,9 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
           type="button"
           aria-label="Hapus digit terakhir"
           onClick={handleDelete}
-          className="h-13 bg-[#1C1C1E] hover:bg-[#2C2C2E] active:bg-[#3A3A3C] rounded-[16px] text-xl font-medium text-[#8E8E93] hover:text-white ios-press flex items-center justify-center cursor-pointer select-none border border-white/[0.04] transition-colors"
+          className="h-12 bg-[#1C1C1E] active:bg-[#2C2C2E] rounded-[14px] text-xl font-medium text-[rgba(235,235,245,0.60)] hover:text-white ios-press flex items-center justify-center cursor-pointer select-none border border-white/[0.05] transition-colors"
         >
-          <Delete className="w-5 h-5 text-[#8E8E93]" aria-hidden="true" />
+          <Delete className="w-5 h-5 stroke-[1.8]" aria-hidden="true" />
         </button>
       </div>
     </div>

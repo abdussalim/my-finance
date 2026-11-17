@@ -24,7 +24,7 @@ export function Button({
     primary:
       "bg-[#0A84FF] text-white hover:bg-[#0071E3] active:bg-[#0058B3]",
     secondary:
-      "bg-[#2C2C2E] text-[#0A84FF] hover:bg-[#3A3A3C] active:bg-[#48484A] border border-white/[0.04]",
+      "bg-[rgba(118,118,128,0.24)] text-[#0A84FF] hover:bg-[rgba(118,118,128,0.36)] active:bg-[rgba(118,118,128,0.48)] border border-white/[0.04]",
     outline:
       "bg-transparent hover:bg-white/[0.06] text-[#0A84FF] border border-white/[0.16]",
     danger:

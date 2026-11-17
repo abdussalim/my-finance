@@ -8,13 +8,13 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   HandCoins,
-  ArrowRight,
   Eye,
   EyeOff,
   Briefcase,
   ChevronRight,
   CheckCircle2,
   Clock,
+  CreditCard,
 } from "lucide-react";
 import { Link } from "react-router";
 
@@ -48,23 +48,22 @@ export function Dashboard() {
   if (loading) {
     return (
       <div className="py-6 space-y-4 animate-pulse" role="status" aria-label="Memuat data ikhtisar…">
-        <div className="h-40 bg-[#1C1C1E] rounded-[20px] border border-white/[0.04]" />
-        <div className="h-32 bg-[#1C1C1E] rounded-[20px] border border-white/[0.04]" />
-        <div className="h-48 bg-[#1C1C1E] rounded-[20px] border border-white/[0.04]" />
+        <div className="h-44 bg-[#1C1C1E] rounded-[22px] border border-white/[0.06]" />
+        <div className="h-32 bg-[#1C1C1E] rounded-[20px] border border-white/[0.06]" />
+        <div className="h-48 bg-[#1C1C1E] rounded-[20px] border border-white/[0.06]" />
       </div>
     );
   }
 
-  const netSavings = (summary?.month_income || 0) - (summary?.month_expense || 0);
   const incomeTotal = summary?.month_income || 0;
   const expenseTotal = summary?.month_expense || 0;
 
   return (
     <div className="space-y-6 pt-2 pb-6">
-      {/* 1. iOS Navigation Header: Large Title Style */}
+      {/* 1. iOS Large Title Navigation Header */}
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">
+          <span className="text-[12px] font-medium uppercase tracking-wider text-[rgba(235,235,245,0.60)]">
             {new Date().toLocaleDateString("id-ID", {
               weekday: "long",
               day: "numeric",
@@ -72,53 +71,58 @@ export function Dashboard() {
               year: "numeric",
             })}
           </span>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Ringkasan</h1>
+          <h1 className="text-[30px] sm:text-[34px] font-bold text-white tracking-tight leading-tight">
+            Ringkasan
+          </h1>
         </div>
         <button
           type="button"
           onClick={() => setShowBalance(!showBalance)}
           aria-label={showBalance ? "Sembunyikan Saldo" : "Tampilkan Saldo"}
-          className="w-8 h-8 rounded-full bg-[#1C1C1E] border border-white/[0.08] flex items-center justify-center text-[#8E8E93] hover:text-white ios-press cursor-pointer focus-visible:outline-none transition-colors"
+          className="w-9 h-9 rounded-full bg-[rgba(118,118,128,0.24)] hover:bg-[rgba(118,118,128,0.36)] text-[rgba(235,235,245,0.70)] hover:text-white flex items-center justify-center ios-press cursor-pointer focus-visible:outline-none transition-colors"
         >
           {showBalance ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
         </button>
       </div>
 
-      {/* 2. iOS Core Hero Card: Inset Grouped Balance */}
-      <Card className="p-5 bg-[#1C1C1E] border border-white/[0.06]">
+      {/* 2. Apple Wallet / Apple Cash Style Hero Card */}
+      <Card variant="hero" className="p-5.5">
         <div className="flex items-center justify-between pb-1">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8E8E93]">
-            Total Saldo Kas & Bank
-          </span>
-          <span className="text-[11px] font-medium text-[#8E8E93] bg-[#2C2C2E] px-2 py-0.5 rounded-full">
+          <div className="flex items-center gap-1.5">
+            <CreditCard className="w-4 h-4 text-[rgba(235,235,245,0.60)]" />
+            <span className="text-[12px] font-medium uppercase tracking-wider text-[rgba(235,235,245,0.60)]">
+              Total Saldo Kas & Bank
+            </span>
+          </div>
+          <span className="text-[11px] font-medium text-[rgba(235,235,245,0.80)] bg-[rgba(118,118,128,0.24)] px-2.5 py-0.5 rounded-full border border-white/[0.04]">
             {wallets.length} Akun
           </span>
         </div>
 
-        <div className="text-3xl sm:text-4xl font-bold text-white num-tabular tracking-tight my-2">
+        <div className="text-3xl sm:text-[40px] font-bold text-white num-tabular tracking-tight my-2.5">
           {showBalance ? formatCurrency(summary?.total_balance || 0) : "••••••••"}
         </div>
 
-        {/* Inflow vs Outflow iOS Sub-Pills */}
-        <div className="grid grid-cols-2 gap-2.5 pt-3 mt-2 border-t border-white/[0.06]">
-          <div className="p-2.5 bg-[#2C2C2E] rounded-[14px] flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-[#30D158]/15 text-[#30D158] flex items-center justify-center shrink-0">
+        {/* Inflow vs Outflow Apple Pill Metrics */}
+        <div className="grid grid-cols-2 gap-2.5 pt-3 mt-2 border-t border-white/[0.08]">
+          <div className="p-2.5 bg-[#30D158]/10 border border-[#30D158]/20 rounded-[14px] flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-full bg-[#30D158]/20 text-[#30D158] flex items-center justify-center shrink-0">
               <ArrowDownRight className="w-4 h-4 stroke-[2.2]" />
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] text-[#8E8E93] block font-medium">Pemasukan</span>
+              <span className="text-[10px] text-[rgba(235,235,245,0.60)] block font-medium">Pemasukan</span>
               <span className="text-xs font-semibold text-[#30D158] num-tabular truncate block">
                 {showBalance ? formatCurrency(incomeTotal) : "••••••"}
               </span>
             </div>
           </div>
 
-          <div className="p-2.5 bg-[#2C2C2E] rounded-[14px] flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-[#FF453A]/15 text-[#FF453A] flex items-center justify-center shrink-0">
+          <div className="p-2.5 bg-[#FF453A]/10 border border-[#FF453A]/20 rounded-[14px] flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-full bg-[#FF453A]/20 text-[#FF453A] flex items-center justify-center shrink-0">
               <ArrowUpRight className="w-4 h-4 stroke-[2.2]" />
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] text-[#8E8E93] block font-medium">Pengeluaran</span>
+              <span className="text-[10px] text-[rgba(235,235,245,0.60)] block font-medium">Pengeluaran</span>
               <span className="text-xs font-semibold text-[#FF453A] num-tabular truncate block">
                 {showBalance ? formatCurrency(expenseTotal) : "••••••"}
               </span>
@@ -128,9 +132,9 @@ export function Dashboard() {
       </Card>
 
       {/* 3. iOS Inset Grouped: Proyek Bisnis Section */}
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5">
+          <h2 className="text-[13px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider flex items-center gap-1.5">
             <Briefcase className="w-3.5 h-3.5 text-[#0A84FF]" /> Proyek Bisnis ({projects.length})
           </h2>
           <Link
@@ -143,7 +147,7 @@ export function Dashboard() {
 
         <div className="space-y-2.5">
           {projects.length === 0 ? (
-            <div className="p-4 text-xs text-[#8E8E93] bg-[#1C1C1E] rounded-[18px] border border-white/[0.06] text-center">
+            <div className="p-4 text-xs text-[rgba(235,235,245,0.60)] bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] text-center">
               Belum ada proyek bisnis. Tambahkan di menu Proyek.
             </div>
           ) : (
@@ -154,12 +158,12 @@ export function Dashboard() {
                 <Link
                   key={p.id}
                   to="/projects"
-                  className="block p-4 bg-[#1C1C1E] rounded-[18px] border border-white/[0.06] hover:border-white/[0.12] transition-colors ios-press"
+                  className="block p-4 bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] hover:border-white/[0.14] transition-colors ios-press"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2.5">
                       <div
-                        className="w-7 h-7 rounded-[8px] flex items-center justify-center text-white text-[11px] font-bold shadow-xs"
+                        className="w-7 h-7 rounded-[9px] flex items-center justify-center text-white text-[11px] font-bold shadow-xs"
                         style={{ backgroundColor: p.color || "#0A84FF" }}
                       >
                         {p.code || p.name.slice(0, 3)}
@@ -173,14 +177,14 @@ export function Dashboard() {
                   </div>
 
                   <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="text-[#8E8E93] text-[11px]">Nilai Kontrak</span>
+                    <span className="text-[rgba(235,235,245,0.60)] text-[11px]">Nilai Kontrak</span>
                     <span className="font-semibold text-white num-tabular">
                       {p.target_revenue ? formatCurrency(p.target_revenue) : "-"}
                     </span>
                   </div>
 
                   {/* iOS Style Smooth Progress Track */}
-                  <div className="w-full bg-[#2C2C2E] h-1.5 rounded-full overflow-hidden">
+                  <div className="w-full bg-[rgba(118,118,128,0.24)] h-1.5 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-[width] duration-300"
                       style={{
@@ -190,7 +194,7 @@ export function Dashboard() {
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-[#8E8E93] pt-2">
+                  <div className="flex items-center justify-between text-[11px] text-[rgba(235,235,245,0.60)] pt-2">
                     <span className="flex items-center gap-1 text-[#30D158]">
                       <CheckCircle2 className="w-3.5 h-3.5" /> {p.completed_tasks || 0} Selesai
                     </span>
@@ -206,9 +210,9 @@ export function Dashboard() {
       </div>
 
       {/* 4. iOS Accounts Strip: Rekening & Dompet */}
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5">
+          <h2 className="text-[13px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider flex items-center gap-1.5">
             <Wallet className="w-3.5 h-3.5 text-[#0A84FF]" /> Rekening & Dompet
           </h2>
           <Link
@@ -223,11 +227,11 @@ export function Dashboard() {
           {wallets.map((w) => (
             <div
               key={w.id}
-              className="min-w-[145px] bg-[#1C1C1E] rounded-[18px] p-3.5 border border-white/[0.06] flex flex-col justify-between"
+              className="min-w-[145px] bg-[#1C1C1E] rounded-[18px] p-3.5 border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] flex flex-col justify-between"
             >
               <div className="flex items-center gap-2 mb-2.5">
                 <div
-                  className="w-6 h-6 rounded-[8px] flex items-center justify-center text-white text-[10px] font-bold shadow-xs"
+                  className="w-6 h-6 rounded-[7px] flex items-center justify-center text-white text-[10px] font-bold shadow-xs"
                   style={{ backgroundColor: w.color || "#0A84FF" }}
                 >
                   <Wallet className="w-3.5 h-3.5" />
@@ -244,9 +248,9 @@ export function Dashboard() {
 
       {/* 5. iOS Inset Grouped: Hutang & Piutang */}
       {(summary?.total_debt || 0) > 0 || (summary?.total_receivable || 0) > 0 ? (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider flex items-center gap-1.5">
+            <h2 className="text-[13px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider flex items-center gap-1.5">
               <HandCoins className="w-3.5 h-3.5 text-[#0A84FF]" /> Kewajiban & Piutang
             </h2>
             <Link
@@ -257,18 +261,18 @@ export function Dashboard() {
             </Link>
           </div>
 
-          <Card className="p-3.5 bg-[#1C1C1E] border border-white/[0.06]">
+          <Card className="p-3.5 bg-[#1C1C1E] border border-white/[0.08]">
             <div className="grid grid-cols-2 gap-2.5">
-              <div className="p-3 bg-[#2C2C2E] rounded-[14px]">
-                <span className="text-[10px] text-[#8E8E93] font-medium block">Harus Dibayar (Utang)</span>
-                <span className="text-sm font-bold text-[#FF453A] num-tabular mt-0.5 block">
+              <div className="p-3 bg-[#FF9F0A]/10 border border-[#FF9F0A]/20 rounded-[14px]">
+                <span className="text-[10px] text-[rgba(235,235,245,0.60)] font-medium block">Harus Dibayar (Utang)</span>
+                <span className="text-sm font-bold text-[#FF9F0A] num-tabular mt-0.5 block">
                   {showBalance ? formatCurrency(summary?.total_debt || 0) : "••••••"}
                 </span>
               </div>
 
-              <div className="p-3 bg-[#2C2C2E] rounded-[14px]">
-                <span className="text-[10px] text-[#8E8E93] font-medium block">Harus Diterima (Piutang)</span>
-                <span className="text-sm font-bold text-[#30D158] num-tabular mt-0.5 block">
+              <div className="p-3 bg-[#0A84FF]/10 border border-[#0A84FF]/20 rounded-[14px]">
+                <span className="text-[10px] text-[rgba(235,235,245,0.60)] font-medium block">Harus Diterima (Piutang)</span>
+                <span className="text-sm font-bold text-[#0A84FF] num-tabular mt-0.5 block">
                   {showBalance ? formatCurrency(summary?.total_receivable || 0) : "••••••"}
                 </span>
               </div>
@@ -278,9 +282,9 @@ export function Dashboard() {
       ) : null}
 
       {/* 6. iOS Inset Grouped Table: Recent Transactions */}
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">
+          <h2 className="text-[13px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider">
             Transaksi Terakhir
           </h2>
           <Link
@@ -291,9 +295,9 @@ export function Dashboard() {
           </Link>
         </div>
 
-        <div className="bg-[#1C1C1E] rounded-[20px] border border-white/[0.06] overflow-hidden divide-y divide-white/[0.06]">
+        <div className="bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] overflow-hidden divide-y divide-white/[0.06]">
           {summary?.recent_transactions.length === 0 ? (
-            <div className="py-6 text-center text-xs text-[#8E8E93]">
+            <div className="py-6 text-center text-xs text-[rgba(235,235,245,0.60)]">
               Belum ada transaksi tercatat.
             </div>
           ) : (
@@ -327,15 +331,15 @@ export function Dashboard() {
                         </span>
                       ) : null}
                     </div>
-                    <p className="text-[11px] text-[#8E8E93] mt-0.5 truncate">
+                    <p className="text-[11px] text-[rgba(235,235,245,0.60)] mt-0.5 truncate">
                       {tx.wallet_name} • {relativeDate(tx.date)}
                     </p>
                   </div>
                 </div>
 
                 <span
-                  className={`text-xs font-bold num-tabular shrink-0 pl-2 ${
-                    tx.type === "income" ? "text-[#30D158]" : "text-[#FF453A]"
+                  className={`text-xs font-semibold num-tabular shrink-0 pl-2 ${
+                    tx.type === "income" ? "text-[#30D158]" : "text-white"
                   }`}
                 >
                   {tx.type === "income" ? "+" : "-"} {formatCurrency(tx.amount)}

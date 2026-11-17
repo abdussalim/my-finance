@@ -101,7 +101,7 @@ export function PinInput({
             >
               <span className="text-2xl font-light text-white leading-none">{item.num}</span>
               {item.sub ? (
-                <span className="text-[8px] font-semibold text-[#8E8E93] tracking-widest mt-0.5" aria-hidden="true">
+                <span className="text-[8px] font-semibold text-[rgba(235,235,245,0.60)] tracking-widest mt-0.5" aria-hidden="true">
                   {item.sub}
                 </span>
               ) : null}
@@ -128,7 +128,7 @@ export function PinInput({
             aria-label="Hapus digit PIN"
             disabled={disabled}
             onClick={handleDelete}
-            className="w-16 h-16 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white ios-press cursor-pointer transition-colors"
+            className="w-16 h-16 rounded-full flex items-center justify-center text-[rgba(235,235,245,0.60)] hover:text-white ios-press cursor-pointer transition-colors"
           >
             <Delete className="w-6 h-6 stroke-[1.8]" aria-hidden="true" />
           </button>

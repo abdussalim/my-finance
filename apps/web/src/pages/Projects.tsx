@@ -348,7 +348,7 @@ export function Projects() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Proyek</h1>
-          <p className="text-xs text-[#8E8E93] mt-0.5">Nilai kontrak, progress fisik, dan daftar pekerjaan</p>
+          <p className="text-xs text-[rgba(235,235,245,0.60)] mt-0.5">Nilai kontrak, progress fisik, dan daftar pekerjaan</p>
         </div>
         <Button size="sm" onClick={handleOpenCreate} className="gap-1.5 shadow-sm">
           <Plus className="w-4 h-4" />
@@ -359,10 +359,10 @@ export function Projects() {
       {/* 2. iOS Inset Grouped: Portfolio Telemetry Card */}
       <Card className="bg-[#1C1C1E] border border-white/[0.06] p-5">
         <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
-          <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider">
+          <span className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider">
             Total Nilai Portofolio
           </span>
-          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#2C2C2E] text-[#8E8E93]">
+          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.60)]">
             {projects.length} Proyek
           </span>
         </div>
@@ -376,11 +376,11 @@ export function Projects() {
         {/* Overall Task Progress Bar */}
         <div className="space-y-2 pt-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[#8E8E93] font-medium">Realisasi Pekerjaan Gabungan</span>
+            <span className="text-[rgba(235,235,245,0.60)] font-medium">Realisasi Pekerjaan Gabungan</span>
             <span className="text-[#0A84FF] font-semibold num-tabular">{portfolioProgress}% Selesai</span>
           </div>
           <ProgressBar progress={portfolioProgress} color="#0A84FF" height="md" />
-          <div className="flex items-center justify-between text-[11px] text-[#8E8E93] pt-1">
+          <div className="flex items-center justify-between text-[11px] text-[rgba(235,235,245,0.60)] pt-1">
             <span className="flex items-center gap-1.5 text-[#30D158] font-medium">
               <Check className="w-3.5 h-3.5 stroke-[2.5]" /> {totalCompletedTasks} Selesai
             </span>
@@ -394,14 +394,14 @@ export function Projects() {
       {/* 3. iOS Inset Grouped: List of Projects */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-[13px] font-semibold uppercase tracking-wider text-[#8E8E93]">
+          <h2 className="text-[13px] font-semibold uppercase tracking-wider text-[rgba(235,235,245,0.60)]">
             Daftar Portofolio
           </h2>
-          <span className="text-xs text-[#8E8E93]">{projects.length} unit usaha</span>
+          <span className="text-xs text-[rgba(235,235,245,0.60)]">{projects.length} unit usaha</span>
         </div>
 
         {loading ? (
-          <div className="py-12 text-center text-[#8E8E93] text-sm">Memuat data proyek…</div>
+          <div className="py-12 text-center text-[rgba(235,235,245,0.60)] text-sm">Memuat data proyek…</div>
         ) : projects.length === 0 ? (
           <EmptyState
             icon={<Briefcase className="w-6 h-6" />}
@@ -441,7 +441,7 @@ export function Projects() {
                         {p.name}
                       </h3>
                       {p.description ? (
-                        <p className="text-xs text-[#8E8E93] line-clamp-1 mt-0.5">{p.description}</p>
+                        <p className="text-xs text-[rgba(235,235,245,0.60)] line-clamp-1 mt-0.5">{p.description}</p>
                       ) : null}
                     </div>
                   </div>
@@ -460,9 +460,9 @@ export function Projects() {
                 </div>
 
                 {/* iOS Sub-Card for Metrics */}
-                <div className="grid grid-cols-2 gap-2 p-3 bg-[#2C2C2E] rounded-[14px]">
+                <div className="grid grid-cols-2 gap-2 p-3 bg-[rgba(118,118,128,0.24)] rounded-[14px]">
                   <div>
-                    <span className="text-[10px] text-[#8E8E93] font-medium uppercase tracking-wide">
+                    <span className="text-[10px] text-[rgba(235,235,245,0.60)] font-medium uppercase tracking-wide">
                       Nilai Proyek
                     </span>
                     <p className="text-sm font-bold text-white num-tabular mt-0.5">
@@ -470,7 +470,7 @@ export function Projects() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] text-[#8E8E93] font-medium uppercase tracking-wide">
+                    <span className="text-[10px] text-[rgba(235,235,245,0.60)] font-medium uppercase tracking-wide">
                       Progress Kerja
                     </span>
                     <p className="text-sm font-bold text-[#0A84FF] num-tabular mt-0.5">
@@ -482,7 +482,7 @@ export function Projects() {
                 {/* Task Breakdown Indicator */}
                 <div className="space-y-1.5">
                   <ProgressBar progress={progress} color={p.color || "#0A84FF"} height="sm" />
-                  <div className="flex items-center justify-between text-[11px] text-[#8E8E93]">
+                  <div className="flex items-center justify-between text-[11px] text-[rgba(235,235,245,0.60)]">
                     <span>
                       {taskCount > 0 ? (
                         <>
@@ -514,10 +514,10 @@ export function Projects() {
         {selectedProject ? (
           <div className="space-y-5">
             {/* Project Executive Summary Header */}
-            <div className="p-4 bg-[#2C2C2E] rounded-[20px] space-y-3">
+            <div className="p-4 bg-[rgba(118,118,128,0.24)] rounded-[20px] space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wide">
+                  <span className="text-[11px] font-medium text-[rgba(235,235,245,0.60)] uppercase tracking-wide">
                     Nilai Proyek (Kontrak)
                   </span>
                   <div className="text-2xl font-bold text-white num-tabular mt-0.5">
@@ -538,7 +538,7 @@ export function Projects() {
                   <button
                     type="button"
                     onClick={() => handleDeleteProject(selectedProject.id)}
-                    className="p-2 rounded-full bg-[#3A3A3C] hover:bg-[#FF453A]/20 text-[#8E8E93] hover:text-[#FF453A] ios-press cursor-pointer"
+                    className="p-2 rounded-full bg-[#3A3A3C] hover:bg-[#FF453A]/20 text-[rgba(235,235,245,0.60)] hover:text-[#FF453A] ios-press cursor-pointer"
                     aria-label="Hapus Proyek"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -549,7 +549,7 @@ export function Projects() {
               {/* Progress Summary */}
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#8E8E93] font-medium">Realisasi Pekerjaan Fisik</span>
+                  <span className="text-[rgba(235,235,245,0.60)] font-medium">Realisasi Pekerjaan Fisik</span>
                   <span className="text-[#0A84FF] font-bold num-tabular">
                     {selectedProject.progress_percentage || 0}% Selesai
                   </span>
@@ -559,7 +559,7 @@ export function Projects() {
                   color={selectedProject.color || "#0A84FF"}
                   height="md"
                 />
-                <div className="flex items-center justify-between text-[11px] text-[#8E8E93] pt-0.5">
+                <div className="flex items-center justify-between text-[11px] text-[rgba(235,235,245,0.60)] pt-0.5">
                   <span className="text-[#30D158] font-medium">
                     {selectedProject.completed_tasks || 0} Selesai
                   </span>
@@ -586,11 +586,11 @@ export function Projects() {
                 {/* iOS Quick Add Task Box */}
                 <form
                   onSubmit={handleCreateTask}
-                  className="p-3.5 bg-[#2C2C2E] rounded-[18px] space-y-2.5"
+                  className="p-3.5 bg-[rgba(118,118,128,0.24)] rounded-[18px] space-y-2.5"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-white">Tambah Pekerjaan Baru</span>
-                    <span className="text-[10px] text-[#8E8E93]">Milestone / Task</span>
+                    <span className="text-[10px] text-[rgba(235,235,245,0.60)]">Milestone / Task</span>
                   </div>
 
                   <input
@@ -598,13 +598,13 @@ export function Projects() {
                     value={newTaskTitle}
                     onChange={(e) => setNewTaskTitle(e.target.value)}
                     placeholder="Contoh: Pengiriman Batch 2 Paving Block"
-                    className="w-full px-3.5 py-2.5 bg-[#1C1C1E] rounded-[12px] border border-white/[0.06] text-xs text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+                    className="w-full px-3.5 py-2.5 bg-[#1C1C1E] rounded-[12px] border border-white/[0.06] text-xs text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
                     required
                   />
 
                   <div className="grid grid-cols-2 gap-2 pt-0.5">
                     <div>
-                      <label className="text-[10px] text-[#8E8E93] block mb-1">Prioritas</label>
+                      <label className="text-[10px] text-[rgba(235,235,245,0.60)] block mb-1">Prioritas</label>
                       <select
                         value={newTaskPriority}
                         onChange={(e) => setNewTaskPriority(e.target.value as any)}
@@ -616,7 +616,7 @@ export function Projects() {
                       </select>
                     </div>
                     <div>
-                      <label className="text-[10px] text-[#8E8E93] block mb-1">Target Selesai</label>
+                      <label className="text-[10px] text-[rgba(235,235,245,0.60)] block mb-1">Target Selesai</label>
                       <input
                         type="date"
                         value={newTaskDueDate}
@@ -646,7 +646,7 @@ export function Projects() {
                       className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer ios-press transition-colors ${
                         taskFilter === "all"
                           ? "bg-[#0A84FF] text-white"
-                          : "bg-[#2C2C2E] text-[#8E8E93] hover:text-white"
+                          : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.60)] hover:text-white"
                       }`}
                     >
                       Semua ({projectTasks.length})
@@ -657,7 +657,7 @@ export function Projects() {
                       className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer ios-press transition-colors ${
                         taskFilter === "pending"
                           ? "bg-[#FF9F0A]/20 text-[#FF9F0A] border border-[#FF9F0A]/30"
-                          : "bg-[#2C2C2E] text-[#8E8E93] hover:text-white"
+                          : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.60)] hover:text-white"
                       }`}
                     >
                       Tertunda ({pendingTasksList.length})
@@ -668,7 +668,7 @@ export function Projects() {
                       className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer ios-press transition-colors ${
                         taskFilter === "completed"
                           ? "bg-[#30D158]/20 text-[#30D158] border border-[#30D158]/30"
-                          : "bg-[#2C2C2E] text-[#8E8E93] hover:text-white"
+                          : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.60)] hover:text-white"
                       }`}
                     >
                       Selesai ({completedTasksList.length})
@@ -678,7 +678,7 @@ export function Projects() {
 
                 {/* iOS Task List Items */}
                 {filteredTasks.length === 0 ? (
-                  <div className="py-8 text-center text-[#8E8E93] text-xs bg-[#2C2C2E] rounded-[18px]">
+                  <div className="py-8 text-center text-[rgba(235,235,245,0.60)] text-xs bg-[rgba(118,118,128,0.24)] rounded-[18px]">
                     {taskFilter === "completed"
                       ? "Belum ada pekerjaan yang diselesaikan"
                       : taskFilter === "pending"
@@ -696,7 +696,7 @@ export function Projects() {
                           </div>
                         ) : null}
 
-                        <div className="bg-[#2C2C2E] rounded-[18px] overflow-hidden divide-y divide-white/[0.06]">
+                        <div className="bg-[rgba(118,118,128,0.24)] rounded-[18px] overflow-hidden divide-y divide-white/[0.06]">
                           {pendingTasksList.map((task) => (
                             <div
                               key={task.id}
@@ -715,7 +715,7 @@ export function Projects() {
                                   {task.title}
                                 </p>
                                 {task.description ? (
-                                  <p className="text-[11px] text-[#8E8E93] mt-0.5">{task.description}</p>
+                                  <p className="text-[11px] text-[rgba(235,235,245,0.60)] mt-0.5">{task.description}</p>
                                 ) : null}
 
                                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
@@ -731,7 +731,7 @@ export function Projects() {
                                     {task.priority === "high" ? "Tinggi" : task.priority === "medium" ? "Sedang" : "Rendah"}
                                   </span>
                                   {task.due_date ? (
-                                    <span className="text-[10px] text-[#8E8E93] flex items-center gap-1">
+                                    <span className="text-[10px] text-[rgba(235,235,245,0.60)] flex items-center gap-1">
                                       <Calendar className="w-3 h-3" /> {relativeDate(task.due_date)}
                                     </span>
                                   ) : null}
@@ -741,7 +741,7 @@ export function Projects() {
                               <button
                                 type="button"
                                 onClick={() => handleDeleteTask(task.id)}
-                                className="text-[#8E8E93] hover:text-[#FF453A] p-1 ios-press cursor-pointer"
+                                className="text-[rgba(235,235,245,0.60)] hover:text-[#FF453A] p-1 ios-press cursor-pointer"
                                 aria-label="Hapus pekerjaan"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -761,7 +761,7 @@ export function Projects() {
                           </div>
                         ) : null}
 
-                        <div className="bg-[#2C2C2E] rounded-[18px] overflow-hidden divide-y divide-white/[0.06] opacity-80">
+                        <div className="bg-[rgba(118,118,128,0.24)] rounded-[18px] overflow-hidden divide-y divide-white/[0.06] opacity-80">
                           {completedTasksList.map((task) => (
                             <div
                               key={task.id}
@@ -778,7 +778,7 @@ export function Projects() {
                               </button>
 
                               <div className="flex-1 min-w-0">
-                                <p className="text-xs font-medium text-[#8E8E93] line-through leading-snug">
+                                <p className="text-xs font-medium text-[rgba(235,235,245,0.60)] line-through leading-snug">
                                   {task.title}
                                 </p>
                                 {task.completed_at ? (
@@ -791,7 +791,7 @@ export function Projects() {
                               <button
                                 type="button"
                                 onClick={() => handleDeleteTask(task.id)}
-                                className="text-[#8E8E93] hover:text-[#FF453A] p-1 ios-press cursor-pointer"
+                                className="text-[rgba(235,235,245,0.60)] hover:text-[#FF453A] p-1 ios-press cursor-pointer"
                                 aria-label="Hapus pekerjaan"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -809,7 +809,7 @@ export function Projects() {
               <div className="space-y-4">
                 {/* Financial Overview Cards */}
                 <div className="grid grid-cols-2 gap-2.5">
-                  <div className="p-3.5 bg-[#2C2C2E] rounded-[16px]">
+                  <div className="p-3.5 bg-[rgba(118,118,128,0.24)] rounded-[16px]">
                     <span className="text-[10px] text-[#30D158] font-semibold uppercase tracking-wider">
                       Uang Masuk
                     </span>
@@ -818,7 +818,7 @@ export function Projects() {
                     </div>
                   </div>
 
-                  <div className="p-3.5 bg-[#2C2C2E] rounded-[16px]">
+                  <div className="p-3.5 bg-[rgba(118,118,128,0.24)] rounded-[16px]">
                     <span className="text-[10px] text-[#FF453A] font-semibold uppercase tracking-wider">
                       Biaya Proyek
                     </span>
@@ -828,9 +828,9 @@ export function Projects() {
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-[#2C2C2E] rounded-[16px] flex items-center justify-between">
+                <div className="p-3.5 bg-[rgba(118,118,128,0.24)] rounded-[16px] flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-[#8E8E93] uppercase tracking-wider font-medium">
+                    <span className="text-[10px] text-[rgba(235,235,245,0.60)] uppercase tracking-wider font-medium">
                       Laba Bersih Proyek
                     </span>
                     <div className="text-base font-bold text-white num-tabular mt-0.5">
@@ -860,14 +860,14 @@ export function Projects() {
                 {/* Linked Transactions */}
                 <div className="space-y-2 pt-1">
                   <div className="flex items-center justify-between px-1">
-                    <span className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider">
+                    <span className="text-[11px] font-semibold text-[rgba(235,235,245,0.60)] uppercase tracking-wider">
                       Riwayat Transaksi Terkait ({projectTransactions.length})
                     </span>
                   </div>
 
-                  <div className="bg-[#2C2C2E] rounded-[18px] overflow-hidden divide-y divide-white/[0.06]">
+                  <div className="bg-[rgba(118,118,128,0.24)] rounded-[18px] overflow-hidden divide-y divide-white/[0.06]">
                     {projectTransactions.length === 0 ? (
-                      <div className="py-6 text-center text-[#8E8E93] text-xs">
+                      <div className="py-6 text-center text-[rgba(235,235,245,0.60)] text-xs">
                         Belum ada transaksi yang dialokasikan ke proyek ini.
                       </div>
                     ) : (
@@ -880,7 +880,7 @@ export function Projects() {
                             <p className="text-xs font-semibold text-white">
                               {tx.category_name || (tx.type === "income" ? "Pemasukan" : "Pengeluaran")}
                             </p>
-                            <p className="text-[10px] text-[#8E8E93] mt-0.5">
+                            <p className="text-[10px] text-[rgba(235,235,245,0.60)] mt-0.5">
                               {tx.wallet_name} • {relativeDate(tx.date)}
                               {tx.note ? ` • ${tx.note}` : ""}
                             </p>
@@ -912,7 +912,7 @@ export function Projects() {
       >
         <form onSubmit={handleSaveProject} className="space-y-4">
           <div>
-            <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+            <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
               Nama Proyek / Ventura *
             </label>
             <input
@@ -920,29 +920,29 @@ export function Projects() {
               value={pName}
               onChange={(e) => setPName(e.target.value)}
               placeholder="Contoh: EDUNUSA, SOBATPART, ISTANA BLOCK"
-              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+              className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Kode Singkat</label>
+              <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">Kode Singkat</label>
               <input
                 type="text"
                 maxLength={5}
                 value={pCode}
                 onChange={(e) => setPCode(e.target.value.toUpperCase())}
                 placeholder="EDU, SOB, IBL"
-                className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+                className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Status Proyek</label>
+              <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">Status Proyek</label>
               <select
                 value={pStatus}
                 onChange={(e) => setPStatus(e.target.value as any)}
-                className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-[#EBEBF5] focus:outline-none focus:border-[#0A84FF]"
+                className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-sm text-[#EBEBF5] focus:outline-none focus:border-[#0A84FF]"
               >
                 <option value="active">Aktif</option>
                 <option value="on_hold">Ditunda (On Hold)</option>
@@ -952,7 +952,7 @@ export function Projects() {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+            <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
               Nilai Proyek / Target Omset (Rp)
             </label>
             <input
@@ -962,12 +962,12 @@ export function Projects() {
               value={pTargetRevenue || ""}
               onChange={(e) => setPTargetRevenue(Number(e.target.value))}
               placeholder="Contoh: 150000000"
-              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+              className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[#8E8E93] block mb-1">
+            <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">
               Pagu Anggaran / Biaya Maksimal (Rp)
             </label>
             <input
@@ -977,23 +977,23 @@ export function Projects() {
               value={pBudget || ""}
               onChange={(e) => setPBudget(Number(e.target.value))}
               placeholder="Contoh: 50000000"
-              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+              className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[#8E8E93] block mb-1">Deskripsi Singkat</label>
+            <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">Deskripsi Singkat</label>
             <textarea
               rows={2}
               value={pDesc}
               onChange={(e) => setPDesc(e.target.value)}
               placeholder="Ruang lingkup pekerjaan dan keterangan spesifikasi…"
-              className="w-full px-3.5 py-2.5 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+              className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[#8E8E93] block mb-2">Warna Identitas</label>
+            <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-2">Warna Identitas</label>
             <div className="flex gap-2.5 flex-wrap">
               {PROJECT_PALETTE.map((color) => (
                 <button
@@ -1037,11 +1037,11 @@ export function Projects() {
 
           <div className="grid grid-cols-2 gap-3 pt-2">
             <div>
-              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Rekening Dompet</label>
+              <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">Rekening Dompet</label>
               <select
                 value={txWalletId}
                 onChange={(e) => setTxWalletId(e.target.value)}
-                className="w-full px-3.5 py-2 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+                className="w-full px-3.5 py-2 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
               >
                 {wallets.map((w) => (
                   <option key={w.id} value={w.id}>
@@ -1052,11 +1052,11 @@ export function Projects() {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Kategori</label>
+              <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">Kategori</label>
               <select
                 value={txCategoryId}
                 onChange={(e) => setTxCategoryId(e.target.value)}
-                className="w-full px-3.5 py-2 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+                className="w-full px-3.5 py-2 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
               >
                 <option value="">(Tanpa Kategori)</option>
                 {categories
@@ -1072,23 +1072,23 @@ export function Projects() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Tanggal</label>
+              <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">Tanggal</label>
               <input
                 type="date"
                 value={txDate}
                 onChange={(e) => setTxDate(e.target.value)}
-                className="w-full px-3.5 py-2 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
+                className="w-full px-3.5 py-2 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-xs text-white focus:outline-none focus:border-[#0A84FF]"
               />
             </div>
 
             <div>
-              <label className="text-xs font-medium text-[#8E8E93] block mb-1">Keterangan</label>
+              <label className="text-xs font-medium text-[rgba(235,235,245,0.60)] block mb-1">Keterangan</label>
               <input
                 type="text"
                 value={txNote}
                 onChange={(e) => setTxNote(e.target.value)}
                 placeholder="Contoh: Termin 1 / Beli Semen"
-                className="w-full px-3.5 py-2 bg-[#2C2C2E] rounded-[12px] border border-white/[0.06] text-xs text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF]"
+                className="w-full px-3.5 py-2 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-xs text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
               />
             </div>
           </div>
