@@ -8,6 +8,7 @@ import { SegmentedControl } from "../components/ui/SegmentedControl";
 import { ProgressBar } from "../components/ui/ProgressBar";
 import { EmptyState } from "../components/ui/EmptyState";
 import { formatCurrency, relativeDate } from "../lib/format";
+import { getProjectLogo } from "../lib/project-utils";
 import { ProjectWithStats, ProjectTask, WalletWithBalance, Category } from "@my-finance/shared";
 import {
   Briefcase,
@@ -56,6 +57,7 @@ export function Projects() {
   const [pName, setPName] = useState("");
   const [pCode, setPCode] = useState("");
   const [pDesc, setPDesc] = useState("");
+  const [pLogoUrl, setPLogoUrl] = useState("");
   const [pColor, setPColor] = useState(PROJECT_PALETTE[0]);
   const [pStatus, setPStatus] = useState<"active" | "on_hold" | "completed">("active");
   const [pBudget, setPBudget] = useState(0);
@@ -219,6 +221,7 @@ export function Projects() {
     setPName("");
     setPCode("");
     setPDesc("");
+    setPLogoUrl("");
     setPColor(PROJECT_PALETTE[0]);
     setPStatus("active");
     setPBudget(0);
@@ -231,6 +234,7 @@ export function Projects() {
     setPName(p.name);
     setPCode(p.code || "");
     setPDesc(p.description || "");
+    setPLogoUrl(p.logo_url || "");
     setPColor(p.color || PROJECT_PALETTE[0]);
     setPStatus(p.status as any);
     setPBudget(p.budget || 0);
@@ -248,6 +252,7 @@ export function Projects() {
         name: pName.trim(),
         code: (pCode || pName.slice(0, 3)).toUpperCase().trim(),
         description: pDesc.trim() || null,
+        logo_url: pLogoUrl.trim() || null,
         color: pColor,
         status: pStatus,
         budget: Number(pBudget) || 0,
@@ -430,12 +435,25 @@ export function Projects() {
                 {/* Project Header */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div
-                      className="w-10 h-10 rounded-[11px] flex items-center justify-center font-bold text-xs text-white shrink-0 shadow-xs"
-                      style={{ backgroundColor: p.color || "#0A84FF" }}
-                    >
-                      {p.code || p.name.slice(0, 3).toUpperCase()}
-                    </div>
+                    {(() => {
+                      const logo = getProjectLogo(p);
+                      return logo ? (
+                        <div className="w-11 h-11 rounded-[12px] overflow-hidden bg-[rgba(118,118,128,0.20)] border border-white/[0.08] flex items-center justify-center shrink-0 p-1.5 shadow-xs">
+                          <img
+                            src={logo}
+                            alt={p.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          className="w-11 h-11 rounded-[12px] flex items-center justify-center font-bold text-xs text-white shrink-0 shadow-xs"
+                          style={{ backgroundColor: p.color || "#0A84FF" }}
+                        >
+                          {p.code || p.name.slice(0, 3).toUpperCase()}
+                        </div>
+                      );
+                    })()}
                     <div className="min-w-0">
                       <h3 className="text-sm font-bold text-white tracking-tight truncate">
                         {p.name}
@@ -516,17 +534,38 @@ export function Projects() {
             {/* Project Executive Summary Header */}
             <div className="p-4 bg-[rgba(118,118,128,0.24)] rounded-[20px] space-y-3">
               <div className="flex items-start justify-between">
-                <div>
-                  <span className="text-[11px] font-medium text-[rgba(235,235,245,0.60)] uppercase tracking-wide">
-                    Nilai Proyek (Kontrak)
-                  </span>
-                  <div className="text-2xl font-bold text-white num-tabular mt-0.5">
-                    {selectedProject.target_revenue
-                      ? formatCurrency(selectedProject.target_revenue)
-                      : "Rp 0"}
+                <div className="flex items-center gap-3 min-w-0">
+                  {(() => {
+                    const logo = getProjectLogo(selectedProject);
+                    return logo ? (
+                      <div className="w-12 h-12 rounded-[13px] overflow-hidden bg-[rgba(118,118,128,0.20)] border border-white/[0.08] flex items-center justify-center shrink-0 p-1.5 shadow-xs">
+                        <img
+                          src={logo}
+                          alt={selectedProject.name}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="w-12 h-12 rounded-[13px] flex items-center justify-center font-bold text-sm text-white shrink-0 shadow-xs"
+                        style={{ backgroundColor: selectedProject.color || "#0A84FF" }}
+                      >
+                        {selectedProject.code || selectedProject.name.slice(0, 3).toUpperCase()}
+                      </div>
+                    );
+                  })()}
+                  <div className="min-w-0">
+                    <span className="text-[11px] font-medium text-[rgba(235,235,245,0.60)] uppercase tracking-wide">
+                      Nilai Proyek (Kontrak)
+                    </span>
+                    <div className="text-2xl font-bold text-white num-tabular mt-0.5 truncate">
+                      {selectedProject.target_revenue
+                        ? formatCurrency(selectedProject.target_revenue)
+                        : "Rp 0"}
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 shrink-0 pl-2">
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(selectedProject)}
@@ -990,6 +1029,95 @@ export function Projects() {
               placeholder="Ruang lingkup pekerjaan dan keterangan spesifikasi…"
               className="w-full px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-sm text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
             />
+          </div>
+
+          {/* Logo Brand Selector & Presets */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-[rgba(235,235,245,0.60)]">
+                Logo Brand Proyek
+              </label>
+              {pLogoUrl ? (
+                <button
+                  type="button"
+                  onClick={() => setPLogoUrl("")}
+                  className="text-[11px] text-[#FF453A] hover:underline cursor-pointer"
+                >
+                  Hapus Logo
+                </button>
+              ) : null}
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              {pLogoUrl ? (
+                <div className="w-10 h-10 rounded-[10px] bg-[rgba(118,118,128,0.24)] border border-white/[0.1] p-1.5 flex items-center justify-center shrink-0">
+                  <img src={pLogoUrl} alt="Preview" className="w-full h-full object-contain" />
+                </div>
+              ) : null}
+              <input
+                type="text"
+                value={pLogoUrl}
+                onChange={(e) => setPLogoUrl(e.target.value)}
+                placeholder="/logos/edunusa.png atau tautan web…"
+                className="flex-1 px-3.5 py-2.5 bg-[rgba(118,118,128,0.24)] rounded-[12px] border border-white/[0.06] text-xs text-white placeholder-[rgba(235,235,245,0.35)] focus:outline-none focus:border-[#0A84FF]"
+              />
+            </div>
+
+            <div className="space-y-1.5 pt-0.5">
+              <span className="text-[11px] text-[rgba(235,235,245,0.60)]">Pilih preset brand lokal:</span>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPLogoUrl("/logos/edunusa.png");
+                    if (!pName) setPName("EDUNUSA");
+                    if (!pCode) setPCode("EDU");
+                  }}
+                  className={`px-2.5 py-1.5 rounded-[10px] border text-xs flex items-center gap-1.5 cursor-pointer ios-press transition-colors ${
+                    pLogoUrl === "/logos/edunusa.png"
+                      ? "border-[#0A84FF] bg-[#0A84FF]/20 text-white font-semibold"
+                      : "border-white/[0.08] bg-[rgba(118,118,128,0.18)] text-[rgba(235,235,245,0.70)] hover:text-white"
+                  }`}
+                >
+                  <img src="/logos/edunusa.png" alt="EDUNUSA" className="w-4 h-4 object-contain" />
+                  <span>EDUNUSA</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPLogoUrl("/logos/sobatpart.png");
+                    if (!pName) setPName("SOBATPART");
+                    if (!pCode) setPCode("SOB");
+                  }}
+                  className={`px-2.5 py-1.5 rounded-[10px] border text-xs flex items-center gap-1.5 cursor-pointer ios-press transition-colors ${
+                    pLogoUrl === "/logos/sobatpart.png"
+                      ? "border-[#0A84FF] bg-[#0A84FF]/20 text-white font-semibold"
+                      : "border-white/[0.08] bg-[rgba(118,118,128,0.18)] text-[rgba(235,235,245,0.70)] hover:text-white"
+                  }`}
+                >
+                  <img src="/logos/sobatpart.png" alt="SOBATPART" className="w-4 h-4 object-contain" />
+                  <span>SOBATPART</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPLogoUrl("/logos/istanablock.png");
+                    if (!pName) setPName("ISTANA BLOCK");
+                    if (!pCode) setPCode("IBL");
+                  }}
+                  className={`px-2.5 py-1.5 rounded-[10px] border text-xs flex items-center gap-1.5 cursor-pointer ios-press transition-colors ${
+                    pLogoUrl === "/logos/istanablock.png"
+                      ? "border-[#0A84FF] bg-[#0A84FF]/20 text-white font-semibold"
+                      : "border-white/[0.08] bg-[rgba(118,118,128,0.18)] text-[rgba(235,235,245,0.70)] hover:text-white"
+                  }`}
+                >
+                  <img src="/logos/istanablock.png" alt="ISTANA BLOCK" className="w-4 h-4 object-contain" />
+                  <span>ISTANA BLOCK</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <div>

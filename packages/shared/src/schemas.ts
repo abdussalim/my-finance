@@ -22,6 +22,7 @@ export const projectSchema = z.object({
   code: z.string().optional().default(""),
   description: z.string().optional().nullable(),
   color: z.string().optional().default("#8B5CF6"),
+  logo_url: z.string().optional().nullable(),
   status: z.enum(["active", "on_hold", "completed"]).default("active"),
   budget: z.number().int().nonnegative().default(0),
   target_revenue: z.number().int().nonnegative().default(0),

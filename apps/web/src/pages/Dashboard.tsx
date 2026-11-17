@@ -17,6 +17,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { Link } from "react-router";
+import { getProjectLogo } from "../lib/project-utils";
 
 export function Dashboard() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
@@ -161,12 +162,22 @@ export function Dashboard() {
                   className="block p-4 bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] hover:border-white/[0.14] transition-colors ios-press"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2.5">
-                      <div
-                        className="w-7 h-7 rounded-[9px] flex items-center justify-center text-white text-[11px] font-bold shadow-xs"
-                        style={{ backgroundColor: p.color || "#0A84FF" }}
-                      >
-                        {p.code || p.name.slice(0, 3)}
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-[10px] overflow-hidden bg-[rgba(118,118,128,0.20)] border border-white/[0.08] flex items-center justify-center text-white text-[11px] font-bold shadow-xs shrink-0">
+                        {getProjectLogo(p) ? (
+                          <img
+                            src={getProjectLogo(p)!}
+                            alt={p.name}
+                            className="w-full h-full object-contain p-1"
+                          />
+                        ) : (
+                          <span
+                            className="w-full h-full flex items-center justify-center"
+                            style={{ backgroundColor: p.color || "#0A84FF" }}
+                          >
+                            {p.code || p.name.slice(0, 3)}
+                          </span>
+                        )}
                       </div>
                       <span className="text-sm font-semibold text-white">{p.name}</span>
                     </div>
@@ -326,7 +337,14 @@ export function Dashboard() {
                         {tx.category_name || (tx.type === "income" ? "Pemasukan" : "Pengeluaran")}
                       </p>
                       {tx.project_code ? (
-                        <span className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full bg-[#5E5CE6]/15 text-[#5E5CE6] border border-[#5E5CE6]/30">
+                        <span className="inline-flex items-center gap-1 text-[9px] font-semibold px-2 py-0.5 rounded-full bg-[#5E5CE6]/15 text-[#5E5CE6] border border-[#5E5CE6]/30">
+                          {getProjectLogo({ code: tx.project_code, project_logo: tx.project_logo }) ? (
+                            <img
+                              src={getProjectLogo({ code: tx.project_code, project_logo: tx.project_logo })!}
+                              alt=""
+                              className="w-3 h-3 object-contain rounded-xs"
+                            />
+                          ) : null}
                           {tx.project_code}
                         </span>
                       ) : null}

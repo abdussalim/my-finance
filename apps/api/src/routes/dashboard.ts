@@ -47,7 +47,8 @@ dashboardRoutes.get("/summary", async (c) => {
         c.name as category_name,
         p.name as project_name,
         p.color as project_color,
-        p.code as project_code
+        p.code as project_code,
+        p.logo_url as project_logo
       FROM transactions t
       JOIN wallets w ON w.id = t.wallet_id
       LEFT JOIN categories c ON c.id = t.category_id

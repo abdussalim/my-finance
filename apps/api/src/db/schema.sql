@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS projects (
   code TEXT,
   description TEXT,
   color TEXT DEFAULT '#6366F1',
+  logo_url TEXT,
   status TEXT NOT NULL DEFAULT 'active',
   budget INTEGER DEFAULT 0,
   target_revenue INTEGER DEFAULT 0,

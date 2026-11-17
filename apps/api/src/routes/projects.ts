@@ -14,6 +14,7 @@ projectRoutes.get("/", async (c) => {
       p.code,
       p.description,
       p.color,
+      p.logo_url,
       p.status,
       p.budget,
       p.target_revenue,
@@ -87,7 +88,7 @@ projectRoutes.get("/:id", async (c) => {
   const [projectRes, tasksRes, txsRes] = await c.env.DB.batch([
     c.env.DB.prepare(`
       SELECT 
-        p.id, p.name, p.code, p.description, p.color, p.status, p.budget, p.target_revenue, p.created_at,
+        p.id, p.name, p.code, p.description, p.color, p.logo_url, p.status, p.budget, p.target_revenue, p.created_at,
         COALESCE(t.total_income, 0) AS total_income,
         COALESCE(t.total_expense, 0) AS total_expense,
         COALESCE(t.transaction_count, 0) AS transaction_count,
@@ -185,18 +186,19 @@ projectRoutes.post("/", async (c) => {
     return c.json({ success: false, error: parsed.error.errors[0].message }, 400);
   }
 
-  const { name, code, description, color, status, budget, target_revenue } = parsed.data;
+  const { name, code, description, color, logo_url, status, budget, target_revenue } = parsed.data;
   const id = generateId("prj");
 
   await c.env.DB.prepare(`
-    INSERT INTO projects (id, name, code, description, color, status, budget, target_revenue)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO projects (id, name, code, description, color, logo_url, status, budget, target_revenue)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).bind(
     id,
     name.trim(),
     (code || name.slice(0, 3)).toUpperCase().trim(),
     description || null,
     color || "#6366F1",
+    logo_url || null,
     status || "active",
     budget || 0,
     target_revenue || 0
@@ -215,17 +217,18 @@ projectRoutes.put("/:id", async (c) => {
     return c.json({ success: false, error: parsed.error.errors[0].message }, 400);
   }
 
-  const { name, code, description, color, status, budget, target_revenue } = parsed.data;
+  const { name, code, description, color, logo_url, status, budget, target_revenue } = parsed.data;
 
   await c.env.DB.prepare(`
     UPDATE projects 
-    SET name = ?, code = ?, description = ?, color = ?, status = ?, budget = ?, target_revenue = ?
+    SET name = ?, code = ?, description = ?, color = ?, logo_url = ?, status = ?, budget = ?, target_revenue = ?
     WHERE id = ?
   `).bind(
     name.trim(),
     (code || name.slice(0, 3)).toUpperCase().trim(),
     description || null,
     color || "#6366F1",
+    logo_url || null,
     status || "active",
     budget || 0,
     target_revenue || 0,

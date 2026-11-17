@@ -6,6 +6,7 @@ import { NumberPad } from "../components/ui/NumberPad";
 import { SegmentedControl } from "../components/ui/SegmentedControl";
 import { EmptyState } from "../components/ui/EmptyState";
 import { formatCurrency, relativeDate } from "../lib/format";
+import { getProjectLogo } from "../lib/project-utils";
 import {
   TransactionWithDetails,
   WalletWithBalance,
@@ -210,26 +211,37 @@ export function Transactions() {
             >
               Semua Proyek
             </button>
-            {projects.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setFilterProject(p.id)}
-                aria-pressed={filterProject === p.id}
-                className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press flex items-center gap-1.5 cursor-pointer ${
-                  filterProject === p.id
-                    ? "bg-[#0A84FF] text-white"
-                    : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.70)] hover:text-white"
-                }`}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: p.color || "#0A84FF" }}
-                  aria-hidden="true"
-                />
-                {p.name}
-              </button>
-            ))}
+            {projects.map((p) => {
+              const logo = getProjectLogo(p);
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setFilterProject(p.id)}
+                  aria-pressed={filterProject === p.id}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press flex items-center gap-1.5 cursor-pointer ${
+                    filterProject === p.id
+                      ? "bg-[#0A84FF] text-white"
+                      : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.70)] hover:text-white"
+                  }`}
+                >
+                  {logo ? (
+                    <img
+                      src={logo}
+                      alt=""
+                      className="w-3.5 h-3.5 rounded-[4px] object-contain bg-black/20"
+                    />
+                  ) : (
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: p.color || "#0A84FF" }}
+                      aria-hidden="true"
+                    />
+                  )}
+                  {p.name}
+                </button>
+              );
+            })}
           </div>
         ) : null}
 
@@ -339,14 +351,29 @@ export function Transactions() {
                           </p>
                           {tx.project_name ? (
                             <span
-                              className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full uppercase border shrink-0"
+                              className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full uppercase border shrink-0 flex items-center gap-1"
                               style={{
                                 color: tx.project_color || "#0A84FF",
                                 borderColor: `${tx.project_color || "#0A84FF"}30`,
                                 backgroundColor: `${tx.project_color || "#0A84FF"}15`,
                               }}
                             >
-                              {tx.project_code || tx.project_name.slice(0, 3)}
+                              {(() => {
+                                const logo = getProjectLogo({
+                                  id: tx.project_id,
+                                  code: tx.project_code,
+                                  name: tx.project_name,
+                                  project_logo: tx.project_logo,
+                                });
+                                return logo ? (
+                                  <img
+                                    src={logo}
+                                    alt=""
+                                    className="w-3 h-3 object-contain rounded-xs"
+                                  />
+                                ) : null;
+                              })()}
+                              <span>{tx.project_code || tx.project_name.slice(0, 3)}</span>
                             </span>
                           ) : null}
                         </div>
@@ -433,26 +460,37 @@ export function Transactions() {
                   >
                     Pribadi / Umum
                   </button>
-                  {projects.map((p) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => setProjectId(p.id)}
-                      aria-pressed={projectId === p.id}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press flex items-center gap-1.5 ${
-                        projectId === p.id
-                          ? "bg-[#0A84FF] text-white"
-                          : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.60)] hover:text-white"
-                      }`}
-                    >
-                      <span
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: p.color || "#0A84FF" }}
-                        aria-hidden="true"
-                      />
-                      {p.name}
-                    </button>
-                  ))}
+                  {projects.map((p) => {
+                    const logo = getProjectLogo(p);
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setProjectId(p.id)}
+                        aria-pressed={projectId === p.id}
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ios-press flex items-center gap-1.5 cursor-pointer ${
+                          projectId === p.id
+                            ? "bg-[#0A84FF] text-white"
+                            : "bg-[rgba(118,118,128,0.24)] text-[rgba(235,235,245,0.60)] hover:text-white"
+                        }`}
+                      >
+                        {logo ? (
+                          <img
+                            src={logo}
+                            alt=""
+                            className="w-3.5 h-3.5 rounded-[4px] object-contain bg-black/20"
+                          />
+                        ) : (
+                          <span
+                            className="w-2 h-2 rounded-full"
+                            style={{ backgroundColor: p.color || "#0A84FF" }}
+                            aria-hidden="true"
+                          />
+                        )}
+                        {p.name}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             ) : null}

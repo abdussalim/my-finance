@@ -120,6 +120,7 @@ export interface TransactionWithDetails extends Transaction {
   project_name?: string | null;
   project_color?: string | null;
   project_code?: string | null;
+  project_logo?: string | null;
 }
 
 export interface DashboardSummary {
